@@ -85,14 +85,14 @@
 <meta property="og:url" content="http://yoursite.com/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/index.html">
 <meta property="og:site_name" content="张鸣的博客">
 <meta property="og:description" content="1. 前言博客有第三方平台，也可以自建，比较早的有博客园、CSDN，近几年新兴的也比较多诸如：WordPress、segmentFault、简书、掘金、知乎专栏、Github Page 等等。 这次我要说的就是 Github Page + Hexo 搭建个人博客的方式！Github Page 是 Github 提供的一种免费的静态网页托管服务（所以想想免费的空间不用也挺浪费的哈哈哈），可以用来托管">
-<meta property="og:image" content="http://yoursite.com/.com//E:%5Cdocument%5CMyBlog%5Csource_posts%5CHexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%5C%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png">
-<meta property="og:image" content="http://yoursite.com/.com//E:%5Cdocument%5CMyBlog%5Csource_posts%5CHexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%5C%E8%8F%9C%E5%8D%95%E9%85%8D%E7%BD%AE%E5%9C%B0%E5%9D%80%E9%94%99%E8%AF%AF.png">
+<meta property="og:image" content="http://yoursite.com/.com//%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png">
+<meta property="og:image" content="http://yoursite.com/.com//%E8%8F%9C%E5%8D%95%E9%85%8D%E7%BD%AE%E5%9C%B0%E5%9D%80%E9%94%99%E8%AF%AF.png">
 <meta property="article:published_time" content="2020-02-04T08:57:24.000Z">
-<meta property="article:modified_time" content="2020-02-04T10:14:05.202Z">
+<meta property="article:modified_time" content="2020-02-04T10:52:24.508Z">
 <meta property="article:author" content="张鸣">
 <meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/.com//E:%5Cdocument%5CMyBlog%5Csource_posts%5CHexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%5C%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png">
+<meta name="twitter:image" content="http://yoursite.com/.com//%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png">
 
 
 
@@ -390,13 +390,13 @@
 
 <p>看看你需要哪个菜单就把哪个取消注释打开就行了；<br> 关于后面的格式，以<code>archives: /archives/ || archive</code>为例：<br> <code>||</code> 之前的<code>/archives/</code>表示标题“归档”，关于标题的格式可以去<code>themes/next/languages/zh-Hans.yml</code>中参考或修改<br> <code>||</code>之后的<code>archive</code>表示图标，可以去<a href="https://links.jianshu.com/go?to=http%3A%2F%2Ffontawesome.io%2Ficons%2F" target="_blank" rel="noopener">Font Awesome</a>中查看或修改，Next主题所有的图标都来自Font Awesome。</p>
 <p><strong>踩坑说明，修改主题配置后主题图标不生效，具体情况如图所示</strong></p>
-<p><img src="/.com//E:%5Cdocument%5CMyBlog%5Csource_posts%5CHexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%5C%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png" alt></p>
+<p><img src="/.com//%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png" alt></p>
 <p><strong>原因：</strong>小编当时也在网上搜了很多帖子，每一个修改步骤都是按照帖子里面来的，先修改<strong>主题</strong>配置文件中的<em>menu</em>配置，然后再修改<em>menu_icons</em>的配置，但是无论怎么改都是不生效；后来小编发现，在最新版的next主题中，菜单图标设置已经不是通过<em>menu_icons</em>属性设置了，这个属性只用于设置是否显示图标，新版主题设置直接就在<em>menu</em>属性中，例如：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">home: &#x2F; || home</span><br></pre></td></tr></table></figure>
 
 <p>其实，在clone主题之后初始化的文件中就是这样写的，只怪小编没有仔细看就安装旧版的教程改了~</p>
 <p>但是，按照新版设置改过来之后，又出现了新的问题，图标的样式虽然显示出来了，但是点击图标跳转到的网址却是错误的，如下图所示，跳转的网址莫名其妙多加了%20，导致网址错误加载不出页面~</p>
-<p><img src="/.com//E:%5Cdocument%5CMyBlog%5Csource_posts%5CHexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%5C%E8%8F%9C%E5%8D%95%E9%85%8D%E7%BD%AE%E5%9C%B0%E5%9D%80%E9%94%99%E8%AF%AF.png" alt></p>
+<p><img src="/.com//%E8%8F%9C%E5%8D%95%E9%85%8D%E7%BD%AE%E5%9C%B0%E5%9D%80%E9%94%99%E8%AF%AF.png" alt></p>
 <p>这个问题小编尝试了很久，才发现是配置图标的时候，<strong>||符号前面多了一个空格</strong>导致的，删掉多余的空格就OK啦~~</p>
 <h4 id="3、Next主题样式设置"><a href="#3、Next主题样式设置" class="headerlink" title="3、Next主题样式设置"></a>3、Next主题样式设置</h4><p>我们百里挑一选择了Next主题，不过Next主题还有4种风格供我们选择，打开 <strong><em>主题配置文件</em></strong> 找到<code>Scheme Settings</code></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Schemes</span></span><br><span class="line"><span class="comment"># scheme: Muse</span></span><br><span class="line"><span class="comment"># scheme: Mist</span></span><br><span class="line">scheme: Pisces</span><br><span class="line"><span class="comment"># scheme: Gemini</span></span><br></pre></td></tr></table></figure>
