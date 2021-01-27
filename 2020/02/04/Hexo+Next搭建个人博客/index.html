@@ -91,8 +91,9 @@
 <meta property="og:image" content="http://yoursite.com/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E6%B7%BB%E5%8A%A0%E6%AF%8F%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E8%AE%BF%E9%97%AE%E6%AC%A1%E6%95%B0%E7%BB%9F%E8%AE%A1.png">
 <meta property="og:image" content="http://yoursite.com/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E6%B7%BB%E5%8A%A0%E6%AF%8F%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E8%AE%BF%E9%97%AE%E6%AC%A1%E6%95%B0%E7%BB%9F%E8%AE%A11.png">
 <meta property="og:image" content="http://yoursite.com/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E6%B7%BB%E5%8A%A0%E6%AF%8F%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E8%AE%BF%E9%97%AE%E6%AC%A1%E6%95%B0%E7%BB%9F%E8%AE%A12.png">
+<meta property="og:image" content="http://yoursite.com/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E4%BB%93%E5%BA%93%E8%B7%AF%E5%BE%84.png">
 <meta property="article:published_time" content="2020-02-04T08:57:24.000Z">
-<meta property="article:modified_time" content="2020-08-18T10:50:38.540Z">
+<meta property="article:modified_time" content="2021-01-27T07:19:11.809Z">
 <meta property="article:author" content="张鸣">
 <meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
@@ -534,6 +535,32 @@
 
 
 <p> OK！设置完毕。</p>
+<h2 id="4-写作"><a href="#4-写作" class="headerlink" title="4.写作"></a>4.写作</h2><p>以上所有的工作都完成了，并设置了一套你自己喜欢的主题样式，接下来就可以写博客了。</p>
+<h4 id="1、新建一篇文章"><a href="#1、新建一篇文章" class="headerlink" title="1、新建一篇文章"></a>1、新建一篇文章</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo new layout title</span><br></pre></td></tr></table></figure>
+
+<p>layout：模板，如果不写将使用默认模板，一般不写，直接<code>$ hexo new title</code><br>title：文章标题，如果标题包含空格的话，请使用引号括起来。<br>新建的文章将会存在<code>username/source/_posts</code>中，<code>_posts</code>就是默认模板，文章文件名称将会是<code>title.md</code>，接下来就可以打开该文件进行编辑写你的文章了。</p>
+<h4 id="2、生成静态文件"><a href="#2、生成静态文件" class="headerlink" title="2、生成静态文件"></a>2、生成静态文件</h4><p>写完文章之后执行，来生成静态网页文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo g 			&#x2F;&#x2F;hexo generate的缩写</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、启动本地服务器"><a href="#3、启动本地服务器" class="headerlink" title="3、启动本地服务器"></a>3、启动本地服务器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo s			&#x2F;&#x2F;hexo server的缩写</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、部署网站"><a href="#4、部署网站" class="headerlink" title="4、部署网站"></a>4、部署网站</h4><p>安装部署工具</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>安装完毕后打开username下的<code>_config.yml</code>文件，翻到最底部找到deploy节点编辑如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: https:&#x2F;&#x2F;github.com&#x2F;YoungerLi&#x2F;youngerli.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>https://github.com/YoungerLi/youngerli.github.io.git</code>就是你GitHub中创建的仓库地址，在这复制即可</p>
+<img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/仓库路径.png" alt="img" style="zoom:150%;">
+
+<p>最后，部署网站</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d        &#x2F;&#x2F;hexo deploy的缩写</span><br></pre></td></tr></table></figure>
+
+<p>第一次执行这一步的时候会让你输入你的GitHub的用户名及密码，输入正确无误后执行完毕，任何人就可以访问 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fyoungerli.github.io" target="_blank" rel="noopener">https://youngerli.github.io</a> 进入你的博客了。</p>
+<blockquote>
+<p><strong><em>以后每次写完文章之后依次执行以下命令就可以发布更新了</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;$ hexo clean      &#x2F;&#x2F; 清除缓存</span><br><span class="line">&gt;$ hexo g          &#x2F;&#x2F; 生成静态网页文件</span><br><span class="line">&gt;$ hexo d          &#x2F;&#x2F; 将本地博客发布到github</span><br></pre></td></tr></table></figure>
+</blockquote>
 
       
     </div>
@@ -560,22 +587,6 @@
       
       
 
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/18/%E4%BA%86%E8%A7%A3%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%84%8F%E4%B9%89%E5%92%8C%E4%BD%BF%E7%94%A8/" rel="prev" title="了解多线程的意义和使用">
-                了解多线程的意义和使用 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
 
       
@@ -653,7 +664,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -664,7 +675,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -675,7 +686,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -708,7 +719,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-text">1. 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装"><span class="nav-text">2. 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Hexo的Next主题详细配置"><span class="nav-text">3. Hexo的Next主题详细配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、基本信息配置"><span class="nav-text">1、基本信息配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、菜单设置"><span class="nav-text">2、菜单设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、Next主题样式设置"><span class="nav-text">3、Next主题样式设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、侧栏设置"><span class="nav-text">4、侧栏设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、头像设置"><span class="nav-text">5、头像设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6、添加分类模块"><span class="nav-text">6、添加分类模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7、添加标签模块"><span class="nav-text">7、添加标签模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8、添加关于模块"><span class="nav-text">8、添加关于模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9、添加搜索功能"><span class="nav-text">9、添加搜索功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10、添加阅读全文按钮"><span class="nav-text">10、添加阅读全文按钮</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11、去掉文章目录标题的自动编号"><span class="nav-text">11、去掉文章目录标题的自动编号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12、添加本地图片"><span class="nav-text">12、添加本地图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13、修改文章内链接文本样式"><span class="nav-text">13、修改文章内链接文本样式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14、添加字数统计和阅读时长"><span class="nav-text">14、添加字数统计和阅读时长</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15、添加站点访问计数"><span class="nav-text">15、添加站点访问计数</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前言"><span class="nav-text">1. 前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-安装"><span class="nav-text">2. 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Hexo的Next主题详细配置"><span class="nav-text">3. Hexo的Next主题详细配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、基本信息配置"><span class="nav-text">1、基本信息配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、菜单设置"><span class="nav-text">2、菜单设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、Next主题样式设置"><span class="nav-text">3、Next主题样式设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、侧栏设置"><span class="nav-text">4、侧栏设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、头像设置"><span class="nav-text">5、头像设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6、添加分类模块"><span class="nav-text">6、添加分类模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7、添加标签模块"><span class="nav-text">7、添加标签模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8、添加关于模块"><span class="nav-text">8、添加关于模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9、添加搜索功能"><span class="nav-text">9、添加搜索功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10、添加阅读全文按钮"><span class="nav-text">10、添加阅读全文按钮</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#11、去掉文章目录标题的自动编号"><span class="nav-text">11、去掉文章目录标题的自动编号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#12、添加本地图片"><span class="nav-text">12、添加本地图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#13、修改文章内链接文本样式"><span class="nav-text">13、修改文章内链接文本样式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#14、添加字数统计和阅读时长"><span class="nav-text">14、添加字数统计和阅读时长</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#15、添加站点访问计数"><span class="nav-text">15、添加站点访问计数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-写作"><span class="nav-text">4.写作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、新建一篇文章"><span class="nav-text">1、新建一篇文章</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、生成静态文件"><span class="nav-text">2、生成静态文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、启动本地服务器"><span class="nav-text">3、启动本地服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、部署网站"><span class="nav-text">4、部署网站</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -735,7 +746,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
