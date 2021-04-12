@@ -1,311 +1,406 @@
-<?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>微服务架构-1-基础概念</title>
-    <url>/2021/01/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h2 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h2><p>项目初期，所有的功能模块都放在一个工程中编码、编译、打包并且部署在一个Tomcat容器中的架构模式就是单体架构。</p>
-<p>优点：</p>
-<ol>
-<li>项⽬前期开发节奏快，团队成员少的时候能够快速迭代　　</li>
-<li>架构简单：MVC架构，只需要借助IDE开发、调试即可</li>
-<li>易于测试：只需要通过单元测试或者浏览器完成</li>
-<li>易于部署：打包成单⼀可执⾏的jar或者打成war包放到容器内启动</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li>随着时间推移业务增加，功能不断迭代，项目会不断变得臃肿，业务耦合严重，随着项目团队增大，沟通成本高，项目启动慢</li>
-<li>新增业务困难：在已经乱如麻的系统中增加新业务，维护旧功能，⼀脚踩进去全是不可预测 的问题。新⼈来了以后很难接⼿任务，学习成本⾼</li>
-<li>核⼼业务与边缘业务混合在⼀块，出现问题互相影响</li>
-</ol>
-<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><p>集群就是单机的多实例，在多个服务器上部署多个服务，每个服务就是一个节点，部署N个节点，处理业务的能力就提升 N倍（大约），这些节点的集合就叫做集群。</p>
-<p>优点：操作简单，容易部署；</p>
-<p>缺点：每个节点负载相同（耦合度高），每个具体业务的访问量可能差异很大，比如美团外卖美食外卖的访问量一定大于鲜花外卖的访问量，这就造成了资源浪费</p>
-<h2 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h2><p>分布式结构就是将一个完整的系统，按照业务功能，拆分成一个个独立的子系统，在分布式结构中，每个子系统就被称为“服务”。这些子系统能够独立运行在web容器中，它们之间通过RPC方式通信。</p>
-<p>优点：资源利用率高</p>
-<p>缺点：安全性低，如果一台服务器出现问题整个系统就会崩塌</p>
-<h2 id="垂直化"><a href="#垂直化" class="headerlink" title="垂直化"></a>垂直化</h2><p>为了避免单体架构上出现的那些问题，大家开始对应用按照业务做垂直划分，把原来的的一个单体架构拆成一堆单体应用，这时候就由原来的单应用变成了多应用部署，这就是垂直架构。</p>
-<p>优点：</p>
-<ol>
-<li><p>系统拆分实现了流量分担，解决了并发问题</p>
-</li>
-<li><p>可以针对不同模块进⾏优化</p>
-</li>
-<li><p>⽅便⽔平扩展，负载均衡，容错率提⾼</p>
-</li>
-<li><p>系统间相互独⽴，互不影响，新的业务迭代时更加⾼效</p>
-</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li><p>服务之间相互调⽤，如果某个服务的端⼝或者ip地址发⽣改变，调⽤的系统得⼿动改变（也就是硬编码）</p>
-</li>
-<li><p>搭建集群之后，实现负载均衡⽐较复杂，如：内⽹负载，在迁移机器时会影响调⽤⽅的路 由，导致线上故障</p>
-</li>
-<li><p>服务之间调⽤⽅式不统⼀，基于 httpclient 、 webservice ，接⼝协议不统⼀</p>
-</li>
-<li><p>服务监控不到位：除了依靠端⼝、进程的监控，调⽤的成功率、失败率、总耗时等等这些监 控指标是没有的</p>
-</li>
-</ol>
-<h2 id="服务化（SOA）"><a href="#服务化（SOA）" class="headerlink" title="服务化（SOA）"></a>服务化（SOA）</h2><p>SOA (Service-Oriented Architecture)，即⾯向服务的架构。其思想就是根据实际业务，把系统拆分成合适的、独⽴部署的模块，模块之间相互独⽴（通过Webservice/Dubbo等技术进⾏通信）。可以理解为拆分出来的每个系统都是一个个的组件，组件与组件之间都是通过服务进行调用。</p>
-<p>优点：</p>
-<ol>
-<li><p>分布式</p>
-</li>
-<li><p>松耦合</p>
-</li>
-<li><p>扩展灵活</p>
-</li>
-<li><p>可重⽤</p>
-</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li><p>服务抽取粒度较⼤</p>
-</li>
-<li><p>服务调⽤⽅和提供⽅耦合度较⾼（接⼝耦合度）</p>
-</li>
-</ol>
-<h2 id="微服务化"><a href="#微服务化" class="headerlink" title="微服务化"></a>微服务化</h2><p>在SOA架构下虽然能解决大部分的问题，但是由于他自身的缺点，依然不那么尽如人意，其实主要还是在SOA架构下拆分粒度不是很细，因此大家又在SOA架构下进行了拓展，将服务粒度拆分得更细这就引出了微服务架构。这种架构模式下它拆分粒度更⼩、服务更独⽴。把应⽤拆分成为⼀个个微⼩的服务，不同的服务可以使⽤不同的开发语⾔和存储，服务之间往往通过Restful等轻量级通信。微服务架构关键在于微⼩、独⽴、轻量级通信。微服务架构强调的⼀个重点是“业务需要彻底的组件化和服务化”。其实这时候就要求服务的拆分达到一个设计原则：单一职责原则。</p>
-<p>优点：</p>
-<ol>
-<li><p>业务聚焦</p>
-</li>
-<li><p>解耦</p>
-</li>
-<li><p>降低团队合作成本</p>
-</li>
-<li><p>复用性高、可维护性搞</p>
-</li>
-</ol>
-<p>缺点：由于服务拆分粒度很细，技术成本高（容错、分布式事务等），对团队挑战大、服务治理成本高</p>
-<h2 id="服务端负载均衡和客户端负载均衡的区别"><a href="#服务端负载均衡和客户端负载均衡的区别" class="headerlink" title="服务端负载均衡和客户端负载均衡的区别"></a>服务端负载均衡和客户端负载均衡的区别</h2><ul>
-<li><p>服务器端负载均衡：例如Nginx，通过Nginx进行负载均衡，先发送请求，然后通过负载均衡算法，在多个服务器之间选择一个进行访问；即在服务器端再进行负载均衡算法分配。</p>
-</li>
-<li><p>客户端负载均衡：例如spring cloud中的ribbon，客户端会有一个服务器地址列表，在发送请求前通过负载均衡算法选择一个服务器，然后进行访问，这是客户端负载均衡；即在客户端就进行负载均衡算法分配。</p>
-</li>
-</ul>
-<p>Ribbon是一个基于HTTP和TCP的客户端负载均衡器，当我们将Ribbon和Eureka一起使用时，Ribbon会从Eureka注册中心去获取服务端列表，然后进行轮询访问以到达负载均衡的作用，客户端负载均衡中也需要心跳机制去维护服务端清单的有效性，当然这个过程需要配合服务注册中心一起完成。</p>
-<p>从上面的描述我们可以看出，<strong>客户端负载均衡和服务端负载均衡最大的区别在于服务清单所存储的位置。在客户端负载均衡中，所有的客户端节点都有一份自己要访问的服务端清单，这些清单统统都是从Eureka服务注册中心获取的。</strong></p>
-<h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>SpringBoot是一个快速开发的框架，能够快速整合第三方框架，他是如何快速整合的呢？其实他是基于原来的Maven依赖关系，Maven的集成，完全采用注解化，简化XML配置，内嵌HTTP服务器（Tomcate，jetty），默认嵌入Tomcate，最终以Java应用程序进行执行。</p>
-<ol>
-<li><p>SpringBoot是微服务框架</p>
-</li>
-<li><p>SpringBoot核心：快速整合第三方框架</p>
-</li>
-<li><p>SpringBoot原理：Maven依赖关系，Maven的继承，完全采用注解化，Spring3.0以后采用注解方式启动SpringMVC</p>
-</li>
-</ol>
-<h2 id="Spring-Cloud"><a href="#Spring-Cloud" class="headerlink" title="Spring Cloud"></a>Spring Cloud</h2><p>SpringCloud一套目前完整的微服务解决框架，功能非常强大，注册中心，客户端调用工具，服务治理（负载均衡，断路器，分布式配置中心，网管，消息总线等）。</p>
-<h2 id="Spring-Cloud生态"><a href="#Spring-Cloud生态" class="headerlink" title="Spring Cloud生态"></a>Spring Cloud生态</h2><p><img src="/2021/01/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E7%8E%B0%E7%8A%B6%E4%BB%A5%E5%8F%8A%E6%9C%AA%E6%9D%A5.jpg" alt></p>
-<h2 id="Spring-Cloud版本命名"><a href="#Spring-Cloud版本命名" class="headerlink" title="Spring Cloud版本命名"></a>Spring Cloud版本命名</h2><p>Spring Cloud 采用了英国伦敦地铁站的名称来命名，并由地铁站名称字母A-Z依次类推的形式来发布迭代版本。Spring Cloud 的第一个版本 “Angel” ，接着 “Brixton” 就是第二个版本。当一个项目到达发布临界点或者解决了一个严重的BUG后就会发布一个 “service Release” 版本， 简称 SR（X）版本，x 代表一个递增数字。</p>
-<p><strong>SR：service Release，服务版本</strong></p>
-<p><strong>RC:Release Candidate，候选发布版本</strong> </p>
-<p><strong>M：MileStone，里程碑版本</strong></p>
-<p><strong>GA : General Availability，正式发布的版本，官方推荐使用此版本。在国外都是用GA来说明release版本的</strong>。</p>
-<h2 id="Spring-Boot和Spring-Cloud版本关系"><a href="#Spring-Boot和Spring-Cloud版本关系" class="headerlink" title="Spring Boot和Spring Cloud版本关系"></a>Spring Boot和Spring Cloud版本关系</h2><ol>
-<li>官网：<a href="https://spring.io/projects/spring-cloud" target="_blank" rel="noopener">https://spring.io/projects/spring-cloud</a></li>
-</ol>
-<p><img src="/2021/01/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/SpringCloud%E4%B8%8ESpringBoot%E7%89%88%E6%9C%AC%E5%85%B3%E7%B3%BB.png" alt></p>
-<ol start="2">
-<li>接口返回：<a href="https://start.spring.io/actuator/info" target="_blank" rel="noopener">https://start.spring.io/actuator/info</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>微服务架构</category>
-        <category>SpringBoot</category>
-      </categories>
-      <tags>
-        <tag>SpringBoot</tag>
-        <tag>微服务架构</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo+Next搭建个人博客</title>
-    <url>/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>博客有第三方平台，也可以自建，比较早的有博客园、CSDN，近几年新兴的也比较多诸如：WordPress、segmentFault、简书、掘金、知乎专栏、Github Page 等等。</p>
-<p>这次我要说的就是 Github Page + Hexo 搭建个人博客的方式！Github Page 是 Github 提供的一种免费的静态网页托管服务（所以想想免费的空间不用也挺浪费的哈哈哈），可以用来托管博客、项目官网等静态网页。支持 Jekyll、Hugo、Hexo 编译静态资源，这次我们的主角就是 Hexo 了，具体的内容下面在文章内介绍。</p>
-<h2 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2><p>所有必备的应用程序安装完成后，即可使用 npm 安装 Hexo。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p>安装 Hexo 完成后，请执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo init &lt;folder&gt;</span><br><span class="line">$ cd &lt;folder&gt;</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
-
-<p>新建完成后，指定文件夹的目录如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.├── _config.yml</span><br><span class="line"> ├── package.json</span><br><span class="line"> ├── scaffolds</span><br><span class="line"> ├── source</span><br><span class="line"> |   ├── _drafts</span><br><span class="line"> |   └── _posts</span><br><span class="line"> └── themes</span><br></pre></td></tr></table></figure>
-
-<p><strong>_config.yml</strong></p>
-<p>网站的 <a href="https://hexo.io/zh-cn/docs/configuration" target="_blank" rel="noopener">配置</a> 信息，您可以在此配置大部分的参数。</p>
-<p><strong>package.json</strong></p>
-<p>应用程序的信息。<a href="https://ejs.co/" target="_blank" rel="noopener">EJS</a>, <a href="http://learnboost.github.io/stylus/" target="_blank" rel="noopener">Stylus</a> 和 <a href="http://daringfireball.net/projects/markdown/" target="_blank" rel="noopener">Markdown</a> renderer 已默认安装，您可以自由移除。</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">package.json</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"hexo-site"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.0.0"</span>,</span><br><span class="line">  <span class="attr">"private"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"hexo"</span>: &#123;</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">""</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"hexo"</span>: <span class="string">"^3.8.0"</span>,</span><br><span class="line">    <span class="attr">"hexo-generator-archive"</span>: <span class="string">"^0.1.5"</span>,</span><br><span class="line">    <span class="attr">"hexo-generator-category"</span>: <span class="string">"^0.1.3"</span>,</span><br><span class="line">    <span class="attr">"hexo-generator-index"</span>: <span class="string">"^0.2.1"</span>,</span><br><span class="line">    <span class="attr">"hexo-generator-tag"</span>: <span class="string">"^0.2.0"</span>,</span><br><span class="line">    <span class="attr">"hexo-renderer-ejs"</span>: <span class="string">"^0.3.1"</span>,</span><br><span class="line">    <span class="attr">"hexo-renderer-stylus"</span>: <span class="string">"^0.3.3"</span>,</span><br><span class="line">    <span class="attr">"hexo-renderer-marked"</span>: <span class="string">"^0.3.2"</span>,</span><br><span class="line">    <span class="attr">"hexo-server"</span>: <span class="string">"^0.3.3"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>scaffolds</strong></p>
-<p><a href="https://hexo.io/zh-cn/docs/writing" target="_blank" rel="noopener">模版</a> 文件夹。当您新建文章时，Hexo 会根据 scaffold 来建立文件。</p>
-<p>Hexo的模板是指在新建的文章文件中默认填充的内容。例如，如果您修改scaffold/post.md中的Front-matter内容，那么每次新建一篇文章时都会包含这个修改。</p>
-<p><strong>source</strong></p>
-<p>资源文件夹是存放用户资源的地方。除 <code>_posts</code> 文件夹之外，开头命名为 <code>_</code> (下划线)的文件 / 文件夹和隐藏的文件将会被忽略。Markdown 和 HTML 文件会被解析并放到 <code>public</code> 文件夹，而其他文件会被拷贝过去。</p>
-<p><strong>themes</strong></p>
-<p><a href="https://hexo.io/zh-cn/docs/themes" target="_blank" rel="noopener">主题</a> 文件夹。Hexo 会根据主题来生成静态页面。</p>
-<h2 id="3-Hexo的Next主题详细配置"><a href="#3-Hexo的Next主题详细配置" class="headerlink" title="3. Hexo的Next主题详细配置"></a>3. Hexo的Next主题详细配置</h2><p>经过一番不懈的努力，我们终于按照<a href="https://www.jianshu.com/p/51617690f8ca" target="_blank" rel="noopener">Hexo免费搭建一个属于自己的博客</a>搭建好了一个属于自己的博客，并且还安装了一个Next主题，但是我们的博客一开始还是很简陋的，我们需要把她装修一下。</p>
-<blockquote>
-<ul>
-<li>在 Hexo 中有两份主要的配置文件，其名称都是 _config.yml。 其中，一份位于站点根目录下，主要包含 Hexo 本身的配置；另一份位于主题目录下，这份配置由主题作者提供，主要用于配置主题相关的选项。<br> 为了描述方便，在以下说明中，将前者称为<strong><em>站点配置文件</em></strong>， 后者称为<strong><em>主题配置文件</em></strong>。</li>
-<li>以下所有终端执行的命令都在你的Hexo根目录下</li>
-</ul>
-</blockquote>
-<h4 id="1、基本信息配置"><a href="#1、基本信息配置" class="headerlink" title="1、基本信息配置"></a>1、基本信息配置</h4><blockquote>
-<p>基本信息包括：博客标题、作者、描述、语言等等。</p>
-</blockquote>
-<p>打开 <strong><em>站点配置文件</em></strong> ，找到Site模块</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: 标题</span><br><span class="line">subtitle: 副标题</span><br><span class="line">description: 描述</span><br><span class="line">author: 作者</span><br><span class="line">language: 语言（简体中文是zh-Hans）</span><br><span class="line">timezone: 网站时区（Hexo 默认使用您电脑的时区，不用写）</span><br></pre></td></tr></table></figure>
-
-<p>关于 <strong><em>站点配置文件</em></strong> 中的其他配置可参考[站点配置</p>
-<h4 id="2、菜单设置"><a href="#2、菜单设置" class="headerlink" title="2、菜单设置"></a>2、菜单设置</h4><blockquote>
-<p>菜单包括：首页、归档、分类、标签、关于等等</p>
-</blockquote>
-<p>我们刚开始默认的菜单只有首页和归档两个，不能够满足我们的要求，所以需要添加菜单，打开 <strong><em>主题配置文件</em></strong> 找到<code>Menu Settings</code></p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: / || home                          <span class="comment">//首页</span></span><br><span class="line">  archives: /archives/ || archive          <span class="comment">//归档</span></span><br><span class="line">  categories: /categories/ || th           <span class="comment">//分类</span></span><br><span class="line">  tags: /tags/ || tags                     <span class="comment">//标签</span></span><br><span class="line">  about: /about/ || user                   <span class="comment">//关于</span></span><br><span class="line">  <span class="meta">#schedule: /schedule/ || calendar        <span class="comment">//日程表</span></span></span><br><span class="line">  <span class="meta">#sitemap: /sitemap.xml || sitemap        <span class="comment">//站点地图</span></span></span><br><span class="line">  <span class="meta">#commonweal: /404/ || heartbeat          <span class="comment">//公益404</span></span></span><br></pre></td></tr></table></figure>
-
-<p>看看你需要哪个菜单就把哪个取消注释打开就行了；<br> 关于后面的格式，以<code>archives: /archives/ || archive</code>为例：<br> <code>||</code> 之前的<code>/archives/</code>表示标题“归档”，关于标题的格式可以去<code>themes/next/languages/zh-Hans.yml</code>中参考或修改<br> <code>||</code>之后的<code>archive</code>表示图标，可以去<a href="https://links.jianshu.com/go?to=http%3A%2F%2Ffontawesome.io%2Ficons%2F" target="_blank" rel="noopener">Font Awesome</a>中查看或修改，Next主题所有的图标都来自Font Awesome。</p>
-<p><strong>踩坑说明，修改主题配置后主题图标不生效，具体情况如图所示</strong></p>
-<p><img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E8%8F%9C%E5%8D%95%E5%9B%BE%E6%A0%87%E4%B8%8D%E6%98%BE%E7%A4%BA.png" alt></p>
-<p><strong>原因：</strong>小编当时也在网上搜了很多帖子，每一个修改步骤都是按照帖子里面来的，先修改<strong>主题</strong>配置文件中的<em>menu</em>配置，然后再修改<em>menu_icons</em>的配置，但是无论怎么改都是不生效；后来小编发现，在最新版的next主题中，菜单图标设置已经不是通过<em>menu_icons</em>属性设置了，这个属性只用于设置是否显示图标，新版主题设置直接就在<em>menu</em>属性中，例如：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">home: &#x2F; || home</span><br></pre></td></tr></table></figure>
-
-<p>其实，在clone主题之后初始化的文件中就是这样写的，只怪小编没有仔细看就安装旧版的教程改了~</p>
-<p>但是，按照新版设置改过来之后，又出现了新的问题，图标的样式虽然显示出来了，但是点击图标跳转到的网址却是错误的，如下图所示，跳转的网址莫名其妙多加了%20，导致网址错误加载不出页面~</p>
-<p><img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/%E8%8F%9C%E5%8D%95%E9%85%8D%E7%BD%AE%E5%9C%B0%E5%9D%80%E9%94%99%E8%AF%AF.png" alt></p>
-<p>这个问题小编尝试了很久，才发现是配置图标的时候，<strong>||符号前面多了一个空格</strong>导致的，删掉多余的空格就OK啦~~</p>
-<h4 id="3、Next主题样式设置"><a href="#3、Next主题样式设置" class="headerlink" title="3、Next主题样式设置"></a>3、Next主题样式设置</h4><p>我们百里挑一选择了Next主题，不过Next主题还有4种风格供我们选择，打开 <strong><em>主题配置文件</em></strong> 找到<code>Scheme Settings</code></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Schemes</span></span><br><span class="line"><span class="comment"># scheme: Muse</span></span><br><span class="line"><span class="comment"># scheme: Mist</span></span><br><span class="line">scheme: Pisces</span><br><span class="line"><span class="comment"># scheme: Gemini</span></span><br></pre></td></tr></table></figure>
-
-<p>4种风格大同小异，本人用的是Pisces风格，你们可以选择自己喜欢的风格。</p>
-<h4 id="4、侧栏设置"><a href="#4、侧栏设置" class="headerlink" title="4、侧栏设置"></a>4、侧栏设置</h4><blockquote>
-<p>侧栏设置包括：侧栏位置、侧栏显示与否、文章间距、返回顶部按钮等等</p>
-</blockquote>
-<p>打开 <strong><em>主题配置文件</em></strong> 找到<code>sidebar</code>字段</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">sidebar:</span><br><span class="line"># Sidebar Position - 侧栏位置（只对Pisces | Gemini两种风格有效）</span><br><span class="line">  position: left        <span class="comment">//靠左放置</span></span><br><span class="line">  <span class="meta">#position: right      <span class="comment">//靠右放置</span></span></span><br><span class="line"></span><br><span class="line"># Sidebar Display - 侧栏显示时机（只对Muse | Mist两种风格有效）</span><br><span class="line">  <span class="meta">#display: post        <span class="comment">//默认行为，在文章页面（拥有目录列表）时显示</span></span></span><br><span class="line">  display: always       <span class="comment">//在所有页面中都显示</span></span><br><span class="line">  <span class="meta">#display: hide        <span class="comment">//在所有页面中都隐藏（可以手动展开）</span></span></span><br><span class="line">  <span class="meta">#display: remove      <span class="comment">//完全移除</span></span></span><br><span class="line"></span><br><span class="line">  offset: <span class="number">12</span>            <span class="comment">//文章间距（只对Pisces | Gemini两种风格有效）</span></span><br><span class="line"></span><br><span class="line">  b2t: <span class="literal">false</span>            <span class="comment">//返回顶部按钮（只对Pisces | Gemini两种风格有效）</span></span><br><span class="line"></span><br><span class="line">  scrollpercent: <span class="literal">true</span>   <span class="comment">//返回顶部按钮的百分比</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="5、头像设置"><a href="#5、头像设置" class="headerlink" title="5、头像设置"></a>5、头像设置</h4><p>打开 <strong><em>主题配置文件</em></strong> 找到<code>Sidebar Avatar</code>字段</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Sidebar Avatar</span></span><br><span class="line">avatar: /images/header.jpg</span><br></pre></td></tr></table></figure>
-
-<p>这是头像的路径，只需把你的头像命名为<code>header.jpg</code>（随便命名）放入<code>themes/next/source/images</code>中，将<code>avatar</code>的路径名改成你的头像名就OK啦！</p>
-<h4 id="6、添加分类模块"><a href="#6、添加分类模块" class="headerlink" title="6、添加分类模块"></a>6、添加分类模块</h4><p>1、新建一个分类页面</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ hexo <span class="keyword">new</span> page categories</span><br></pre></td></tr></table></figure>
-
-<p>2、你会发现你的<code>source</code>文件夹下有了<code>categorcies/index.md</code>，打开<code>index.md</code>文件将title设置为<code>title: 分类</code><br>3、打开 <strong><em>主题配置文件</em></strong> 找到<code>menu</code>，将categorcies取消注释<br>4、把文章归入分类只需在文章的顶部标题下方添加<code>categories</code>字段，即可自动创建分类名并加入对应的分类中<br>举个栗子：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: 分类测试文章标题</span><br><span class="line">categories: 分类名</span><br></pre></td></tr></table></figure>
-
-<h4 id="7、添加标签模块"><a href="#7、添加标签模块" class="headerlink" title="7、添加标签模块"></a>7、添加标签模块</h4><p>1、新建一个标签页面</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ hexo <span class="keyword">new</span> page tags</span><br></pre></td></tr></table></figure>
-
-<p>2、你会发现你的<code>source</code>文件夹下有了<code>tags/index.md</code>，打开<code>index.md</code>文件将title设置为<code>title: 标签</code><br>3、打开 <strong><em>主题配置文件</em></strong> 找到<code>menu</code>，将tags取消注释<br>4、把文章添加标签只需在文章的顶部标题下方添加<code>tags</code>字段，即可自动创建标签名并归入对应的标签中<br>举个栗子：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">title: 标签测试文章标题</span><br><span class="line">tags: </span><br><span class="line">  - 标签1</span><br><span class="line">  - 标签2</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
-
-<h4 id="8、添加关于模块"><a href="#8、添加关于模块" class="headerlink" title="8、添加关于模块"></a>8、添加关于模块</h4><p>1、新建一个关于页面</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">$ hexo <span class="keyword">new</span> page about</span><br></pre></td></tr></table></figure>
-
-<p>2、你会发现你的<code>source</code>文件夹下有了<code>about/index.md</code>，打开<code>index.md</code>文件即可编辑关于你的信息，可以随编辑。<br>3、打开 <strong><em>主题配置文件</em></strong> 找到<code>menu</code>，将about取消注释</p>
-<h4 id="9、添加搜索功能"><a href="#9、添加搜索功能" class="headerlink" title="9、添加搜索功能"></a>9、添加搜索功能</h4><p>1、安装 hexo-generator-searchdb插件</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
-
-<p>2、打开 <strong><em>站点配置文件</em></strong> 找到<code>Extensions</code>在下面添加</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 搜索</span><br><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure>
-
-<p>3、打开 <strong><em>主题配置文件</em></strong> 找到<code>Local search</code>，将<code>enable</code>设置为<code>true</code></p>
-<h4 id="10、添加阅读全文按钮"><a href="#10、添加阅读全文按钮" class="headerlink" title="10、添加阅读全文按钮"></a>10、添加阅读全文按钮</h4><p>NexT主题下的首页默认是显示每一篇文章的全文的，如果文章很长就要往下拉很远才能看到下一篇文章</p>
-<p>我们要设置成每一篇文章只显示150个字的摘要，然后底部显示一个阅读原文的按钮，点击可以进入阅读全文</p>
-<p>1、打开NexT主题的配置文件，站点根目录\themes\next_config.yml<br>2、搜索auto_excerpt，然后配置如下，开启摘要，设置摘要长度为150个字</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Automatically Excerpt (Not recommend).</span><br><span class="line"># Use &lt;!-- more --&gt; in the post to control excerpt accurately.</span><br><span class="line">auto_excerpt:</span><br><span class="line">  enable: true</span><br><span class="line">  length: 150</span><br></pre></td></tr></table></figure>
-
-<h4 id="11、去掉文章目录标题的自动编号"><a href="#11、去掉文章目录标题的自动编号" class="headerlink" title="11、去掉文章目录标题的自动编号"></a>11、去掉文章目录标题的自动编号</h4><p>我们自己写文章的时候一般都会自己带上标题编号，但是默认的主题会给我们带上编号，很是别扭，如何去掉呢？<br>打开<strong><em>主题配置文件</em></strong>，找到</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># Table Of Contents in the Sidebar</span><br><span class="line">toc:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Automatically add list number to toc.</span><br><span class="line">  number: false</span><br><span class="line"></span><br><span class="line">  # If true, all words will placed on next lines if header width longer then sidebar width.</span><br><span class="line">  wrap: false</span><br></pre></td></tr></table></figure>
-
-<p>将<code>number</code>改为<code>false</code>即可</p>
-<h4 id="12、添加本地图片"><a href="#12、添加本地图片" class="headerlink" title="12、添加本地图片"></a>12、添加本地图片</h4><p>1、 把<strong><em>主页配置文件</em></strong><code>_config.yml</code> 里的<code>post_asset_folder:</code>这个选项设置为<code>true</code></p>
-<p>2、 在你的hexo目录下执行这样一句话<code>npm install hexo-asset-image --save</code>，这是下载安装一个可以上传本地图片的插件，来自大佬：大佬的git](<a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="noopener">https://github.com/CodeFalling/hexo-asset-image</a>)</p>
-<p>3、 等待一小段时间后，再运行<code>hexo n &quot;xxxx&quot;</code>来生成md博文时，<code>/source/_posts</code>文件夹内除了<code>xxxx.md</code>文件还有一个同名的文件夹</p>
-<p>4、 最后在<code>xxxx.md</code>中想引入图片时，先把图片复制到xxxx这个文件夹中，然后只需要在xxxx.md中按照markdown的格式引入图片：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">![你想输入的替代文字](xxxx&#x2F;图片名.jpg)</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意： xxxx是这个md文件的名字，也是同名文件夹的名字。只需要有文件夹名字即可，不需要有什么绝对路径。你想引入的图片就只需要放入xxxx这个文件夹内就好了，很像引用相对路径。</strong></p>
-<p>5、 最后检查一下，<code>hexo g</code>生成页面后，进入<code>public\2017\02\26\index.html</code>文件中查看相关字段，可以发现，html标签内的语句是``，而不是`。这很重要，关乎你的网页是否可以真正加载你想插入的图片。</p>
-<p><strong>踩坑说明，部署上去图片不显示，查看图片路径为/.com//…</strong></p>
-<p><strong>原因是：</strong>使用 npm install <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2FCodeFalling%2Fhexo-asset-image" target="_blank" rel="noopener">https://github.com/CodeFalling/hexo-asset-image</a> –save 安装0.0.5版本的hexo-asset-image插件。 使用 npm install hexo-asset-image –save 安装的是1.0.0版本的hexo-asset-image插件。 两者最直接的区别是映射关系不同。也就是因为插件版本更新了，之前的使用方法有所变化，于是我安装了0.0.5版本的插件，就成功加载图片了</p>
-<h4 id="13、修改文章内链接文本样式"><a href="#13、修改文章内链接文本样式" class="headerlink" title="13、修改文章内链接文本样式"></a>13、修改文章内链接文本样式</h4><p>打开文件 <code>themes/next/source/css/_common/components/post/post.styl</code>，在末尾添加</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.post-body</span> <span class="selector-tag">p</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#0593d3</span>;</span><br><span class="line">  <span class="attribute">border-bottom</span>: none;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#0593d3</span>;</span><br><span class="line">  &amp;:hover &#123;</span><br><span class="line">    <span class="selector-tag">color</span>: <span class="selector-id">#fc6423</span>;</span><br><span class="line">    <span class="selector-tag">border-bottom</span>: <span class="selector-tag">none</span>;</span><br><span class="line">    <span class="selector-tag">border-bottom</span>: 1<span class="selector-tag">px</span> <span class="selector-tag">solid</span> <span class="selector-id">#fc6423</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中选择 .post-body 是为了不影响标题，选择 p 是为了不影响首页“阅读全文”的显示样式,颜色可以自己定义。</p>
-<h4 id="14、添加字数统计和阅读时长"><a href="#14、添加字数统计和阅读时长" class="headerlink" title="14、添加字数统计和阅读时长"></a>14、添加字数统计和阅读时长</h4><p>首先安装一个插件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-symbols-count-time --save</span><br></pre></td></tr></table></figure>
-
-<p>接着博客根目录下的配置文件里添加以下配置</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 文章字数统计</span><br><span class="line">symbols_count_time:</span><br><span class="line">  symbols: true</span><br><span class="line">  time: true</span><br><span class="line">  total_symbols: true</span><br><span class="line">  total_time: true</span><br></pre></td></tr></table></figure>
-
-<p>最后到 next 主题的配置文件下开启 symbols_count_time 字段</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Post wordcount display settings</span><br><span class="line"># Dependencies: https:&#x2F;&#x2F;github.com&#x2F;theme-next&#x2F;hexo-symbols-count-time</span><br><span class="line">symbols_count_time:</span><br><span class="line">  separated_meta: true</span><br><span class="line">  item_text_post: true</span><br><span class="line">  item_text_total: false</span><br><span class="line">  awl: 4</span><br><span class="line">  wpm: 275</span><br></pre></td></tr></table></figure>
-
-<h4 id="15、添加站点访问计数"><a href="#15、添加站点访问计数" class="headerlink" title="15、添加站点访问计数"></a>15、添加站点访问计数</h4><p>站点访问计数有名的就是<a href="https://links.jianshu.com/go?to=http%3A%2F%2Fbusuanzi.ibruce.info" target="_blank" rel="noopener">不蒜子</a>，使用起来非常方便<br>1、安装脚本<br>打开 <strong>themes/next/layout/_partial/footer.swig</strong>，将下面这段代码添加到里面</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">"//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_pv"</span> <span class="attr">style</span>=<span class="string">'display:none'</span>&gt;</span></span><br><span class="line">    本站总访问量 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_pv"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span> 次</span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"post-meta-divider"</span>&gt;</span>|<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_uv"</span> <span class="attr">style</span>=<span class="string">'display:none'</span>&gt;</span></span><br><span class="line">    有<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_uv"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>人看过我的博客啦</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>添加的位置如下图，可自行根据个人喜好更换位置</p>
-<img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/添加站点访问统计.png" style="zoom: 150%;">
-
-<p>2、以上只是显示站点的访问次数，如果想显示每篇文章的访问次数，打开 <strong>themes/next/layout/_macro/post.swig</strong>，在第一行增加<code>is_pv</code>字段</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">&#123;% <span class="keyword">macro</span> render(post, is_index, is_pv, post_extra_class) %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后将这段代码插入到里面</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">&#123;% <span class="keyword">if</span> is_pv %&#125;</span><br><span class="line">  &lt;span <span class="class"><span class="keyword">class</span></span>=<span class="string">"post-meta-divider"</span>&gt;|&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">  &lt;span id="busuanzi_value_page_pv"&gt;&lt;/</span>span&gt;次阅读</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>插入的位置</p>
-<img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/添加每篇文章的访问次数统计.png" style="zoom:150%;">
-
-<p>然后再打开 <strong>themes/next/layout/post.swig</strong>，这个文件是文章的模板，给render方法传入参数（对应刚才添加的<code>is_pv</code>字段）</p>
-<img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/添加每篇文章的访问次数统计1.png" alt="img" style="zoom:150%;">
+<!DOCTYPE html>
 
 
-<p> 最后再打开 <strong>themes/next/layout/index.swig</strong>，这个文件是首页的模板，给render方法传入参数（对应刚才添加的is_pv字段）</p>
-<img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/添加每篇文章的访问次数统计2.png" alt="img" style="zoom:150%;">
 
-<p> OK！设置完毕。</p>
-<h2 id="4-写作"><a href="#4-写作" class="headerlink" title="4. 写作"></a>4. 写作</h2><p>以上所有的工作都完成了，并设置了一套你自己喜欢的主题样式，接下来就可以写博客了。</p>
-<h4 id="1、新建一篇文章"><a href="#1、新建一篇文章" class="headerlink" title="1、新建一篇文章"></a>1、新建一篇文章</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo new layout title</span><br></pre></td></tr></table></figure>
+  
 
-<p>layout：模板，如果不写将使用默认模板，一般不写，直接<code>$ hexo new title</code><br>title：文章标题，如果标题包含空格的话，请使用引号括起来。<br>新建的文章将会存在<code>username/source/_posts</code>中，<code>_posts</code>就是默认模板，文章文件名称将会是<code>title.md</code>，接下来就可以打开该文件进行编辑写你的文章了。</p>
-<h4 id="2、生成静态文件"><a href="#2、生成静态文件" class="headerlink" title="2、生成静态文件"></a>2、生成静态文件</h4><p>写完文章之后执行，来生成静态网页文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo g 			&#x2F;&#x2F;hexo generate的缩写</span><br></pre></td></tr></table></figure>
 
-<h4 id="3、启动本地服务器"><a href="#3、启动本地服务器" class="headerlink" title="3、启动本地服务器"></a>3、启动本地服务器</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo s			&#x2F;&#x2F;hexo server的缩写</span><br></pre></td></tr></table></figure>
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
 
-<h4 id="4、部署网站"><a href="#4、部署网站" class="headerlink" title="4、部署网站"></a>4、部署网站</h4><p>安装部署工具</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 
-<p>安装完毕后打开username下的<code>_config.yml</code>文件，翻到最底部找到deploy节点编辑如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: https:&#x2F;&#x2F;github.com&#x2F;YoungerLi&#x2F;youngerli.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
 
-<p>其中<code>https://github.com/YoungerLi/youngerli.github.io.git</code>就是你GitHub中创建的仓库地址，在这复制即可</p>
-<img src="/2020/02/04/Hexo+Next%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/仓库路径.png" alt="img" style="zoom:150%;">
 
-<p>最后，部署网站</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d        &#x2F;&#x2F;hexo deploy的缩写</span><br></pre></td></tr></table></figure>
 
-<p>第一次执行这一步的时候会让你输入你的GitHub的用户名及密码，输入正确无误后执行完毕，任何人就可以访问 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fyoungerli.github.io" target="_blank" rel="noopener">https://youngerli.github.io</a> 进入你的博客了。</p>
-<blockquote>
-<p><strong><em>以后每次写完文章之后依次执行以下命令就可以发布更新了</em></strong></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;$ hexo clean      &#x2F;&#x2F; 清除缓存</span><br><span class="line">&gt;$ hexo g          &#x2F;&#x2F; 生成静态网页文件</span><br><span class="line">&gt;$ hexo d          &#x2F;&#x2F; 将本地博客发布到github</span><br></pre></td></tr></table></figure>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>微服务架构-2-SpringBoot</title>
-    <url>/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/</url>
-    <content><![CDATA[<h2 id="Spring-Boot的前世今生"><a href="#Spring-Boot的前世今生" class="headerlink" title="Spring Boot的前世今生"></a>Spring Boot的前世今生</h2><h4 id="Spring-Framework"><a href="#Spring-Framework" class="headerlink" title="Spring Framework"></a>Spring Framework</h4><ol>
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="SpringBoot,微服务架构," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Spring Boot的前世今生Spring Framework IOC（Inversion of Control）：控制反转，简单点说，就是创建对象的控制权，被反转到了Spring框架上。通常，我们实例化一个对象时，都是使用类的构造方法来new一个对象，这个过程是由我们自己来控制的，而控制反转就把new对象的工交给了Spring容器。 IoC的主要实现方式有两种：依赖查找、依赖注入。依赖注入是一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务架构-2-SpringBoot">
+<meta property="og:url" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/index.html">
+<meta property="og:site_name" content="张鸣的博客">
+<meta property="og:description" content="Spring Boot的前世今生Spring Framework IOC（Inversion of Control）：控制反转，简单点说，就是创建对象的控制权，被反转到了Spring框架上。通常，我们实例化一个对象时，都是使用类的构造方法来new一个对象，这个过程是由我们自己来控制的，而控制反转就把new对象的工交给了Spring容器。 IoC的主要实现方式有两种：依赖查找、依赖注入。依赖注入是一">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/idea%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Emaven%E7%9A%84web%E9%A1%B9%E7%9B%AE.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/Springmvc%E4%BE%9D%E8%B5%96.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/%E9%85%8D%E7%BD%AEDispatcherServlet.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/Dispatcher-servlet.xml.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/Tomcat.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/idea%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAspringboot-web%E9%A1%B9%E7%9B%AE.png">
+<meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/%E9%9B%86%E6%88%90mybatis%E4%BE%9D%E8%B5%96.png">
+<meta property="article:published_time" content="2021-01-28T10:27:05.000Z">
+<meta property="article:modified_time" content="2021-03-25T13:37:31.565Z">
+<meta property="article:author" content="张鸣">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="微服务架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/idea%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Emaven%E7%9A%84web%E9%A1%B9%E7%9B%AE.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/01/28/微服务架构-2-SpringBoot/"/>
+
+
+
+
+
+  <title>微服务架构-2-SpringBoot | 张鸣的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张鸣的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hello World</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张鸣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/saritocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张鸣的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微服务架构-2-SpringBoot</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-28T18:27:05+08:00">
+                2021-01-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index">
+                    <span itemprop="name">微服务架构</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+	  
+	    <span class="post-meta-divider">|</span>
+	    <span id="busuanzi_value_page_pv"></span>次阅读
+	  
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Spring-Boot的前世今生"><a href="#Spring-Boot的前世今生" class="headerlink" title="Spring Boot的前世今生"></a>Spring Boot的前世今生</h2><h4 id="Spring-Framework"><a href="#Spring-Framework" class="headerlink" title="Spring Framework"></a>Spring Framework</h4><ol>
 <li><p><strong>IOC（Inversion of Control）：</strong>控制反转，简单点说，就是创建对象的控制权，被反转到了Spring框架上。通常，我们实例化一个对象时，都是使用类的构造方法来new一个对象，这个过程是由我们自己来控制的，而控制反转就把new对象的工交给了Spring容器。</p>
 <p><strong>IoC的主要实现方式有两种：</strong>依赖查找、依赖注入。依赖注入是一种更可取的方式。</p>
 <p><strong>依赖查找和依赖注入的区别：</strong></p>
@@ -491,14 +586,724 @@
 </ol>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>微服务架构</category>
-        <category>SpringBoot</category>
-      </categories>
-      <tags>
-        <tag>SpringBoot</tag>
-        <tag>微服务架构</tag>
-      </tags>
-  </entry>
-</search>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+            <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" rel="tag"># 微服务架构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/27/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-1-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5/" rel="next" title="微服务架构-1-基础概念">
+                <i class="fa fa-chevron-left"></i> 微服务架构-1-基础概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/saritocat.png"
+                alt="张鸣" />
+            
+              <p class="site-author-name" itemprop="name">张鸣</p>
+              <p class="site-description motion-element" itemprop="description">No cross, no crown</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot的前世今生"><span class="nav-text">Spring Boot的前世今生</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Framework"><span class="nav-text">Spring Framework</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用Spring-MVC创建一个web项目"><span class="nav-text">用Spring MVC创建一个web项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是Spring-Boot"><span class="nav-text">什么是Spring Boot</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建一个Spring-Boot的web项目"><span class="nav-text">创建一个Spring Boot的web项目</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot的特性"><span class="nav-text">Spring Boot的特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring注解驱动的发展过程"><span class="nav-text">Spring注解驱动的发展过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring常用注解"><span class="nav-text">Spring常用注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-1-x"><span class="nav-text">Spring 1.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-2-x"><span class="nav-text">Spring 2.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-3-x"><span class="nav-text">Spring 3.x</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Configuration"><span class="nav-text">@Configuration</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Import"><span class="nav-text">@Import</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Enable"><span class="nav-text">@Enable</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张鸣</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+<!-- 添加站点访问计数 -->
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
