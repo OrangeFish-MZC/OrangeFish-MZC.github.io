@@ -412,6 +412,14 @@
 <p>@Resource默认按照名称进行装配（该注解属于J2EE），名称可以通过name属性来指定。如果没有指定name属性，当注解写在字段上时，默认取字段名进行装配；如果注解写在setter方法上，默认取属性名进行装配。当找不到与名称相匹配的Bean时，会按照类型进行装配。但是，name属性一旦指定，就只会按照名称进行装配。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Resource</span>(name = <span class="string">"adminService"</span>)</span><br><span class="line"><span class="keyword">private</span> AdminService adminService;</span><br></pre></td></tr></table></figure>
 </blockquote>
+<blockquote>
+<p>@Bean与@Component(@Controller、@Service、@Repository)等的区别？</p>
+<p>@Component用于自动检测和使用类路径扫描自动配置bean。注释类和bean之间存在隐式的一对一映射（即每个类一个bean）</p>
+<p>@Bean用于显示声明单个bean，而不是让Spring像上面那样自动执行它。它将bean的声明与类定义分离，并允许您精确的创建和配置bean。常和@Configuration注解搭配使用</p>
+<p>以上两种注解均可使用@Autowired或者@Resource注解注入</p>
+<p>为什么有了@Component，还需要@Bean呢？</p>
+<p>如果想将第三方的类变成组件，但又没有源代码，也就没办法使用@Component进行自动配置，这种时候使用@Bean就比较合适了。不过同样的也可以通过xml方式来定义。另外@Bean注解的方法返回值是对象，可以在方法中为对象设置属性。例如Spring的Starter自动装配机制，就是通过@Bean注解来定义bean。可以搭配@ConditionalOnMissingBean注解和@ConditionalOnMissingClass注解等条件注解来使用，如果本项目中没有定义该类型的bean则会失效，避免在某个项目中定义或者通过config注解来声明大量重复的bean。</p>
+</blockquote>
 <h4 id="Spring-1-x"><a href="#Spring-1-x" class="headerlink" title="Spring 1.x"></a>Spring 1.x</h4><p>实现IoC功能</p>
 <ul>
 <li><p>applicationContext.xml</p>
@@ -492,6 +500,19 @@
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>微服务架构</category>
+        <category>SpringBoot</category>
+      </categories>
+      <tags>
+        <tag>SpringBoot</tag>
+        <tag>微服务架构</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>微服务架构-3-Spring Boot的核心特性及设计思想</title>
+    <url>/2021/04/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-3-Spring-Boot%E7%9A%84%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%8F%8A%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/</url>
+    <content><![CDATA[]]></content>
       <categories>
         <category>微服务架构</category>
         <category>SpringBoot</category>
