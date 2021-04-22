@@ -93,7 +93,7 @@
 <meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/idea%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAspringboot-web%E9%A1%B9%E7%9B%AE.png">
 <meta property="og:image" content="http://yoursite.com/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/%E9%9B%86%E6%88%90mybatis%E4%BE%9D%E8%B5%96.png">
 <meta property="article:published_time" content="2021-01-28T10:27:05.000Z">
-<meta property="article:modified_time" content="2021-04-20T07:52:40.553Z">
+<meta property="article:modified_time" content="2021-04-22T06:51:01.402Z">
 <meta property="article:author" content="张鸣">
 <meta property="article:tag" content="SpringBoot">
 <meta property="article:tag" content="微服务架构">
@@ -400,7 +400,7 @@
       
 
       
-        <h2 id="Spring-Boot的前世今生"><a href="#Spring-Boot的前世今生" class="headerlink" title="Spring Boot的前世今生"></a>Spring Boot的前世今生</h2><h4 id="Spring-Framework"><a href="#Spring-Framework" class="headerlink" title="Spring Framework"></a>Spring Framework</h4><ol>
+        <h1 id="Spring-Boot的前世今生"><a href="#Spring-Boot的前世今生" class="headerlink" title="Spring Boot的前世今生"></a>Spring Boot的前世今生</h1><h2 id="Spring-Framework"><a href="#Spring-Framework" class="headerlink" title="Spring Framework"></a>Spring Framework</h2><ol>
 <li><p><strong>IOC（Inversion of Control）：</strong>控制反转，简单点说，就是创建对象的控制权，被反转到了Spring框架上。通常，我们实例化一个对象时，都是使用类的构造方法来new一个对象，这个过程是由我们自己来控制的，而控制反转就把new对象的工交给了Spring容器。</p>
 <p><strong>IoC的主要实现方式有两种：</strong>依赖查找、依赖注入。依赖注入是一种更可取的方式。</p>
 <p><strong>依赖查找和依赖注入的区别：</strong></p>
@@ -425,7 +425,7 @@
 <p><strong>织入（Weaving）：</strong>将切面应用到目标对象从而创建一个新的代理对象的过程。这个过程可以发生在编译时、类加载时、运行时。Spring是在运行时完成织入，运行时织入通过Java语言的反射机制与动态代理机制来动态实现。</p>
 </li>
 </ol>
-<h4 id="用Spring-MVC创建一个web项目"><a href="#用Spring-MVC创建一个web项目" class="headerlink" title="用Spring MVC创建一个web项目"></a>用Spring MVC创建一个web项目</h4><ul>
+<h2 id="用Spring-MVC创建一个web项目"><a href="#用Spring-MVC创建一个web项目" class="headerlink" title="用Spring MVC创建一个web项目"></a>用Spring MVC创建一个web项目</h2><ul>
 <li><p>创建一个项目结构（maven/gradle）</p>
 <p><img src="/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/idea%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%9F%BA%E4%BA%8Emaven%E7%9A%84web%E9%A1%B9%E7%9B%AE.png" alt="image-20210325180818597"></p>
 </li>
@@ -445,10 +445,10 @@
 <p><img src="/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/Tomcat.png" alt></p>
 </li>
 </ul>
-<h4 id="什么是Spring-Boot"><a href="#什么是Spring-Boot" class="headerlink" title="什么是Spring Boot"></a>什么是Spring Boot</h4><blockquote>
+<h2 id="什么是Spring-Boot"><a href="#什么是Spring-Boot" class="headerlink" title="什么是Spring Boot"></a>什么是Spring Boot</h2><blockquote>
 <p>约定优于配置理念下的一个产物</p>
 </blockquote>
-<h4 id="创建一个Spring-Boot的web项目"><a href="#创建一个Spring-Boot的web项目" class="headerlink" title="创建一个Spring Boot的web项目"></a>创建一个Spring Boot的web项目</h4><ul>
+<h2 id="创建一个Spring-Boot的web项目"><a href="#创建一个Spring-Boot的web项目" class="headerlink" title="创建一个Spring Boot的web项目"></a>创建一个Spring Boot的web项目</h2><ul>
 <li><p>idea创建一个Spring Boot的web项目</p>
 <p><img src="/2021/01/28/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-2-SpringBoot/idea%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAspringboot-web%E9%A1%B9%E7%9B%AE.png" alt></p>
 </li>
@@ -489,13 +489,13 @@
 
 </li>
 </ul>
-<h2 id="Spring-Boot的特性"><a href="#Spring-Boot的特性" class="headerlink" title="Spring Boot的特性"></a>Spring Boot的特性</h2><ul>
+<h1 id="Spring-Boot的特性"><a href="#Spring-Boot的特性" class="headerlink" title="Spring Boot的特性"></a>Spring Boot的特性</h1><ul>
 <li>EnableAutoConfiguration 自动装配</li>
 <li>Starter启动依赖</li>
 <li>Actuator监控</li>
 <li>Spring Boot CLI（命令行操作的功能，groovy脚本）</li>
 </ul>
-<h2 id="Spring注解驱动的发展过程"><a href="#Spring注解驱动的发展过程" class="headerlink" title="Spring注解驱动的发展过程"></a>Spring注解驱动的发展过程</h2><h4 id="Spring常用注解"><a href="#Spring常用注解" class="headerlink" title="Spring常用注解"></a>Spring常用注解</h4><ol>
+<h1 id="Spring注解驱动的发展过程"><a href="#Spring注解驱动的发展过程" class="headerlink" title="Spring注解驱动的发展过程"></a>Spring注解驱动的发展过程</h1><h2 id="Spring常用注解"><a href="#Spring常用注解" class="headerlink" title="Spring常用注解"></a>Spring常用注解</h2><ol>
 <li><strong>@Controller:</strong>用于标注控制器层组件</li>
 <li><strong>@Service:</strong>用于标注业务层组件</li>
 <li><strong>@Component:</strong>用于标注这是一个受Spring管理的组件，组件引用名称是类名，第一个字母小写。可以使用@Component(“beanID”)指定组件名称</li>
@@ -524,7 +524,7 @@
 <p>为什么有了@Component，还需要@Bean呢？</p>
 <p>如果想将第三方的类变成组件，但又没有源代码，也就没办法使用@Component进行自动配置，这种时候使用@Bean就比较合适了。不过同样的也可以通过xml方式来定义。另外@Bean注解的方法返回值是对象，可以在方法中为对象设置属性。例如Spring的Starter自动装配机制，就是通过@Bean注解来定义bean。可以搭配@ConditionalOnMissingBean注解和@ConditionalOnMissingClass注解等条件注解来使用，如果本项目中没有定义该类型的bean则会失效，避免在某个项目中定义或者通过config注解来声明大量重复的bean。</p>
 </blockquote>
-<h4 id="Spring-1-x"><a href="#Spring-1-x" class="headerlink" title="Spring 1.x"></a>Spring 1.x</h4><p>实现IoC功能</p>
+<h2 id="Spring-1-x"><a href="#Spring-1-x" class="headerlink" title="Spring 1.x"></a>Spring 1.x</h2><p>实现IoC功能</p>
 <ul>
 <li><p>applicationContext.xml</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:mvc</span>=<span class="string">"http://www.springframework.org/schema/mvc"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xmlns:aop</span>=<span class="string">"http://www.springframework.org/schema/aop"</span></span></span><br><span class="line"><span class="tag">       <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">name</span>=<span class="string">"demoService01"</span> <span class="attr">class</span>=<span class="string">"com.study.annotation.demo1.DemoService01"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -534,7 +534,7 @@
 
 </li>
 </ul>
-<h4 id="Spring-2-x"><a href="#Spring-2-x" class="headerlink" title="Spring 2.x"></a>Spring 2.x</h4><p>通过注解装配bean，@Required/@Repository/@Aspect。Spring 2.5增加@Component/@Service/@Controller/@RequestMappping</p>
+<h2 id="Spring-2-x"><a href="#Spring-2-x" class="headerlink" title="Spring 2.x"></a>Spring 2.x</h2><p>通过注解装配bean，@Required/@Repository/@Aspect。Spring 2.5增加@Component/@Service/@Controller/@RequestMappping</p>
 <ul>
 <li><p>applicationContext.xml增加注解扫描</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--通过注解扫描，扫描路径下的注解--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"com.study.annotation.demo2"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
@@ -544,7 +544,7 @@
 
 </li>
 </ul>
-<h4 id="Spring-3-x"><a href="#Spring-3-x" class="headerlink" title="Spring 3.x"></a>Spring 3.x</h4><h6 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h6><p>去xml化，无需applicationContext.xml文件。核心目的是：把bean对象如何更加便捷的方式去加载到Spring IOC容器中</p>
+<h2 id="Spring-3-x"><a href="#Spring-3-x" class="headerlink" title="Spring 3.x"></a>Spring 3.x</h2><h3 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h3><p>去xml化，无需applicationContext.xml文件。核心目的是：把bean对象如何更加便捷的方式去加载到Spring IOC容器中</p>
 <ul>
 <li><p>SpringConfiguration.java</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ComponentScan</span>(<span class="string">"com.study.annotation.demo3"</span>) <span class="comment">// 相当于&lt;context:component-scan base-package="com.study.annotation.demo3" /&gt;，扫描@Service/@Repository/@Controller等注解，没有@ComponentScan，则无法扫描到这些注解导致注解失效</span></span><br><span class="line"><span class="meta">@Configuration</span> <span class="comment">// 相当于applicationContext.xml</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 此处通过<span class="doctag">@Bean</span>来创建对象，则无需在DemoService03上注解<span class="doctag">@Service</span>。</span></span><br><span class="line"><span class="comment">     * 若组件类上使用<span class="doctag">@Service</span>，则不需要<span class="doctag">@Bean</span>注解方法，只需在配置类上增加<span class="doctag">@ComponentScan</span>("com.study.annotation.demo3")</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span> <span class="comment">// 相当于&lt;bean name="" class="" /&gt;</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> DemoService03 <span class="title">demoService03</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DemoService03();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -564,7 +564,7 @@
 
 </li>
 </ul>
-<h6 id="Import"><a href="#Import" class="headerlink" title="@Import"></a>@Import</h6><ul>
+<h3 id="Import"><a href="#Import" class="headerlink" title="@Import"></a>@Import</h3><ul>
 <li><p>动态导入其他配置类</p>
 <p>ImportConfiguration.java</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Import</span>(SpringConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">ImportConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ImportService <span class="title">importService</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ImportService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -574,7 +574,7 @@
 
 </li>
 </ul>
-<h6 id="Enable"><a href="#Enable" class="headerlink" title="@Enable"></a>@Enable</h6><ul>
+<h3 id="Enable"><a href="#Enable" class="headerlink" title="@Enable"></a>@Enable</h3><ul>
 <li><p>模块驱动，把相关组件的bean自动装配到IOC容器中</p>
 <p>Spring3.x版本中，集成Redis或者mybatis：1、创建配置类 2、@Bean注解来声明一个bean</p>
 <p>例如：增加定时任务</p>
@@ -603,7 +603,7 @@
 </ol>
 </li>
 </ul>
-<h4 id="Spring-4-x"><a href="#Spring-4-x" class="headerlink" title="Spring 4.x"></a>Spring 4.x</h4><h6 id="Conditional"><a href="#Conditional" class="headerlink" title="@Conditional"></a>@Conditional</h6><p>@Conditional是Spring4新提供的注解，它的作用是按照一定的条件进行判断，满足条件给容器注册bean。</p>
+<h2 id="Spring-4-x"><a href="#Spring-4-x" class="headerlink" title="Spring 4.x"></a>Spring 4.x</h2><h3 id="Conditional"><a href="#Conditional" class="headerlink" title="@Conditional"></a>@Conditional</h3><p>@Conditional是Spring4新提供的注解，它的作用是按照一定的条件进行判断，满足条件给容器注册bean。</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">// 此注解可以标注在类和方法上</span><br><span class="line">@Target(&#123;ElementType.TYPE, ElementType.METHOD&#125;)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">public @interface Conditional &#123;</span><br><span class="line">    Class<span class="php"><span class="meta">&lt;?</span> extends Condition&gt;[] value();</span></span><br><span class="line"><span class="php">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>从代码中可以看到，需要传入一个Class数组，并且需要集成Condition接口</p>
@@ -632,8 +632,8 @@
 
 <p>@Conditional注解传入的是Class数组，存在多种条件类的情况下：都返回true时才注入，存在false则不注入</p>
 </blockquote>
-<h4 id="Spring-5-x"><a href="#Spring-5-x" class="headerlink" title="Spring 5.x"></a>Spring 5.x</h4><h6 id="Indexed"><a href="#Indexed" class="headerlink" title="@Indexed"></a>@Indexed</h6><p>它可以为Spring的模式注解添加索引，以提升应用启动性能。</p>
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>Spring的注解驱动的整个发展过程，目的就是是bean的装载变得更加简单</p>
+<h2 id="Spring-5-x"><a href="#Spring-5-x" class="headerlink" title="Spring 5.x"></a>Spring 5.x</h2><h3 id="Indexed"><a href="#Indexed" class="headerlink" title="@Indexed"></a>@Indexed</h3><p>它可以为Spring的模式注解添加索引，以提升应用启动性能。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Spring的注解驱动的整个发展过程，目的就是是bean的装载变得更加简单</p>
 
       
     </div>
@@ -759,7 +759,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -814,7 +814,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot的前世今生"><span class="nav-text">Spring Boot的前世今生</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Framework"><span class="nav-text">Spring Framework</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用Spring-MVC创建一个web项目"><span class="nav-text">用Spring MVC创建一个web项目</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是Spring-Boot"><span class="nav-text">什么是Spring Boot</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建一个Spring-Boot的web项目"><span class="nav-text">创建一个Spring Boot的web项目</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot的特性"><span class="nav-text">Spring Boot的特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring注解驱动的发展过程"><span class="nav-text">Spring注解驱动的发展过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring常用注解"><span class="nav-text">Spring常用注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-1-x"><span class="nav-text">Spring 1.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-2-x"><span class="nav-text">Spring 2.x</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-3-x"><span class="nav-text">Spring 3.x</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Configuration"><span class="nav-text">@Configuration</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Import"><span class="nav-text">@Import</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Enable"><span class="nav-text">@Enable</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-4-x"><span class="nav-text">Spring 4.x</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Conditional"><span class="nav-text">@Conditional</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-5-x"><span class="nav-text">Spring 5.x</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Indexed"><span class="nav-text">@Indexed</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-text">小结</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot的前世今生"><span class="nav-text">Spring Boot的前世今生</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Framework"><span class="nav-text">Spring Framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用Spring-MVC创建一个web项目"><span class="nav-text">用Spring MVC创建一个web项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Spring-Boot"><span class="nav-text">什么是Spring Boot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建一个Spring-Boot的web项目"><span class="nav-text">创建一个Spring Boot的web项目</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot的特性"><span class="nav-text">Spring Boot的特性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring注解驱动的发展过程"><span class="nav-text">Spring注解驱动的发展过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring常用注解"><span class="nav-text">Spring常用注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-1-x"><span class="nav-text">Spring 1.x</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-2-x"><span class="nav-text">Spring 2.x</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-3-x"><span class="nav-text">Spring 3.x</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration"><span class="nav-text">@Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Import"><span class="nav-text">@Import</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enable"><span class="nav-text">@Enable</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-4-x"><span class="nav-text">Spring 4.x</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Conditional"><span class="nav-text">@Conditional</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-5-x"><span class="nav-text">Spring 5.x</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Indexed"><span class="nav-text">@Indexed</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-text">小结</span></a></li></ol></li></ol></div>
             
 
           </div>
