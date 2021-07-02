@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="张鸣的博客">
 <meta property="og:description" content="手写一个Spring Boot Starter组件官方的starter组件一般都命名为spring-boot-starter-xxx，如spring-boot-starter-redis。第三方starter组件一般命名为xxx-spring-boot-starter。对于自动装配的配置类命名方式一般xxxAutoConfiguration.java。 创建starter项目基于maven-qui">
 <meta property="article:published_time" content="2021-04-20T10:01:35.000Z">
-<meta property="article:modified_time" content="2021-04-22T06:53:11.260Z">
+<meta property="article:modified_time" content="2021-06-24T12:23:30.095Z">
 <meta property="article:author" content="张鸣">
 <meta property="article:tag" content="微服务架构">
 <meta property="article:tag" content="SpringBoot">
@@ -502,7 +502,7 @@
 <li><p>通过添加@Configuration实现。只要该类被Spring Boot扫描到，就可以在应用上下文中访问到该属性类bean。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> HelloProperties <span class="title">helloProperties</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HelloProperties();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>通过天机@EnableConfigurationProperties注解让SpringBoot知道，在该注解中其实是用了<code>@Import(EnableConfigurationPropertiesImportSelector.class)</code> 实现</p>
+<li><p>通过添加@EnableConfigurationProperties注解让SpringBoot知道，在该注解中其实是用了<code>@Import(EnableConfigurationPropertiesImportSelector.class)</code> 实现</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@EnableConfigurationProperties</span>(HelloProperties<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">Configuration</span></span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">HelloAutoConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> HelloProperties helloProperties;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> HelloService <span class="title">helloService</span><span class="params">()</span></span>&#123;</span><br><span class="line">        HelloService helloService = <span class="keyword">new</span> HelloService();</span><br><span class="line">        helloService.setHelloProperties(helloProperties);</span><br><span class="line">        <span class="keyword">return</span> helloService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -632,7 +632,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -643,7 +643,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -654,7 +654,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -87,7 +87,7 @@
 <meta property="og:description" content="Spring动态Bean的装载ImportSelector实现bean的动态装载 自定义RedisConfiguration CustRedisTemplate.java public class CustRedisTemplate &amp;#123;&amp;#125;  RedisConfiguration.java @Configurationpublic class RedisConfiguration">
 <meta property="og:image" content="http://yoursite.com/2021/04/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-3-Spring-Boot%E7%9A%84%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7%E5%8F%8A%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3/spring.factories.png">
 <meta property="article:published_time" content="2021-04-12T08:24:32.000Z">
-<meta property="article:modified_time" content="2021-04-22T06:52:07.089Z">
+<meta property="article:modified_time" content="2021-05-24T03:59:52.629Z">
 <meta property="article:author" content="张鸣">
 <meta property="article:tag" content="微服务架构">
 <meta property="article:tag" content="SpringBoot">
@@ -413,7 +413,7 @@
 <p>CustImportSelector.java</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ImportSelector实现动态批量的配置类扫描</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustImportSelector</span> <span class="keyword">implements</span> <span class="title">ImportSelector</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String[] selectImports(AnnotationMetadata annotationMetadata) &#123;</span><br><span class="line">        <span class="comment">// 动态导入bean，告诉了Spring两个配置类在哪里</span></span><br><span class="line">        <span class="comment">// 传入需要导入的配置类或这bean，即数组元素可以是CustRedisTemplate.class.getName(), CustSqlSessionFactory.class.getName()</span></span><br><span class="line">        <span class="comment">// System.out.println(RedisConfiguration.class.getName());//com.study.demo02_RedisConfiguration.RedisConfiguration</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;RedisConfiguration<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>(), <span class="title">MybatisConfiguration</span>.<span class="title">class</span>.<span class="title">getName</span>()&#125;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>自定义Enable注解，用于导入ImportSelector配置类</p>
+<li><p>自定义Enable注解，用于导入ImportSelector配置类。在开源原件中大部分@Import是伴随着一个@EnableXXX使用的</p>
 <p>EnableSelectorConfiguration.java</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义注解用于启用ImportSelector配置类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Import</span>(CustImportSelector<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableSelectorConfiguration</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
@@ -694,7 +694,7 @@
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -705,7 +705,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -716,7 +716,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
