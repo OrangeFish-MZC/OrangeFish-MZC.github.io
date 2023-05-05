@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="消息中间件,Kafka," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="apache kafka一、简介kafka是最初由Linkedin公司开发，使用Scala语言编写，Kafka是一个分布式、分区的、多副本的、多订阅者的日志系统(分布式MQ系统)，可以用于web&#x2F;nginx日志，搜索日志，监控日志，访问日志等等。kafka目前支持多种客户端语言：java，python，c++，php等等。 二、总体架构 kafka名词解释和工作方式：  Broker ：一台kaf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息中间件-2-kafka">
+<meta property="og:url" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/index.html">
+<meta property="og:site_name" content="张鸣的博客">
+<meta property="og:description" content="apache kafka一、简介kafka是最初由Linkedin公司开发，使用Scala语言编写，Kafka是一个分布式、分区的、多副本的、多订阅者的日志系统(分布式MQ系统)，可以用于web&#x2F;nginx日志，搜索日志，监控日志，访问日志等等。kafka目前支持多种客户端语言：java，python，c++，php等等。 二、总体架构 kafka名词解释和工作方式：  Broker ：一台kaf">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220413183641716.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/clip_image001.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418172746373.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418172842985.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418172929723.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418225156907.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418225256302.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418225746332.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418234049129.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418234221467.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418234403717.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220419104738306.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220419104936169.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220419104953319.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420154417487.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420154639297.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420154715977.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155358841.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155425552.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155537150.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155745344.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155811743.png">
+<meta property="og:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220523235233229.png">
+<meta property="article:published_time" content="2022-04-12T15:06:45.000Z">
+<meta property="article:modified_time" content="2022-05-23T15:58:38.000Z">
+<meta property="article:author" content="张鸣">
+<meta property="article:tag" content="消息中间件">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220413183641716.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/04/12/消息中间件-2-kafka/"/>
+
+
+
+
+
+  <title>消息中间件-2-kafka | 张鸣的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张鸣的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hello World</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张鸣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/saritocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张鸣的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">消息中间件-2-kafka</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-12T23:06:45+08:00">
+                2022-04-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">消息中间件</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">Kafka</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+	  
+	    <span class="post-meta-divider">|</span>
+	    <span id="busuanzi_value_page_pv"></span>次阅读
+	  
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="apache-kafka"><a href="#apache-kafka" class="headerlink" title="apache kafka"></a>apache kafka</h1><h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>kafka是最初由Linkedin公司开发，使用Scala语言编写，Kafka是一个分布式、分区的、多副本的、多订阅者的日志系统(分布式MQ系统)，可以用于web/nginx日志，搜索日志，监控日志，访问日志等等。kafka目前支持多种客户端语言：java，python，c++，php等等。</p>
+<h2 id="二、总体架构"><a href="#二、总体架构" class="headerlink" title="二、总体架构"></a>二、总体架构</h2><p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220413183641716.png" alt="整体架构"></p>
+<p><strong>kafka名词解释和工作方式：</strong></p>
+<ul>
+<li>Broker ：一台kafka服务器就是一个broker。一个集群由多个broker组成。一个broker可以容纳多个topic。</li>
+<li>Topic ：可以理解为一个队列。</li>
+<li>Partition：为了实现扩展性，一个非常大的topic可以分布到多个broker（即服务器）上，一个topic可以分为多个partition，每个partition是一个有序的队列。partition中的每条消息都会被分配一个有序的id（offset）。kafka只保证按一个partition中的顺序将消息发给consumer，不保证一个topic的整体（多个partition间）的顺序。</li>
+<li>Producer ：消息生产者，就是向kafka broker发消息的客户端。</li>
+<li>Consumer ：消息消费者，向kafka broker取消息的客户端。</li>
+<li>Consumer Group （CG）：这是kafka用来实现一个topic消息的广播（发给所有的consumer）和单播（发给任意一个consumer）的手段。一个topic可以有多个CG。topic的消息会复制（不是真的复制，是概念上的）到所有的CG，但每个CG只会把消息发给该CG中的一个consumer。如果需要实现广播，只要每个consumer有一个独立的CG就可以了。要实现单播只要所有的consumer在同一个CG。用CG还可以将consumer进行自由的分组而不需要多次发送消息到不同的topic。</li>
+<li>Segment：partition物理上由多个segment组成。</li>
+<li>Offset：每个partition都由一系列有序的、不可变的消息组成，这些消息被连续的追加到partition中。partition中的每个消息都有一个连续的序列号叫做offset，用于partition唯一标识一条消息。</li>
+</ul>
+<p><strong>kafka特性：</strong></p>
+<ul>
+<li>通过O(1)的磁盘数据结构提供消息的持久化，这种结构对于即使数以TB的消息存储也能够保持长时间的稳定性能。</li>
+<li>高吞吐量：即使是非常普通的硬件kafka也可以支持每秒数十万的消息。</li>
+<li>支持同步和异步复制两种HA</li>
+<li>Consumer客户端pull，随机读，利用sendfile系统调用，zero-copy ，批量拉数据</li>
+<li>消费状态保存在客户端</li>
+<li>消息存储顺序写</li>
+<li>数据迁移、扩容对用户透明</li>
+<li>支持Hadoop并行数据加载。</li>
+<li>支持online和offline的场景。</li>
+<li>持久化：通过将数据持久化到硬盘以及replication防止数据丢失。</li>
+<li>scale out：无需停机即可扩展机器。</li>
+<li>定期删除机制，支持设定partitions的segment file保留时间。</li>
+</ul>
+<h2 id="三、安装"><a href="#三、安装" class="headerlink" title="三、安装"></a>三、安装</h2><h3 id="Zookeeper安装"><a href="#Zookeeper安装" class="headerlink" title="Zookeeper安装"></a>Zookeeper安装</h3><p>ZooKeeper是一个开源的分布式框架，提供了协调分布式应用的基本服务。它向外部应用暴露一组通用服务——分布式同步（Distributed Synchronization）、命名服务（Naming Service）、集群维护（Group Maintenance）等，简化分布式应用协调及其管理的难度。</p>
+<p>它是Google的Chubby一个开源的实现。它本身可以搭建成一个集群，这个zk集群用来对应用程序集群进行管理，监视应用程序集群中各个节点的状态，并根据应用程序集群中各个节点提交的反馈信息决定下一步的合理操作。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/clip_image001.jpg" alt="ZooKeeper Service"></p>
+<h4 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h4><p><a href="https://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz" target="_blank" rel="noopener">https://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz</a></p>
+<h4 id="安装并启动"><a href="#安装并启动" class="headerlink" title="安装并启动"></a>安装并启动</h4><p><strong>1.部署3个节点的Zookeeper伪分布式集群</strong></p>
+<p>在同一台服务器上，部署一个3个ZooKeeper节点组成的集群，这样的集群叫伪分布式集群，而如果集群中的3个节点分别部署在3个服务器上，那么这种集群就叫真正的分布式集群。</p>
+<p>这里，记录一下搭建一个3节点的伪分布式集群的过程，真正的分布式集群的搭建过程和伪分布式的过程类似，稍有不同，真正的分布式集群和伪分布式集群不一样的地方在于配置文件。</p>
+<p>1、clientport端口各个节点一样就行</p>
+<p>2、server.1=127.0.0.1:8880:7770中的ip要修改成对应的server的ip，后边的两个端口号不需要不同，各个节点都一样就可以了。其他地方伪分布式和真正分布式都是一样的。</p>
+<p><strong>2.解压Zookeeper安装包</strong></p>
+<p>首先在要安装集群的目录中解压zk。建立一个集群安装的目录，就叫zookeeper。其次，在这个目录的下面解压三份ZooKeeper，形成3个节点，每一个目录中的ZooKeeper就代表一个节点。</p>
+<p>这样就形成了如下的安装目录结构：</p>
+<p>/usr/zookeeper</p>
+<p>​     |—-zookeeper-1/</p>
+<p>​     |—-zookeeper-2/</p>
+<p>​     |—-zookeeper-3/</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf zookeeper-3.4.10.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>之后把解压的zk复制出三份来，分别命名为zookeeper-1，zookeeper-2，zookeeper-3，这三个目录中的zk就当成是集群中的3个节点。</p>
+<p><strong>3.为每个节点建立data目录、logs目录和myid文件</strong></p>
+<p>在3个节点目录中分别建立data目录、logs目录和myid文件。</p>
+<p>下面是zookeeper-1上的：</p>
+<p>新建目录data：mkdir data</p>
+<p>新建目录logs：mkdir logs</p>
+<p>新建文件myid：touch data/myid</p>
+<p>myid文件的内容是节点在集群中的编号，zookeeper-1节点的编号就写成1，后边的zookeeper-2的编号是2，zookeeper-3的编号就是3。</p>
+<p>按照同样的方法，依次在zookeeper-2和zookeeper-3上都建立以上目录和文件。</p>
+<p><strong>4.为每个节点创建配置文件</strong></p>
+<p>在zookeeper-1下新增配置文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd conf/</span><br><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+
+<p>配置文件zoo.cfg的内容如下：</p>
+<ul>
+<li>修改数据目录，分别是/usr/zookeeper/zookeeper-1/data，/usr/zookeeper/zookeeper-2/data，/usr/zookeeper/zookeeper-3/data</li>
+<li>修改log目录，分别是/usr/zookeeper/zookeeper-1/logs，/usr/zookeeper/zookeeper-2/logs，/usr/zookeeper/zookeeper-3/logs</li>
+<li>修改端口号，分别是2181，2182，2183</li>
+<li>修改集群服务地址：server.1=127.0.0.1:8880:7770 server.2=127.0.0.1:8881:7771 server.3=127.0.0.1:8882:7772</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># The number of milliseconds of each tick</span><br><span class="line"># zookeeper中使用的基本时间单位，毫秒值，比如可以设为1000，那么基本时间单位就是1000ms，也就是1s。</span><br><span class="line">tickTime&#x3D;2000</span><br><span class="line"># The number of ticks that the initial</span><br><span class="line"># synchronization phase can take</span><br><span class="line"># zookeeper集群中的包含多台server，其中一台为leader，集群中其余的server为follower，initLimit参数配置初始化连接时，</span><br><span class="line"># follower和leader之间的最长心跳时间。如果该参数设置为5，就说明时间限制为5倍tickTime，即5*1000&#x3D;5000ms&#x3D;5s。</span><br><span class="line">initLimit&#x3D;10</span><br><span class="line"># The number of ticks that can pass between</span><br><span class="line"># sending a request and getting an acknowledgement</span><br><span class="line"># 该参数配置leader和follower之间发送消息，请求和应答的最大时间长度。如果该参数设置为2，说明时间限制为2倍tickTime，即2000ms。</span><br><span class="line">syncLimit&#x3D;5</span><br><span class="line"># the directory where the snapshot is stored.</span><br><span class="line"># do not use &#x2F;tmp for storage, &#x2F;tmp here is just</span><br><span class="line"># example sakes.</span><br><span class="line"># 数据目录. 可以是任意目录，一般是节点安装目录下data目录。</span><br><span class="line">dataDir&#x3D;&#x2F;usr&#x2F;zookeeper&#x2F;zookeeper-1&#x2F;data</span><br><span class="line"># log目录, 同样可以是任意目录，一般是节点安装目录下的logs目录。如果没有设置该参数，将使用和dataDir相同的设置。</span><br><span class="line">dataLogDir&#x3D;&#x2F;usr&#x2F;zookeeper&#x2F;zookeeper-1&#x2F;logs</span><br><span class="line"># the port at which the clients will connect</span><br><span class="line"># 监听client连接的端口号。</span><br><span class="line">clientPort&#x3D;2181</span><br><span class="line"># the maximum number of client connections.</span><br><span class="line"># increase this if you need to handle more clients</span><br><span class="line">#maxClientCnxns&#x3D;60</span><br><span class="line">#</span><br><span class="line"># Be sure to read the maintenance section of the</span><br><span class="line"># administrator guide before turning on autopurge.</span><br><span class="line">#</span><br><span class="line"># https:&#x2F;&#x2F;zookeeper.apache.org&#x2F;doc&#x2F;current&#x2F;zookeeperAdmin.html#sc_maintenance</span><br><span class="line">#</span><br><span class="line"># The number of snapshots to retain in dataDir</span><br><span class="line">#autopurge.snapRetainCount&#x3D;3</span><br><span class="line"># Purge task interval in hours</span><br><span class="line"># Set to &quot;0&quot; to disable auto purge feature</span><br><span class="line">#autopurge.purgeInterval&#x3D;1</span><br><span class="line"></span><br><span class="line">## Metrics Providers</span><br><span class="line">#</span><br><span class="line"># https:&#x2F;&#x2F;prometheus.io Metrics Exporter</span><br><span class="line">#metricsProvider.className&#x3D;org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider</span><br><span class="line">#metricsProvider.httpHost&#x3D;0.0.0.0</span><br><span class="line">#metricsProvider.httpPort&#x3D;7000</span><br><span class="line">#metricsProvider.exportJvmInfo&#x3D;true</span><br><span class="line"></span><br><span class="line"># server.X&#x3D;A:B:C 其中X是一个数字, 表示这是第几号server，它的值和myid文件中的值对应。A是该server所在的IP地址。B是配置该server和集群中的leader交换消息所使用的端口。C配置选举leader时所使用的端口。由于配置的是伪集群模式，所以各个server的B, C参数必须不同，如果是真正分布式集群，那么B和C在各个节点上可以相同，因为即使相同由于节点处于不同的服务器也不会导致端口冲突。</span><br><span class="line">server.1&#x3D;127.0.0.1:8880:7770</span><br><span class="line">server.2&#x3D;127.0.0.1:8881:7771</span><br><span class="line">server.3&#x3D;127.0.0.1:8882:7772</span><br></pre></td></tr></table></figure>
+
+<p>用同样的方法，在zookeeper-2和zookeeper-3的相应位置创建zoo.cfg，文件内容复制zookeeper-1的zoo.cfg。只不过需要改动clientport、dataDir、dataLogDir三个配置项，zookeeper-2的clientport改为2182，zookeeper-3的clientport改为2183，而dataDir和dataLogDir都修改为相应的目录，就好了。</p>
+<p><strong>5.启动zk集群</strong></p>
+<p>进入zookeeper集群的第一个节点zookeeper0的bin目录下，启动服务：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd zookeeper-1</span><br><span class="line">./bin/zkServer.sh start</span><br><span class="line">cd zookeeper-2</span><br><span class="line">./bin/zkServer.sh start</span><br><span class="line">cd zookeeper-3</span><br><span class="line">./bin/zkServer.sh start</span><br></pre></td></tr></table></figure>
+
+<p>然后，按照同样的方法，依次启动zookeeper-1和zookeeper-2的服务。这样zookeeper集群的3个节点都启动起来了。</p>
+<p><strong>解决Zookeeper出现Error: Could not find or load main class org.apache.zookeeper.server.quorum.QuorumPeerMain问题</strong></p>
+<p>需要将解压的tar包重新打包一次</p>
+<p>下载maven并解压</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -zxvf apache-maven-3.6.3-bin.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>设置maven环境变量</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export MAVEN_HOME&#x3D;&#x2F;home&#x2F;lib&#x2F;apache-maven-3.6.3</span><br><span class="line">export PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin:$MAVEN_HOME&#x2F;bin</span><br></pre></td></tr></table></figure>
+
+<p>启用环境变量</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source /ect/profile</span><br></pre></td></tr></table></figure>
+
+<p>打包</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /usr/zookeeper/zookeeper-1</span><br><span class="line">mvn package -Dmaven.test.skip=true</span><br></pre></td></tr></table></figure>
+
+<p>注意在打包的时候可能会消耗几分钟，请一定耐心等待</p>
+<p>重启</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/zkServer.sh restart</span><br></pre></td></tr></table></figure>
+
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1. 启动ZK服务: ./bin/zkServer.sh start</span><br><span class="line">2. 查看ZK服务状态: ./bin/zkServer.sh status</span><br><span class="line">3. 停止ZK服务: ./bin/zkServer.sh stop</span><br><span class="line">4. 重启ZK服务: ./bin/zkServer.sh restart </span><br><span class="line">5. 连接服务器: ./zkCli.sh -server 127.0.0.1:2181</span><br></pre></td></tr></table></figure>
+
+<h3 id="kafka安装"><a href="#kafka安装" class="headerlink" title="kafka安装"></a>kafka安装</h3><h4 id="下载-1"><a href="#下载-1" class="headerlink" title="下载"></a>下载</h4><p><a href="https://www.apache.org/dyn/closer.cgi?path=/kafka/2.1.0/kafka_2.12-2.1.0.tgz" target="_blank" rel="noopener">https://www.apache.org/dyn/closer.cgi?path=/kafka/2.1.0/kafka_2.12-2.1.0.tgz</a></p>
+<h4 id="安装并启动-1"><a href="#安装并启动-1" class="headerlink" title="安装并启动"></a>安装并启动</h4><p>1、解压</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf kafka_2.13-3.1.0.tgz</span><br></pre></td></tr></table></figure>
+
+<p>2、复制server.properties多份</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp server.properties server-1.properties</span><br><span class="line">cp server.properties server-2.properties</span><br><span class="line">cp server.properties server-3.properties</span><br></pre></td></tr></table></figure>
+
+<p>3、修改配置文件：</p>
+<ul>
+<li>每个配置文件修改不同的broker.id，分别是broker.id=1，broker.id=2，broker.id=3</li>
+<li>设置日志目录，分别是kafka-logs-1，kafka-logs-2，kafka-logs-3</li>
+<li>设置服务监听地址，分别是listeners=PLAINTEXT://:9093，listeners=PLAINTEXT://:9094，listeners=PLAINTEXT://:9095</li>
+<li>设置zookeeper集群连接地址，localhost:2181,localhost:2182,localhost:2183</li>
+</ul>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Licensed to the Apache Software Foundation (ASF) under one or more</span></span><br><span class="line"><span class="comment"># contributor license agreements.  See the NOTICE file distributed with</span></span><br><span class="line"><span class="comment"># this work for additional information regarding copyright ownership.</span></span><br><span class="line"><span class="comment"># The ASF licenses this file to You under the Apache License, Version 2.0</span></span><br><span class="line"><span class="comment"># (the "License"); you may not use this file except in compliance with</span></span><br><span class="line"><span class="comment"># the License.  You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#    http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"># distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"># See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"># limitations under the License.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># see kafka.server.KafkaConfig for additional details and defaults</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Server Basics #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The id of the broker. This must be set to a unique integer for each broker.</span></span><br><span class="line"><span class="comment"># 配置broker ID，集群中每个节点的名称，这一名称是唯一且永久的</span></span><br><span class="line"><span class="meta">broker.id</span>=<span class="string">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Socket Server Settings #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The address the socket server listens on. It will get the value returned from</span></span><br><span class="line"><span class="comment"># java.net.InetAddress.getCanonicalHostName() if not configured.</span></span><br><span class="line"><span class="comment">#   FORMAT:</span></span><br><span class="line"><span class="comment">#     listeners = listener_name://host_name:port</span></span><br><span class="line"><span class="comment">#   EXAMPLE:</span></span><br><span class="line"><span class="comment">#     listeners = PLAINTEXT://your.host.name:9092</span></span><br><span class="line"><span class="attr">listeners</span>=<span class="string">PLAINTEXT://192.168.100.201:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Hostname and port the broker will advertise to producers and consumers. If not set,</span></span><br><span class="line"><span class="comment"># it uses the value for "listeners" if configured.  Otherwise, it will use the value</span></span><br><span class="line"><span class="comment"># returned from java.net.InetAddress.getCanonicalHostName().</span></span><br><span class="line"><span class="comment">#advertised.listeners=PLAINTEXT://your.host.name:9092</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details</span></span><br><span class="line"><span class="comment">#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The number of threads that the server uses for receiving requests from the network and sending responses to the network</span></span><br><span class="line"><span class="meta">num.network.threads</span>=<span class="string">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The number of threads that the server uses for processing requests, which may include disk I/O</span></span><br><span class="line"><span class="meta">num.io.threads</span>=<span class="string">8</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The send buffer (SO_SNDBUF) used by the socket server</span></span><br><span class="line"><span class="meta">socket.send.buffer.bytes</span>=<span class="string">102400</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The receive buffer (SO_RCVBUF) used by the socket server</span></span><br><span class="line"><span class="meta">socket.receive.buffer.bytes</span>=<span class="string">102400</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The maximum size of a request that the socket server will accept (protection against OOM)</span></span><br><span class="line"><span class="meta">socket.request.max.bytes</span>=<span class="string">104857600</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Log Basics #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A comma separated list of directories under which to store log files</span></span><br><span class="line"><span class="comment"># 配置日志目录</span></span><br><span class="line"><span class="meta">log.dirs</span>=<span class="string">./../kafka-logs-1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The default number of log partitions per topic. More partitions allow greater</span></span><br><span class="line"><span class="comment"># parallelism for consumption, but this will also result in more files across</span></span><br><span class="line"><span class="comment"># the brokers.</span></span><br><span class="line"><span class="meta">num.partitions</span>=<span class="string">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.</span></span><br><span class="line"><span class="comment"># This value is recommended to be increased for installations with data dirs located in RAID array.</span></span><br><span class="line"><span class="meta">num.recovery.threads.per.data.dir</span>=<span class="string">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Internal Topic Settings  #############################</span></span><br><span class="line"><span class="comment"># The replication factor for the group metadata internal topics "__consumer_offsets" and "__transaction_state"</span></span><br><span class="line"><span class="comment"># For anything other than development testing, a value greater than 1 is recommended to ensure availability such as 3.</span></span><br><span class="line"><span class="meta">offsets.topic.replication.factor</span>=<span class="string">1</span></span><br><span class="line"><span class="meta">transaction.state.log.replication.factor</span>=<span class="string">1</span></span><br><span class="line"><span class="meta">transaction.state.log.min.isr</span>=<span class="string">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Log Flush Policy #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Messages are immediately written to the filesystem but by default we only fsync() to sync</span></span><br><span class="line"><span class="comment"># the OS cache lazily. The following configurations control the flush of data to disk.</span></span><br><span class="line"><span class="comment"># There are a few important trade-offs here:</span></span><br><span class="line"><span class="comment">#    1. Durability: Unflushed data may be lost if you are not using replication.</span></span><br><span class="line"><span class="comment">#    2. Latency: Very large flush intervals may lead to latency spikes when the flush does occur as there will be a lot of data to flush.</span></span><br><span class="line"><span class="comment">#    3. Throughput: The flush is generally the most expensive operation, and a small flush interval may lead to excessive seeks.</span></span><br><span class="line"><span class="comment"># The settings below allow one to configure the flush policy to flush data after a period of time or</span></span><br><span class="line"><span class="comment"># every N messages (or both). This can be done globally and overridden on a per-topic basis.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The number of messages to accept before forcing a flush of data to disk</span></span><br><span class="line"><span class="comment">#log.flush.interval.messages=10000</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The maximum amount of time a message can sit in a log before we force a flush</span></span><br><span class="line"><span class="comment">#log.flush.interval.ms=1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Log Retention Policy #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The following configurations control the disposal of log segments. The policy can</span></span><br><span class="line"><span class="comment"># be set to delete segments after a period of time, or after a given size has accumulated.</span></span><br><span class="line"><span class="comment"># A segment will be deleted whenever *either* of these criteria are met. Deletion always happens</span></span><br><span class="line"><span class="comment"># from the end of the log.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The minimum age of a log file to be eligible for deletion due to age</span></span><br><span class="line"><span class="meta">log.retention.hours</span>=<span class="string">168</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A size-based retention policy for logs. Segments are pruned from the log unless the remaining</span></span><br><span class="line"><span class="comment"># segments drop below log.retention.bytes. Functions independently of log.retention.hours.</span></span><br><span class="line"><span class="comment">#log.retention.bytes=1073741824</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The maximum size of a log segment file. When this size is reached a new log segment will be created.</span></span><br><span class="line"><span class="meta">log.segment.bytes</span>=<span class="string">1073741824</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The interval at which log segments are checked to see if they can be deleted according</span></span><br><span class="line"><span class="comment"># to the retention policies</span></span><br><span class="line"><span class="meta">log.retention.check.interval.ms</span>=<span class="string">300000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Zookeeper #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Zookeeper connection string (see zookeeper docs for details).</span></span><br><span class="line"><span class="comment"># This is a comma separated host:port pairs, each corresponding to a zk</span></span><br><span class="line"><span class="comment"># server. e.g. "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002".</span></span><br><span class="line"><span class="comment"># You can also append an optional chroot string to the urls to specify the</span></span><br><span class="line"><span class="comment"># root directory for all kafka znodes.</span></span><br><span class="line"><span class="comment"># 配置zookeeper集群地址</span></span><br><span class="line"><span class="meta">zookeeper.connect</span>=<span class="string">localhost:2181,localhost:2182,localhost:2183</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Timeout in ms for connecting to zookeeper</span></span><br><span class="line"><span class="meta">zookeeper.connection.timeout.ms</span>=<span class="string">18000</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">############################# Group Coordinator Settings #############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The following configuration specifies the time, in milliseconds, that the GroupCoordinator will delay the initial consumer rebalance.</span></span><br><span class="line"><span class="comment"># The rebalance will be further delayed by the value of group.initial.rebalance.delay.ms as new members join the group, up to a maximum of max.poll.interval.ms.</span></span><br><span class="line"><span class="comment"># The default value for this is 3 seconds.</span></span><br><span class="line"><span class="comment"># We override this to 0 here as it makes for a better out-of-the-box experience for development and testing.</span></span><br><span class="line"><span class="comment"># However, in production environments the default value of 3 seconds is more suitable as this will help to avoid unnecessary, and potentially expensive, rebalances during application startup.</span></span><br><span class="line"><span class="meta">group.initial.rebalance.delay.ms</span>=<span class="string">0</span></span><br></pre></td></tr></table></figure>
+
+<p>4、启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-server-start.sh -daemon config/server-1.properties</span><br><span class="line">./bin/kafka-server-start.sh -daemon config/server-2.properties</span><br><span class="line">./bin/kafka-server-start.sh -daemon config/server-3.properties</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>kafk启动失败解决方案：删除配置的log目录并重新启动</p>
+</blockquote>
+<h4 id="创建topic"><a href="#创建topic" class="headerlink" title="创建topic"></a>创建topic</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建一个topic，分区数为1，副本数为1。注意，副本数不可超过集群节点数量，否则会报错</span></span><br><span class="line">./bin/kafka-topics.sh --create --topic test --bootstrap-server 192.168.100.201:9093 --partitions 1 --replication-factor 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看创建的topic列表</span></span><br><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.100.201:9093 --list</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看topic详细信息</span></span><br><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.100.201:9093 --describe</span><br></pre></td></tr></table></figure>
+
+<p>通过查看topic详细信息：</p>
+<ul>
+<li>leader是负责给定分区所有读写操作的节点。每个节点都是随机选择的部分分区的领导者。</li>
+<li>replicas是复制分区日志的节点列表，不管这些节点是leader还是仅仅活着。</li>
+<li>isr是一组“同步”replicas，是replicas列表的子集，它活着并被指到leader，即存活 的可以参与选举的节点。</li>
+</ul>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418172746373.png" alt="partitions=1,replication-factor=1"></p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418172842985.png" alt="partitions=3,replication-factor=1"></p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418172929723.png" alt="partitions=3,replication-factor=3"></p>
+<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h4><p>Kafka自带一个命令行客户端，它从文件或标准输入中获取输入，并将其作为message（消息）发送到Kafka集群。默认情况下，每行将作为单独的message发送。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启一个命令行客户端，输入消息并发送</span></span><br><span class="line">./bin/kafka-console-producer.sh --bootstrap-server 192.168.100.201:9093 --topic test</span><br></pre></td></tr></table></figure>
+
+<h4 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启一个命令行客户端，接收消息并转换为标准输出，其中--from-beginning表示从头读取历史消息</span></span><br><span class="line">./bin/kafka-console-producer.sh --bootstrap-server 192.168.100.201:9093 --topic test --from-beginning</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、Kafka文件存储机制"><a href="#四、Kafka文件存储机制" class="headerlink" title="四、Kafka文件存储机制"></a>四、Kafka文件存储机制</h2><h3 id="1、topic中partition存储分布"><a href="#1、topic中partition存储分布" class="headerlink" title="1、topic中partition存储分布"></a>1、topic中partition存储分布</h3><p>假设实验环境中Kafka集群只有一个broker，kafka/kafka-logs为数据文件存储根目录，在Kafka broker中server.properties文件配置(参数log.dirs=kafka/kafka-logs)，例如创建2个topic名称分别为report_push、launch_info，partitions数量都为partitions=4 存储路径和目录规则为： kafka/kafka-logs</p>
+<p>|–report_push-0<br>|–report_push-1<br>|–report_push-2<br>|–report_push-3<br>|–launch_info-0<br>|–launch_info-1<br>|–launch_info-2<br>|–launch_info-3</p>
+<p>在Kafka文件存储中，同一个topic下有多个不同partition，每个partition为一个目录，partiton命名规则为topic名称+有序序号，第一个partiton序号从0开始，序号最大值为partitions数量减1。 如果是多broker分布情况会分散到不同的broker上，具体的分配规则和分配算法请看下面示例。</p>
+<p>Kafka集群partition replication默认自动分配，以一个Kafka集群中4个Broker举例，创建1个topic包含4个Partition，2 Replication；数据Producer流动如图所示：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418225156907.png" alt="kafka集群partitions分配-1"></p>
+<p>当集群中新增2节点，Partition增加到6个时分布情况如下：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418225256302.png" alt="kafka集群partitions分配-2"></p>
+<p><strong>副本分配逻辑规则：</strong></p>
+<ul>
+<li>在Kafka集群中，每个Broker都有均等分配Partition的Leader机会。</li>
+<li>上述图Broker Partition中，箭头指向为副本，以Partition-0为例:broker1中parition-0为Leader，Broker2中Partition-0为副本。</li>
+<li>上述图中每个Broker(按照BrokerId有序)依次分配主Partition，下一个Broker为副本，如此循环迭代分配，多副本都遵循此规则。</li>
+</ul>
+<p><strong>副本分配算法：</strong></p>
+<ul>
+<li>将所有N Broker和待分配的i个Partition排序.</li>
+<li>将第i个Partition分配到第(i mod n)个Broker上.</li>
+<li>将第i个Partition的第j个副本分配到第((i + j) mod n)个Broker上.</li>
+</ul>
+<h3 id="2、partiton中文件存储方式"><a href="#2、partiton中文件存储方式" class="headerlink" title="2、partiton中文件存储方式"></a>2、partiton中文件存储方式</h3><p>下面示意图形象说明了partition中文件存储方式：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418225746332.png" alt="partition文件存储方式"></p>
+<ul>
+<li>每个partion(目录)相当于一个巨型文件被平均分配到多个大小相等segment(段)数据文件中。但每个段segment file消息数量不一定相等，这种特性方便old segment file快速被删除。</li>
+<li>每个partiton只需要支持顺序读写就行了，segment文件生命周期由服务端配置参数决定。</li>
+</ul>
+<p>这样做的好处就是能快速删除无用文件，有效提高磁盘利用率。</p>
+<h3 id="3、partiton中segment文件存储结构"><a href="#3、partiton中segment文件存储结构" class="headerlink" title="3、partiton中segment文件存储结构"></a>3、partiton中segment文件存储结构</h3><p>上面我们了解到Kafka文件系统partition存储方式，接下来深入分析partion中segment file组成和物理结构。</p>
+<ul>
+<li>segment file组成：由2大部分组成，分别为index file和data file，此2个文件一一对应，成对出现，后缀”.index”和“.log”分别表示为segment索引文件、数据文件.</li>
+<li>segment文件命名规则：partion全局的第一个segment从0开始，后续每个segment文件名为上一个segment文件最后一条消息的offset值。数值最大为64位long大小，19位数字字符长度，没有数字用0填充。</li>
+</ul>
+<p>下面文件列表是在Kafka broker上做的一个实验，创建一个topic包含1 partition，设置每个segment大小为500MB，并启动producer向Kafka broker写入大量数据，如图所示segment文件列表形象说明了上述2个规则：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418234049129.png" alt="segment文件列表"></p>
+<p>以上述图中一对segment file文件为例，说明segment中index&lt;—-&gt;data file对应关系物理结构如下：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418234221467.png" alt="index与data关系"></p>
+<p>上图中索引文件存储大量元数据，数据文件存储大量消息，索引文件中元数据指向对应数据文件中message的物理偏移地址。 其中以索引文件中元数据3,497为例，依次在数据文件中表示第3个message(在全局partiton表示第368772个message)、以及该消息的物理偏移地址为497。从上述图了解到segment data file由许多message组成，下面详细说明message物理结构如下：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220418234403717.png" alt="message物理结构"></p>
+<p>参数说明：</p>
+<table>
+<thead>
+<tr>
+<th align="left">关键字</th>
+<th align="left">解释说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">8 byte offset</td>
+<td align="left">在parition(分区)内的每条消息都有一个有序的id号，这个id号被称为偏移(offset)，它可以唯一确定每条消息在parition(分区)内的位置。即offset表示partiion的第多少message</td>
+</tr>
+<tr>
+<td align="left">4 byte messagesize</td>
+<td align="left">message大小</td>
+</tr>
+<tr>
+<td align="left">4 byte CRC32</td>
+<td align="left">用crc32校验message</td>
+</tr>
+<tr>
+<td align="left">1 byte “magic”</td>
+<td align="left">表示本次发布Kafka服务程序协议版本号</td>
+</tr>
+<tr>
+<td align="left">1 byte “attributes”</td>
+<td align="left">表示为独立版本、或标识压缩类型、或编码类型。</td>
+</tr>
+<tr>
+<td align="left">4 byte key length</td>
+<td align="left">表示key的长度，当key为-1时，K byte key字段不填</td>
+</tr>
+<tr>
+<td align="left">K byte key</td>
+<td align="left">可选</td>
+</tr>
+<tr>
+<td align="left">value bytes payload</td>
+<td align="left">表示实际消息数据。</td>
+</tr>
+</tbody></table>
+<p><strong>查看segment 内容：</strong></p>
+<p>kafka附带了一个叫DumpLogSegment的工具，可以用它查看片段的内容。它可以显示每个消息的偏移量、校验和、魔术数字节、消息大小和压缩算法。运行该工具的方式如下</p>
+<p>/kafka-run-class.sh kafka.tools.DumpLogSegments</p>
+<p>如果使用–deep-iteration参数，可以显示被压缩到包装消息里的消息。</p>
+<p>–files参数，用于指定想查看的分区片段</p>
+<p>–print-data-log参数，指定打印详细内容</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-run-class.sh kafka.tools.DumpLogSegments --files /kafka/kafka-logs/test-0/00000000000000000000.log  --print-data-log</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、在partition中如何通过offset查找message"><a href="#4、在partition中如何通过offset查找message" class="headerlink" title="4、在partition中如何通过offset查找message"></a>4、在partition中如何通过offset查找message</h3><p>例如读取offset=368776的message，需要通过下面2个步骤查找。</p>
+<ul>
+<li>第一步查找segment file 上述图2为例，其中00000000000000000000.index表示最开始的文件，起始偏移量(offset)为0.第二个文件00000000000000368769.index的消息量起始偏移量为368770= 368769 + 1。同样，第三个文件00000000000000737337.index的起始偏移量为737338=737337 + 1，其他后续文件依次类推，以起始偏移量命名并排序这些文件，只要根据offset 二分查找文件列表，就可以快速定位到具体文件。 当offset=368776时定位到00000000000000368769.index|log</li>
+<li>第二步通过segment file查找message 通过第一步定位到segment file，当offset=368776时，依次定位到00000000000000368769.index的元数据物理位置和00000000000000368769.log的物理偏移地址，然后再通过00000000000000368769.log顺序查找直到offset=368776为止。</li>
+</ul>
+<p>从上述图3可知这样做的优点，segment index file采取稀疏索引存储方式，它减少索引文件大小，通过mmap可以直接内存操作，稀疏索引为数据文件的每个对应message设置一个元数据指针，它比稠密索引节省了更多的存储空间，但查找起来需要消耗更多的时间。</p>
+<h2 id="五、Kafka运维手册"><a href="#五、Kafka运维手册" class="headerlink" title="五、Kafka运维手册"></a>五、Kafka运维手册</h2><h3 id="1、如何在Kafka上创建一个Topic"><a href="#1、如何在Kafka上创建一个Topic" class="headerlink" title="1、如何在Kafka上创建一个Topic"></a>1、如何在Kafka上创建一个Topic</h3><p><strong>脚本手工创建</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --create --topic test --bootstrap-server 192.168.100.201:9092 --partitions 1 --replication-factor 1</span><br></pre></td></tr></table></figure>
+
+<p>–topic指定topic name</p>
+<p>–partitions指定分区数，这个参数需要根据broker数和数据量决定，正常情况下，每个broker上两个partition最好；</p>
+<p>–replication-factor指定partition的replicas数，建议设置为2；</p>
+<p><strong>程序自动创建</strong></p>
+<p>开启自动创建配置： auto.create.topics.enable=true</p>
+<p>使用程序直接往kafka中相应的topic发送数据，如果topic不存在就会按默认配置进行创建。</p>
+<p><strong>查看topic信息</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --describe --topic test --bootstrap-server 192.168.100.201:9092</span><br></pre></td></tr></table></figure>
+
+<p><strong>发送消息</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-console-producer.sh --bootstrap-server 192.168.100.201:9092 --topic test</span><br></pre></td></tr></table></figure>
+
+<p><strong>消费消息</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-console-consumer.sh --bootstrap-server 192.168.100.201:9092 --topic test --from-beginning</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、如何在Kafka上对一个Topic增加partition"><a href="#2、如何在Kafka上对一个Topic增加partition" class="headerlink" title="2、如何在Kafka上对一个Topic增加partition"></a>2、如何在Kafka上对一个Topic增加partition</h3><p>通过kafka-topics.sh工具的alter命令，将topic_test的partitions从1增加到2；</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.10.201:9092 --alter --partitions 2 --topic test</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、如何在Kafka上对一个Topic增加replicas"><a href="#3、如何在Kafka上对一个Topic增加replicas" class="headerlink" title="3、如何在Kafka上对一个Topic增加replicas"></a>3、如何在Kafka上对一个Topic增加replicas</h3><p>操作步骤如下：<br>操作，是指手动写扩充replicas的配置文件，然后使用工具进行操作<br><strong>1.查看topic的详细信息</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.100.201:9092 --describe --topic test</span><br></pre></td></tr></table></figure>
+
+<p>Topic: test TopicId: -h4ScOOXT6WvzasqGLJadQ PartitionCount: 2 ReplicationFactor: 1 Configs:<br>segment.bytes=1073741824<br>Topic: test Partition: 0  Leader: 1 Replicas: 1 Isr: 1<br>Topic: test Partition: 1  Leader: 2 Replicas: 2 Isr: 2</p>
+<p>说明：<br>partiton： partion id，partition id 从 0 开始计数<br>leader：当前负责读写的 lead broker id<br>relicas：当前partition的所有 replication broker list<br>isr：relicas的子集，只包含处于活动状态的 broker</p>
+<p><strong>2.修改配置文件</strong></p>
+<p>将原有replicas为[0]扩充为[0,1], [1]扩充为[1,2]</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; partitions-to-move.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">"partitions": [&#123;</span><br><span class="line">"topic": "test",</span><br><span class="line">"partition": 0,</span><br><span class="line">"replicas": [0, 1]</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">"topic": "test",</span><br><span class="line">"partition": 1,</span><br><span class="line">"replicas": [1, 2]</span><br><span class="line">&#125;</span><br><span class="line">],</span><br><span class="line">"version": 1</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.执行</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-reassign-partitions.sh --bootstrap-server 192.168.100.201:9092 --reassignment-json-file partitions-to-move.json --execute</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.检查修改情况</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.100.201:9092 --describe --topic test</span><br></pre></td></tr></table></figure>
+
+<p>Topic: test TopicId: -h4ScOOXT6WvzasqGLJadQ PartitionCount: 2 ReplicationFactor: 2 Configs:<br>segment.bytes=1073741824<br>Topic: test Partition: 0  Leader: 1 Replicas: 0,1 Isr: 1,0<br>Topic: test Partition: 1  Leader: 2 Replicas: 1,2 Isr: 2,1</p>
+<h3 id="4、如何在Kafka中修改Topic的preferred-replica"><a href="#4、如何在Kafka中修改Topic的preferred-replica" class="headerlink" title="4、如何在Kafka中修改Topic的preferred replica"></a>4、如何在Kafka中修改Topic的preferred replica</h3><p><strong>操作背景</strong></p>
+<p>假如topic test中partition 0的replicas为[0,1]，则0为preferred replica，应该成为leader。这时我们期望1为preferred replica，并变成leader。</p>
+<p>执行步骤如下：</p>
+<p><strong>1.查看当前的topic详细信息</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.100.201:9092 --describe --topic test</span><br></pre></td></tr></table></figure>
+
+<p>Topic: test TopicId: -h4ScOOXT6WvzasqGLJadQ PartitionCount: 2 ReplicationFactor: 2 Configs:<br>segment.bytes=1073741824<br>Topic: test Partition: 0  Leader: 1 Replicas: 0,1 Isr: 1,0<br>Topic: test Partition: 1  Leader: 2 Replicas: 1,2 Isr: 2,1</p>
+<p><strong>2.修改replicas的顺序</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; partitions-to-move-2.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">"partitions": [</span><br><span class="line">&#123;</span><br><span class="line">"topic": "test",</span><br><span class="line">"partition": 0,</span><br><span class="line">"replicas": [</span><br><span class="line">1,</span><br><span class="line">0</span><br><span class="line">]</span><br><span class="line">&#125;</span><br><span class="line">],</span><br><span class="line">"version": 1</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-reassign-partitions.sh --bootstrap-server 192.168.100.201:9092 --reassignment-json-file partitions-to-move-2.json --execute</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.更改leader</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; topicPartitionList.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">"partitions":</span><br><span class="line">[</span><br><span class="line">&#123;"topic": "test", "partition": 0&#125;</span><br><span class="line">]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-leader-election.sh --bootstrap-server 192.168.100.201:9092 --path-to-json-file topicPartitionList.json --election-type PREFERRED</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.检查replicas leader切换情况</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --bootstrap-server 192.168.100.201:9092 --describe --topic test</span><br></pre></td></tr></table></figure>
+
+<p>Topic: test TopicId: -h4ScOOXT6WvzasqGLJadQ PartitionCount: 2 ReplicationFactor: 2 Configs:<br>segment.bytes=1073741824<br>Topic: test Partition: 0  Leader: 0 Replicas: 0,1 Isr: 1,0<br>Topic: test Partition: 1  Leader: 2 Replicas: 1,2 Isr: 2,1</p>
+<h3 id="5、如何在Kafka中对Topic的leader进行均衡"><a href="#5、如何在Kafka中对Topic的leader进行均衡" class="headerlink" title="5、如何在Kafka中对Topic的leader进行均衡"></a>5、如何在Kafka中对Topic的leader进行均衡</h3><p><strong>操作背景</strong></p>
+<p>在创建一个topic时，kafka尽量将partition均分在所有的brokers上，并且将replicas也均分在不同的broker上。</p>
+<p>每个partition的所有replicas叫做”assigned replicas”，”assigned replicas”中的第一个replicas叫”preferred replica”，刚创建的topic一般”preferred replica”是leader。leader replica负责所有的读写。</p>
+<p>但随着时间推移，broker可能会停机，会导致leader迁移，导致机群的负载不均衡。我们期望对topic的leader进行重新负载均衡，让partition选择”preferred replica”做为leader。</p>
+<p><strong>1.对所有Topics进行操作</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-leader-election.sh --bootstrap-server 192.168.100.201:9092 --election-type PREFERRED --all-topic-partitions</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.对某个Topic进行操作</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cat &gt; topicPartitionList.json &lt;&lt;EOF</span><br><span class="line">&#123;</span><br><span class="line">"partitions":</span><br><span class="line">[</span><br><span class="line">&#123;"topic":"test","partition": "0"&#125;</span><br><span class="line">]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-leader-election.sh --bootstrap-server 192.168.100.201:9092 --path-to-json-file topicPartitionList.json --election-type PREFERRED</span><br></pre></td></tr></table></figure>
+
+<h3 id="6、apache-kafka中topic级别配置"><a href="#6、apache-kafka中topic级别配置" class="headerlink" title="6、apache kafka中topic级别配置"></a>6、apache kafka中topic级别配置</h3><p><strong>1.topic级别配置用法</strong></p>
+<p>配置topic级别参数时，相同(参数)属性topic级别会覆盖全局的，否则默认为全局配置属性值。</p>
+<p>创建topic参数可以设置一个或多个–config “Property(属性)”,下面是创建一个topic名称为”my-topic”例子，它设置了2个参数max message size 和 flush rate:</p>
+<ul>
+<li>创建topic时配置参数</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --create --topic my-topic --bootstrap-server 192.168.100.201:9092 --partitions 1 --replication-factor 1 --config max.message.bytes=64000 --config flush.messages=1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改topic时配置参数</li>
+</ul>
+<p>覆盖已经有topic参数，下面例子修改”my-topic”的max message属性</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --alter --topic my-topic --bootstrap-server 192.168.100.201:9092 --config max.message.bytes=128000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除topic级别配置参数</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-topics.sh --alter --topic my-topic --bootstrap-server 192.168.100.201:9092 --delete-config max.message.bytes</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>topic级别在zookeeper存储结构</li>
+</ul>
+<p>“my-topic”在zookeeper上路径为/config/topics/my-topic,存储内容如下：</p>
+<p>{<br>    “version”: 1,<br>    “config”: {<br>        “max.message.bytes”: “12800000”,<br>        “flush.messages”: “1000”<br>    }<br>}</p>
+<p><strong>2.topic级别配置属性表</strong></p>
+<p>以下是topic级别配置， kafak server中默认配置为下表“Server Default Property”列，当需要设置topic级别配置时，属性设置为“Property(属性)”列</p>
+<table>
+<thead>
+<tr>
+<th>Property(属性)</th>
+<th>Default(默认值)</th>
+<th>Server Default Property(server.properties)</th>
+<th>说明(解释)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cleanup.policy</td>
+<td>delete</td>
+<td>log.cleanup.policy</td>
+<td>日志清理策略选择有：delete和compact主要针对过期数据的处理，或是日志文件达到限制的额度，会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>delete.retention.ms</td>
+<td>86400000(24 hours)</td>
+<td>log.cleaner.delete.retention.ms</td>
+<td>对于压缩的日志保留的最长时间，也是客户端消费消息的最长时间，同log.retention.minutes的区别在于一个控制未压缩数据，一个控制压缩后的数据。会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>flush.messages</td>
+<td>None</td>
+<td>log.flush.interval.messages</td>
+<td>log文件”sync”到磁盘之前累积的消息条数,因为磁盘IO操作是一个慢操作,但又是一个”数据可靠性”的必要手段,所以此参数的设置,需要在”数据可靠性”与”性能”之间做必要的权衡.如果此值过大,将会导致每次”fsync”的时间较长(IO阻塞),如果此值过小,将会导致”fsync”的次数较多,这也意味着整体的client请求有一定的延迟.物理server故障,将会导致没有fsync的消息丢失.</td>
+</tr>
+<tr>
+<td>flush.ms</td>
+<td>None</td>
+<td>log.flush.interval.ms</td>
+<td>仅仅通过interval来控制消息的磁盘写入时机,是不足的.此参数用于控制”fsync”的时间间隔,如果消息量始终没有达到阀值,但是离上一次磁盘同步的时间间隔达到阀值,也将触发.</td>
+</tr>
+<tr>
+<td>index.interval.bytes</td>
+<td>4096</td>
+<td>log.index.interval.bytes</td>
+<td>当执行一个fetch操作后，需要一定的空间来扫描最近的offset大小，设置越大，代表扫描速度越快，但是也更耗内存，一般情况下不需要搭理这个参数</td>
+</tr>
+<tr>
+<td>message.max.bytes</td>
+<td>1,000,000</td>
+<td>message.max.bytes</td>
+<td>表示消息的最大大小，单位是字节</td>
+</tr>
+<tr>
+<td>min.cleanable.dirty.ratio</td>
+<td>0.5</td>
+<td>log.cleaner.min.cleanable.ratio</td>
+<td>日志清理的频率控制，越大意味着更高效的清理，同时会存在一些空间上的浪费，会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>retention.bytes</td>
+<td>None</td>
+<td>log.retention.bytes</td>
+<td>topic每个分区的最大文件大小，一个topic的大小限制 = 分区数*log.retention.bytes。-1没有大小限log.retention.bytes和log.retention.minutes任意一个达到要求，都会执行删除，会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>retention.ms</td>
+<td>None</td>
+<td>log.retention.minutes</td>
+<td>数据存储的最大时间超过这个时间会根据log.cleanup.policy设置的策略处理数据，也就是消费端能够多久去消费数据log.retention.bytes和log.retention.minutes达到要求，都会执行删除，会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>segment.bytes</td>
+<td>1 GB</td>
+<td>log.segment.bytes</td>
+<td>topic的分区是以一堆segment文件存储的，这个控制每个segment的大小，会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>segment.index.bytes</td>
+<td>10 MB</td>
+<td>log.index.size.max.bytes</td>
+<td>对于segment日志的索引文件大小限制，会被topic创建时的指定参数覆盖</td>
+</tr>
+<tr>
+<td>log.roll.hours</td>
+<td>7 days</td>
+<td>log.roll.hours</td>
+<td>这个参数会在日志segment没有达到log.segment.bytes设置的大小，也会强制新建一个segment会被 topic创建时的指定参数覆盖</td>
+</tr>
+</tbody></table>
+<h3 id="7、apache-Kafka下线broker的操作"><a href="#7、apache-Kafka下线broker的操作" class="headerlink" title="7、apache Kafka下线broker的操作"></a>7、apache Kafka下线broker的操作</h3><p><strong>操作背景</strong></p>
+<p>主动下线是指broker运行正常，因为机器需要运维（升级操作系统，添加磁盘等）而主动停止broker，分两种情况处理：</p>
+<ul>
+<li>所有的topic的replica &gt;= 2</li>
+</ul>
+<p>此时，直接停止一个broker，会自动触发leader election操作，不过目前leader election是逐个partition进行，等待所有partition完成leader election耗时较长，这样不可服务的时间就比较长。为了缩短不可服务时间窗口，可以主动触发停止broker操作，这样可以逐个partition转移，直到所有partition完成转移，再停止broker。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-run-class.sh kafka.admin.ShutdownBroker --bootstrap-server 192.168.100.201:9092 --broker #brokerId# --num.retries 3 --retry.interval.ms 60</span><br></pre></td></tr></table></figure>
+
+<p>然后shutdown broker。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./bin/kafka-server-stop.sh</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>存在topic的replica=1</li>
+</ul>
+<p>当存在topic的副本数小于2，只能手工把当前broker上这些topic对应的partition转移到其他broker上。当此broker上剩余的topic的replica &gt; 2时，参照上面的处理方法继续处理。</p>
+<h2 id="六、Kafka中Follower如何与Leader同步数据"><a href="#六、Kafka中Follower如何与Leader同步数据" class="headerlink" title="六、Kafka中Follower如何与Leader同步数据"></a>六、Kafka中Follower如何与Leader同步数据</h2><h3 id="1、重要名词解释："><a href="#1、重要名词解释：" class="headerlink" title="1、重要名词解释："></a>1、重要名词解释：</h3><p>log end offset (logEndOffset)，表示log中最后的message的offst位置。</p>
+<p>high watermark (HW)，表示Partition各个replicas数据间同步且一致的offset位置，即表示allreplicas已经commit位置，每个Broker缓存中维护此信息,并不断更新。</p>
+<h3 id="2、Kafka中replication复制数据"><a href="#2、Kafka中replication复制数据" class="headerlink" title="2、Kafka中replication复制数据"></a>2、Kafka中replication复制数据</h3><p>Kafka的复制机制既不是完全的同步复制，也不是单纯的异步复制。完全同步复制要求All Alive Follower都复制完，这条消息才会被认为commit，这种复制方式极大的影响了吞吐率。而异步复制方式下，Follower异步的从Leader复制数据，数据只要被Leader写入log就被认为已经commit，这种情况下如果Follower都复制完都落后于Leader，而如果Leader突然宕机，则会丢失数据。而Kafka的这种使用ISR的方式则很好的均衡了确保数据不丢失以及吞吐率。Follower可以批量的从Leader复制数据，而且Leader充分利用磁盘顺序读以及send file(zero copy)机制，这样极大的提高复制性能，内部批量写磁盘，大幅减少了Follower与Leader的消息量差。</p>
+<p><strong>优点</strong></p>
+<ul>
+<li>性能高，吞吐量大。</li>
+<li>降低了系统和磁盘开销，Leader充分利用磁盘顺序读以及send file(zero copy)机制。</li>
+<li>降低Leader与Follower之间网络开销和交互次数。</li>
+</ul>
+<p><strong>缺点</strong></p>
+<ul>
+<li>有可能会占用大量网络带宽(例如本来集群很大而且数据量很多，后来新增Broker节点需要迁移数据)，甚至堵塞网络，需要有流控机制，否则会影响线上服务。</li>
+<li>因为Follower是批量拉取Leader消息，如果设置为保证所有replicas commit，才返回Ack给生产者会存在抖动现象，Follow拉取Leader修改HW，当HW与当次生产者请求logEndOffset的offst一致时，客户端等待时间会拉长。</li>
+</ul>
+<h3 id="3、kafka集群副本分布原理分析"><a href="#3、kafka集群副本分布原理分析" class="headerlink" title="3、kafka集群副本分布原理分析"></a>3、kafka集群副本分布原理分析</h3><p>Kafka中partition replication之间同步数据，从partition的leader复制数据到follower只需要一个线程(ReplicaFetcherThread)，实际上复制是follower(一个follower相当于consumer)主动从leader批量拉取消息的，这极大提高了吞吐量，从中可以看出无处不显示Kafka高吞吐量设计思想。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220419104738306.png" alt></p>
+<p>这是一个异步复制过程，follow从leader批量拉取消息进行同步数据</p>
+<p><strong>Kafka中partition replica复制机制：</strong></p>
+<p>Kafka中每个Broker启动时都会创建一个副本管理服务(ReplicaManager)，该服务负责维护ReplicaFetcherThread与其他Broker链路连接关系，该Broker中存在多少Follower的partitions对应leader partitions分布在不同的Broker上，有多少Broker就会创建相同数量的ReplicaFetcherThread线程同步对应partition数据，Kafka中partition间复制数据是由follower(扮演consumer角色)主动向leader获取消息，follower每次读取消息都会更新HW状态。每当Follower的partitions发生变更影响leader所在Broker变化时，ReplicaManager就会新建或销毁相应的ReplicaFetcherThread。</p>
+<p>Kafka Broker中follower partition与ReplicaFetcherThread对应关系</p>
+<p>partition三副本情况：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220419104936169.png" alt></p>
+<p>partition两副本情况：</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220419104953319.png" alt></p>
+<p><strong>Kafka中partitions数据一致性：</strong></p>
+<p>Kafka中Producer发送消息到Broker，Broker有三种返回方式，分别为noack、leader commit成功就ack、leader和follower同时commit成功才返回ack。第三种方式是数据强一致性。</p>
+<p><strong>如何保证数据强一致性？</strong></p>
+<p>当Producer发送消息到leader partition所在Broker时，首先保证leader commit消息成功，然后创建一个“生产者延迟请求任务”，并判断当前partiton的HW是否大于等于logEndOffset，如果满足条件即表示本次Producer请求partition replicas之间数据已经一致，立即向Producer返回Ack。否则待Follower批量拉取Leader的partition消息时，同时更新Leader ISR中HW，然后检查是否满足上述条件，如果满足向Producer返回Ack。</p>
+<h2 id="七、Kafka-Broker-HA机制"><a href="#七、Kafka-Broker-HA机制" class="headerlink" title="七、Kafka Broker HA机制"></a>七、Kafka Broker HA机制</h2><p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420154417487.png" alt="HA机制"></p>
+<p>从图中我们可以看出HA的缓存分为生产缓存事件池和拉取缓存事件池两块结构相同的缓存区，分别缓存生产和拉取请求。2个缓存事件池的作用：</p>
+<ul>
+<li>生产缓存事件池：当生产者设置了等待从partition的同步选项(requiredAcks为-1，即等待所有ISR接收到消息后确认ACK)时才会启动生产缓存。因为每一批生产的消息，需要等待所有的处于同步状态的从partition（in-sync）同步成功，在所有follow partition上报自己的水位线追上leader partition之前，生产请求会一直保留在生产缓存中，等待直到超时。</li>
+<li>拉取缓存事件池：拉取请求为什么也需要缓存？因为kafka在消费消息时有一个默认选项，一次拉取最低消费1条消息。那么，如果消费者拉取的时候没有任何新消息生产，则拉取请求会保留到拉取缓存中，等待直到超时。这一定程度上避免了反复拉取一批空消息占用带宽资源的问题，不过也把Kafka的ha缓存架构的复杂度提升了一个等级。</li>
+</ul>
+<h2 id="八、Kafka副本同步机制理解"><a href="#八、Kafka副本同步机制理解" class="headerlink" title="八、Kafka副本同步机制理解"></a>八、Kafka副本同步机制理解</h2><p>Apache Kafka的流行归功于它设计和操作简单、存储系统高效、充分利用磁盘顺序读写等特性、非常适合在线日志收集等高吞吐场景。</p>
+<p>Apache Kafka特性之一是它的复制协议。对于单个集群中每个Broker不同工作负载情况下，如何自动调优Kafka副本的工作方式是比较有挑战的。它的挑战之一是要知道如何避免follower进入和退出同步副本列表(即ISR)。从用户的角度来看，如果生产者发送一大批海量消息，可能会引起Kafka Broker很多警告。这些警报表明一些topics处于“under replicated”状态，这些副本处于同步失败或失效状态，更意味着数据没有被复制到足够数量Broker从而增加数据丢失的概率。因此Kafka集群中处于“underreplicated”中Partition数要密切监控。这个警告应该来自于Broker失效，减慢或暂停等状态而不是生产者写不同大小消息引起的。在这篇文章中，我将讨论这种问题的根源以及我们如何修复它。</p>
+<h3 id="Kafka副本"><a href="#Kafka副本" class="headerlink" title="Kafka副本"></a>Kafka副本</h3><p>Kafka中主题的每个Partition有一个预写式日志文件，每个Partition都由一系列有序的、不可变的消息组成，这些消息被连续的追加到Partition中，Partition中的每个消息都有一个连续的序列号叫做offset，确定它在分区日志中唯一的位置。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420154639297.png" alt></p>
+<p>Kafka每个topic的partition有N个副本，其中N是topic的复制因子。Kafka通过多副本机制实现故障自动转移，当Kafka集群中一个Broker失效情况下仍然保证服务可用。在Kafka中发生复制时确保partition的预写式日志有序地写到其他节点上。N个replicas中。其中一个replica为leader，其他都为follower，leader处理partition的所有读写请求，与此同时，follower会被动定期地去复制leader上的数据。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420154715977.png" alt></p>
+<p>Kafka必须提供数据复制算法保证，如果leader发生故障或挂掉，一个新leader被选举并接收客户端的消息成功写入。Kafka确保从同步副本列表中选举一个副本为leader，或者换句话说，follower追赶leader数据。leader负责维护和跟踪ISR中所有follower滞后状态。当生产者发送一条消息到Broker，leader写入消息并复制到所有follower。消息提交之后才被成功复制到所有的同步副本。消息复制延迟受最慢的follower限制，重要的是快速检测慢副本，如果follower”落后”太多或者失效，leader将会把它从replicas从ISR移除。</p>
+<h3 id="partition的follower追上leader含义"><a href="#partition的follower追上leader含义" class="headerlink" title="partition的follower追上leader含义"></a>partition的follower追上leader含义</h3><p>Kafka中每个partition的follower没有“赶上”leader的日志可能会从同步副本列表中移除。下面用一个例子解释一下“追赶”到底是什么意思。</p>
+<p>请看一个例子：主题名称为foo 1 partition 3 replicas。假如partition的replication分布在Brokers 1、2和3上，并且Broker 3消息已经成功提交。同步副本列表中1为leader、2和3为follower。假设replica.lag.max.messages设置为4，表明只要follower落后leader不超过3，就不会从同步副本列表中移除。replica.lag.time.max设置为500 ms，表明只要follower向leader发送请求时间间隔不超过500ms，就不会被标记为死亡，也不会从同步副本列中移除。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155358841.png" alt></p>
+<p>下面看看，生产者发送下一条消息写入leader，与此同时follower Broker 3 GC暂停，如下图所示:</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155425552.png" alt></p>
+<p>直到follower Broker 3从同步副本列表中移除或追赶上leader log end offset，最新的消息才会认为提交。注意，因为follower Broker 3小于replica.lag.max.messages= 4落后于leader Broker 1，Kafka不会从同步副本列表中移除。在这种情况下，这意味着follower Broker 3需要迎头追赶上直到offset = 6，如果是，那么它完全“赶上” leader Broker 1 log end offset。让我们假设代理3出来的GC暂停在100 ms和追赶上领袖的日志结束偏移量。在这种状态下，下面partition日志会看起来像这样</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155537150.png" alt></p>
+<h3 id="是什么原因导致分区的副本与leader不同步"><a href="#是什么原因导致分区的副本与leader不同步" class="headerlink" title="是什么原因导致分区的副本与leader不同步"></a>是什么原因导致分区的副本与leader不同步</h3><p><strong>一个副本可以不同步Leader有如下几个原因</strong></p>
+<ul>
+<li>慢副本：在一定周期时间内follower不能追赶上leader。最常见的原因之一是I / O瓶颈导致follower追加复制消息速度慢于从leader拉取速度。</li>
+<li>卡住副本：在一定周期时间内follower停止从leader拉取请求。follower replica卡住了是由于GC暂停或follower失效或死亡。</li>
+<li>新启动副本：当用户给主题增加副本因子时，新的follower不在同步副本列表中，直到他们完全赶上了leader日志。</li>
+</ul>
+<p>一个partition的follower落后于leader足够多时，被认为不在同步副本列表或处于滞后状态。在Kafka-0.8.2.x中，副本滞后判断依据是副本落后于leader最大消息数量(replica.lag.max.messages)或replicas响应partition leader的最长等待时间(replica.lag.time.max.ms)。前者是用来检测缓慢的副本，而后者是用来检测失效或死亡的副本</p>
+<p><strong>如何确定副本是滞后的</strong></p>
+<p>这个模型检测不同步卡住副本列表工作下所有情况都适用。它追踪follower replica时间内没有向leader发送拉取请求，表明它已经死了。另一方面，如果均匀流量模式情况下，为一个主题或多个主题设置这些参数检测模型不同步慢副本列表消息的数量会工作很好，但我们发现生产环境中它不扩展到所有主题各种工作负载。</p>
+<p>接着上面的例子，如果主题foo获取数据速率2 msg/sec，leader单次批量接收一般不会超过3条消息，然后你知道主题参数replica.lag.max.messages设置为4。为什么?因为follower replica从leader复制消息前，已经有大批量消息写leader，follower replica落后于leader不超过3条消息 。另一方面，如果主题foo的follower replica初始落后于leader持续超过3消息，leader会从同步副本列表中移除慢副本，避免消息写延迟增加。</p>
+<p>这本质上是replica.lag.max.messages的目标。能够检测follower与leader不一致且从同步副本列表移除。然而，主题在流量高峰期发送了一批消息(4条消息)，等于replica.lag.max.messages = 4配置值。在那一瞬间，2个follower replica将被认为是”out-of-sync”并且leader会从同步副本列表中移除。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155745344.png" alt></p>
+<p>2个follower replica都是活着，下次拉取请求他们会赶上leader log end offset并重新加入同步副本列表。重复相同的过程，如果生产者继续发送相对一批较大消息到leader。这种情况演示了当followerreplica频繁在从同步副本列表移除和重新加入同步副本列表之间来回切换时，不必要触发虚假警报。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220420155811743.png" alt></p>
+<p>参数replica.lag.max.messages指向核心问题。它的配置值根据队列流量大小和集群一般负载情况做出判断并设置一个合适值!</p>
+<p><strong>副本配置规则</strong></p>
+<p>真正重要的事情是检测卡或慢副本，这段时间follower replica是“out-of-sync”落后于leader。在服务端现在只有一个参数需要配置replica.lag.time.max.ms。这个参数解释replicas响应partitionleader的最长等待时间。检测卡住或失败副本的探测——如果一个replica失败导致发送拉取请求时间间隔超过replica.lag.time.max.ms。Kafka会认为此replica已经死亡会从同步副本列表从移除。检测慢副本机制发生了变化——如果一个replica开始落后leader超过replica.lag.time.max.ms。Kafka会认为太缓慢并且会从同步副本列表中移除。除非replica请求leader时间间隔大于replica.lag.time.max.ms，因此即使leader使流量激增和大批量写消息。Kafka也不会从同步副本列表从移除该副本。</p>
+<h2 id="九、Kafka数据可靠性与一致性解析"><a href="#九、Kafka数据可靠性与一致性解析" class="headerlink" title="九、Kafka数据可靠性与一致性解析"></a>九、Kafka数据可靠性与一致性解析</h2><h3 id="1-Partition-Recovery机制"><a href="#1-Partition-Recovery机制" class="headerlink" title="1.Partition Recovery机制"></a>1.Partition Recovery机制</h3><p>每个Partition会在磁盘记录一个RecoveryPoint， 记录已经flush到磁盘的最大offset。当broker fail 重启时，会进行loadLogs。 首先会读取该Partition的RecoveryPoint，找到包含RecoveryPoint的segment及以后的segment， 这些segment就是可能没有完全flush到磁盘segments。然后调用segment的recover，重新读取各个segment的msg，并重建索引。</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>以segment为单位管理Partition数据，方便数据生命周期的管理，删除过期数据简单</li>
+<li>在程序崩溃重启时，加快recovery速度，只需恢复未完全flush到磁盘的segment</li>
+<li>通过index中offset与物理偏移映射，用二分查找能快速定位msg，并且通过分多个Segment，每个index文件很小，查找速度更快。</li>
+</ul>
+<h3 id="2-Partition-Replica同步机制"><a href="#2-Partition-Replica同步机制" class="headerlink" title="2.Partition Replica同步机制"></a>2.Partition Replica同步机制</h3><ul>
+<li>Partition的多个replica中一个为Leader，其余为follower</li>
+<li>Producer只与Leader交互，把数据写入到Leader中</li>
+<li>Followers从Leader中拉取数据进行数据同步</li>
+<li>Consumer只从Leader拉取数据</li>
+</ul>
+<p>ISR：所有不落后的replica集合， 不落后有两层含义：距离上次FetchRequest的时间不大于某一个值或落后的消息数不大于某一个值， Leader失败后会从ISR中选取一个Follower做Leader</p>
+<h3 id="3-数据可靠性保证"><a href="#3-数据可靠性保证" class="headerlink" title="3.数据可靠性保证"></a>3.数据可靠性保证</h3><p>当Producer向Leader发送数据时，可以通过acks参数设置数据可靠性的级别</p>
+<ul>
+<li>0：不论写入是否成功，server不需要给Producer发送Response，如果发生异常，server会终止连接，触发Producer更新meta数据；</li>
+<li>1：Leader写入成功后即发送Response，此种情况如果Leader fail，会丢失数据</li>
+<li>-1：等待所有ISR接收到消息后再给Producer发送Response，这是最强保证仅设置acks=-1也不能保证数据不丢失，当Isr列表中只有Leader时，同样有可能造成数据丢失。</li>
+</ul>
+<p>要保证数据不丢除了设置acks=-1， 还要保 证ISR的大小大于等于2，具体参数设置：</p>
+<ol>
+<li>request.required.acks：设置为-1 等待所有ISR列表中的Replica接收到消息后采算写成功；</li>
+<li>min.insync.replicas：设置为大于等于2，保证ISR中至少有两个Replica Producer要在吞吐率和数据可靠性之间做一个权衡</li>
+</ol>
+<h3 id="4-数据一致性保证"><a href="#4-数据一致性保证" class="headerlink" title="4.数据一致性保证"></a>4.数据一致性保证</h3><p>一致性定义：若某条消息对Consumer可见，那么即使Leader宕机了，在新Leader上数据依然可以被读到</p>
+<ul>
+<li>HighWaterMark简称HW： Partition的高水位，取一个partition对应的ISR中最小的LEO作为HW，消费者最多只能消费到HW所在的位置，另外每个replica都有highWatermark，leader和follower各自负责更新自己的highWatermark状态，highWatermark &lt;= leader. LogEndOffset</li>
+<li>对于Leader新写入的msg，Consumer不能立刻消费，Leader会等待该消息被所有ISR中的replica同步后，更新HW，此时该消息才能被Consumer消费，即Consumer最多只能消费到HW位置</li>
+</ul>
+<p>这样就保证了如果Leader Broker失效，该消息仍然可以从新选举的Leader中获取。对于来自内部Broker的读取请求，没有HW的限制。同时，Follower也会维护一份自己的HW，Folloer.HW =min(Leader.HW， Follower.offset)</p>
+<h2 id="十、Kafka性能为什么这么快？"><a href="#十、Kafka性能为什么这么快？" class="headerlink" title="十、Kafka性能为什么这么快？"></a>十、Kafka性能为什么这么快？</h2><h3 id="1-顺序读写"><a href="#1-顺序读写" class="headerlink" title="1. 顺序读写"></a>1. 顺序读写</h3><p>随机I/O和顺序I/O的。什么叫随机I/O</p>
+<p>磁盘寻址的过程，磁盘的盘片不停的旋转，磁头会在磁盘表面画出一个圆形轨迹，这个就叫<strong>磁道</strong>。从内到外半径不同有很多磁道。然后又有半径线，把磁道分割成了<strong>扇区</strong>（两根射线之内的扇区组成扇面）。如果要读写数据，必须找到数据对应的扇区，这个过程就叫寻址。</p>
+<p><img src="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/image-20220523235233229.png" alt="磁盘构造"></p>
+<p>随机I/O：读写的多条数据在磁盘上是分散的，寻址会很耗时。</p>
+<p>顺序I/O：读写的数据在磁盘上是集中的，不需要重复寻址的过程。</p>
+<p>Kafka的message是不断追加到本地磁盘文件末尾的，而不是随机的写入，这是的Kafka写入吞吐量得到了显著提升。</p>
+<h3 id="2-索引"><a href="#2-索引" class="headerlink" title="2.索引"></a>2.索引</h3><p>Kafka中设计了两种索引：偏移量索引和时间戳索引。</p>
+<p>偏移量索引文件记录的是offset和消息物理地址（在log文件中的位置）的映射关系。时间戳索引文件记录的是时间戳和offset的关系。<strong>注意：Kafka的索引并不是每一条消息都会建立索引，而是一种稀疏索引（sparse index）。</strong></p>
+<h3 id="3-批量读写和文件压缩"><a href="#3-批量读写和文件压缩" class="headerlink" title="3.批量读写和文件压缩"></a>3.批量读写和文件压缩</h3><p>它把所有的消息都变成一个批量的文件，并且进行合理的批量压缩，减少网络I/O损耗。</p>
+<h3 id="4-零拷贝"><a href="#4-零拷贝" class="headerlink" title="4.零拷贝"></a>4.零拷贝</h3><h2 id="面试题："><a href="#面试题：" class="headerlink" title="面试题："></a>面试题：</h2><p><strong>1、kafka如何做到高吞吐低延迟</strong></p>
+<p>总结起来，主要是四点：磁盘顺序I/O、索引机制、批量操作和压紧、零拷贝。</p>
+<p><strong>2、如何保证kafka消息不丢失</strong></p>
+<ol>
+<li>producer端使用producer.send(msg, callback)带有回调的send方法，而不是producer.send(msg)方法。根据回调，一旦出现消息提交失败的情况，就可以有针对性的进行处理。</li>
+<li>设置acks = all。acks是Producer的一个参数，代表“已提交”消息的定义。如果设置成all，则表明所有Broker都要接收到消息，该消息才算是“已提交”。</li>
+<li>设置retries为一个较大的值。同样是Producer的参数。当出现网络抖动时，消息发送可能会失败，此时配置了retries的Producer能够自动重试发送消息，尽量避免消息丢失。</li>
+<li>设置unclean.leader.election.enable = false。即如果分区leader发生故障时，不允许ISR之外的副本参与选举，因为ISR之外的副本并未完全同步leader的消息，会造成数据丢失。</li>
+<li>设置replication.factor &gt;= 3。即需要三个以上的副本。</li>
+<li>设置min.insync.replicas &gt; 1。Broker端参数，控制消息至少要被写入到多少个副本才算是“已提交”。设置成大于1可以提升消息持久性。在生产库安静中不要使用默认值1.确保replication.factor &gt; min.insync.replicas。如果两者相等，那么只要有一个副本离线，整个分区就无法正常工作了。推荐设置成replication.factor = min.insync.replicas + 1。</li>
+<li>确保消息消费完成再提交。Consumer端有个参数enable.auto.commit，最好设置成false，并自己来处理offset的提交更新。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag"># 消息中间件</a>
+          
+            <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/" rel="next" title="消息中间件-1-RabbitMQ">
+                <i class="fa fa-chevron-left"></i> 消息中间件-1-RabbitMQ
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/04/20/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-3-RocketMQ/" rel="prev" title="消息中间件-3-RocketMQ">
+                消息中间件-3-RocketMQ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/saritocat.png"
+                alt="张鸣" />
+            
+              <p class="site-author-name" itemprop="name">张鸣</p>
+              <p class="site-description motion-element" itemprop="description">No cross, no crown</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#apache-kafka"><span class="nav-text">apache kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、总体架构"><span class="nav-text">二、总体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、安装"><span class="nav-text">三、安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper安装"><span class="nav-text">Zookeeper安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载"><span class="nav-text">下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装并启动"><span class="nav-text">安装并启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-text">常用命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka安装"><span class="nav-text">kafka安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载-1"><span class="nav-text">下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装并启动-1"><span class="nav-text">安装并启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建topic"><span class="nav-text">创建topic</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#发送消息"><span class="nav-text">发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#消费消息"><span class="nav-text">消费消息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、Kafka文件存储机制"><span class="nav-text">四、Kafka文件存储机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、topic中partition存储分布"><span class="nav-text">1、topic中partition存储分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、partiton中文件存储方式"><span class="nav-text">2、partiton中文件存储方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、partiton中segment文件存储结构"><span class="nav-text">3、partiton中segment文件存储结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、在partition中如何通过offset查找message"><span class="nav-text">4、在partition中如何通过offset查找message</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、Kafka运维手册"><span class="nav-text">五、Kafka运维手册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、如何在Kafka上创建一个Topic"><span class="nav-text">1、如何在Kafka上创建一个Topic</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、如何在Kafka上对一个Topic增加partition"><span class="nav-text">2、如何在Kafka上对一个Topic增加partition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、如何在Kafka上对一个Topic增加replicas"><span class="nav-text">3、如何在Kafka上对一个Topic增加replicas</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、如何在Kafka中修改Topic的preferred-replica"><span class="nav-text">4、如何在Kafka中修改Topic的preferred replica</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、如何在Kafka中对Topic的leader进行均衡"><span class="nav-text">5、如何在Kafka中对Topic的leader进行均衡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、apache-kafka中topic级别配置"><span class="nav-text">6、apache kafka中topic级别配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、apache-Kafka下线broker的操作"><span class="nav-text">7、apache Kafka下线broker的操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、Kafka中Follower如何与Leader同步数据"><span class="nav-text">六、Kafka中Follower如何与Leader同步数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、重要名词解释："><span class="nav-text">1、重要名词解释：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、Kafka中replication复制数据"><span class="nav-text">2、Kafka中replication复制数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、kafka集群副本分布原理分析"><span class="nav-text">3、kafka集群副本分布原理分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、Kafka-Broker-HA机制"><span class="nav-text">七、Kafka Broker HA机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、Kafka副本同步机制理解"><span class="nav-text">八、Kafka副本同步机制理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka副本"><span class="nav-text">Kafka副本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partition的follower追上leader含义"><span class="nav-text">partition的follower追上leader含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#是什么原因导致分区的副本与leader不同步"><span class="nav-text">是什么原因导致分区的副本与leader不同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、Kafka数据可靠性与一致性解析"><span class="nav-text">九、Kafka数据可靠性与一致性解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Partition-Recovery机制"><span class="nav-text">1.Partition Recovery机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Partition-Replica同步机制"><span class="nav-text">2.Partition Replica同步机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-数据可靠性保证"><span class="nav-text">3.数据可靠性保证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-数据一致性保证"><span class="nav-text">4.数据一致性保证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、Kafka性能为什么这么快？"><span class="nav-text">十、Kafka性能为什么这么快？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-顺序读写"><span class="nav-text">1. 顺序读写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-索引"><span class="nav-text">2.索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-批量读写和文件压缩"><span class="nav-text">3.批量读写和文件压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-零拷贝"><span class="nav-text">4.零拷贝</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#面试题："><span class="nav-text">面试题：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张鸣</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+<!-- 添加站点访问计数 -->
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

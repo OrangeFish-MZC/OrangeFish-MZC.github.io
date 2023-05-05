@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="微服务架构,SpringBoot," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="介绍 官网介绍：https:&#x2F;&#x2F;docs.spring.io&#x2F;spring-boot&#x2F;docs&#x2F;2.5.0-SNAPSHOT&#x2F;reference&#x2F;html&#x2F;production-ready-features.html#production-ready   Spring Boot包含许多其他功能，可帮助您在将应用程序推送到生产环境时监视和管理应用程序。 Spring Boot包含许多其他功能，可帮助">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务架构-5-Spring Boot特性之Actuator">
+<meta property="og:url" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/index.html">
+<meta property="og:site_name" content="张鸣的博客">
+<meta property="og:description" content="介绍 官网介绍：https:&#x2F;&#x2F;docs.spring.io&#x2F;spring-boot&#x2F;docs&#x2F;2.5.0-SNAPSHOT&#x2F;reference&#x2F;html&#x2F;production-ready-features.html#production-ready   Spring Boot包含许多其他功能，可帮助您在将应用程序推送到生产环境时监视和管理应用程序。 Spring Boot包含许多其他功能，可帮助">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/cmd%E6%89%93%E5%BC%80jconsole.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/jmx%E7%9B%91%E6%8E%A7%E6%8E%A7%E5%88%B6%E5%8F%B0.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/jmx%E7%9B%91%E6%8E%A7%E7%AB%AF%E7%82%B9.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/%E8%87%AA%E5%AE%9A%E4%B9%89jmx%E7%9B%91%E6%8E%A7%E5%AF%B9%E8%B1%A1.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/%E6%89%8B%E5%8A%A8%E9%80%9A%E8%BF%87springboot%E5%AE%9E%E7%8E%B0jmx%E7%9B%91%E6%8E%A7.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E6%BA%90prometheus_1.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E6%BA%90prometheus_2.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0dashboard_1.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0dashboard_2.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0dashboard_3.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_1.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_2.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_3.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_4.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_5.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_6.jpg">
+<meta property="article:published_time" content="2021-04-21T13:27:10.000Z">
+<meta property="article:modified_time" content="2021-05-08T11:01:28.000Z">
+<meta property="article:author" content="张鸣">
+<meta property="article:tag" content="微服务架构">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/cmd%E6%89%93%E5%BC%80jconsole.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/04/21/微服务架构-5-Spring-Boot特性之Actuator/"/>
+
+
+
+
+
+  <title>微服务架构-5-Spring Boot特性之Actuator | 张鸣的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张鸣的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hello World</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张鸣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/saritocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张鸣的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微服务架构-5-Spring Boot特性之Actuator</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-21T21:27:10+08:00">
+                2021-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index">
+                    <span itemprop="name">微服务架构</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+	  
+	    <span class="post-meta-divider">|</span>
+	    <span id="busuanzi_value_page_pv"></span>次阅读
+	  
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><blockquote>
+<p>官网介绍：<a href="https://docs.spring.io/spring-boot/docs/2.5.0-SNAPSHOT/reference/html/production-ready-features.html#production-ready" target="_blank" rel="noopener">https://docs.spring.io/spring-boot/docs/2.5.0-SNAPSHOT/reference/html/production-ready-features.html#production-ready</a></p>
+</blockquote>
+<ul>
+<li>Spring Boot包含许多其他功能，可帮助您在将应用程序推送到生产环境时监视和管理应用程序。</li>
+<li>Spring Boot包含许多其他功能，可帮助您在将应用程序推送到生产环境时监视和管理应用程序。</li>
+<li>审核，运行状况和指标收集也可以自动应用于您的应用程序。</li>
+</ul>
+<p><strong>总之Spring Boot Actuator就是一款可以帮助你监控系统数据的框架,其可以监控很多很多的系统数据,它有对应用系统的自省和监控的集成功能，可以查看应用配置的详细信息,如:</strong></p>
+<ul>
+<li><p>显示应用程序员的Health健康信息</p>
+</li>
+<li><p>显示Info应用信息</p>
+</li>
+<li><p>显示HTTP Request跟踪信息</p>
+</li>
+<li><p>显示当前应用程序的“Metrics”信息</p>
+</li>
+<li><p>显示所有的@RequestMapping的路径信息</p>
+</li>
+<li><p>显示应用程序的各种配置信息</p>
+</li>
+<li><p>显示你的程序请求的次数时间等各种信息</p>
+</li>
+</ul>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><ol>
+<li><p><strong>pom.xml中添加依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>所有监控断电endpoints</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">ID</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">auditevents</td>
+<td align="center">公开当前应用程序的审核事件信息。</td>
+</tr>
+<tr>
+<td align="center">beans</td>
+<td align="center">显示应用程序中所有Spring bean的完整列表。</td>
+</tr>
+<tr>
+<td align="center">caches</td>
+<td align="center">暴露可用的缓存。</td>
+</tr>
+<tr>
+<td align="center">conditions</td>
+<td align="center">显示在配置和自动配置类上评估的条件以及它们匹配或不匹配的原因。</td>
+</tr>
+<tr>
+<td align="center">configprops</td>
+<td align="center">显示所有的整理列表@ConfigurationProperties,查看配置属性，包括默认配置</td>
+</tr>
+<tr>
+<td align="center">env</td>
+<td align="center">露出Spring的属性的各种环境变量,后面可跟/{name}查看具体的值</td>
+</tr>
+<tr>
+<td align="center">flyway</td>
+<td align="center">显示已应用的任何Flyway数据库迁移。</td>
+</tr>
+<tr>
+<td align="center">health</td>
+<td align="center">显示应用健康信息,在spring boot2.0以后需要在配置里show-details打开所有健康信息</td>
+</tr>
+<tr>
+<td align="center">httptrace</td>
+<td align="center">显示HTTP跟踪信息（默认情况下，最后100个HTTP请求 - 响应交换）,2.0以后需要手动打开</td>
+</tr>
+<tr>
+<td align="center">info</td>
+<td align="center">显示任意应用信息,是在配置文件里自己定义的</td>
+</tr>
+<tr>
+<td align="center">integrationgraph</td>
+<td align="center">显示Spring Integration图。</td>
+</tr>
+<tr>
+<td align="center">loggers</td>
+<td align="center">显示和修改应用程序中记录器的配置。</td>
+</tr>
+<tr>
+<td align="center">liquibase</td>
+<td align="center">显示已应用的任何Liquibase数据库迁移。</td>
+</tr>
+<tr>
+<td align="center">metrics</td>
+<td align="center">显示当前应用程序的“指标”信息,比如内存用量和HTTP请求计数,后可跟/{name}查看具体值</td>
+</tr>
+<tr>
+<td align="center">mappings</td>
+<td align="center">显示所有@RequestMapping路径的整理列表。</td>
+</tr>
+<tr>
+<td align="center">scheduledtasks</td>
+<td align="center">显示应用程序中的计划任务。</td>
+</tr>
+<tr>
+<td align="center">sessions</td>
+<td align="center">允许从Spring Session支持的会话存储中检索和删除用户会话。使用Spring Session对响应式Web应用程序的支持时不可用</td>
+</tr>
+<tr>
+<td align="center">shutdown</td>
+<td align="center">允许应用程序正常关闭。</td>
+</tr>
+<tr>
+<td align="center">threaddump</td>
+<td align="center">执行线程转储。</td>
+</tr>
+</tbody></table>
+<p>如果您的应用程序是Web应用程序（Spring MVC，Spring WebFlux或Jersey），则可以使用以下附加端点：</p>
+<table>
+<thead>
+<tr>
+<th align="center">ID</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">heapdump</td>
+<td align="center">返回hprof堆转储文件。</td>
+</tr>
+<tr>
+<td align="center">jolokia</td>
+<td align="center">通过HTTP公开JMX bean（当Jolokia在类路径上时，不适用于WebFlux）。</td>
+</tr>
+<tr>
+<td align="center">logfile</td>
+<td align="center">返回日志文件的内容（如果已设置logging.file或logging.path属性）。支持使用HTTP Range标头检索部分日志文件的内容。</td>
+</tr>
+<tr>
+<td align="center">prometheus</td>
+<td align="center">可以由Prometheus服务器抓取的格式公开指标。</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h1 id="Actuator两种形态监控"><a href="#Actuator两种形态监控" class="headerlink" title="Actuator两种形态监控"></a>Actuator两种形态监控</h1><h2 id="HTTP监控"><a href="#HTTP监控" class="headerlink" title="HTTP监控"></a>HTTP监控</h2><ol>
+<li><p>在spring boot 2.0以后,actuator默认只开启了info和health两个端点,要想使用其他的端点,需要在application.properties中打开</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment">#激活所有的端点的web方式请求</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.include</span>=<span class="string">*</span></span><br><span class="line"><span class="comment">#关闭端点web方式</span></span><br><span class="line"><span class="meta">management.endpoints.web.exposure.exclude</span>=<span class="string">env,beans</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>而且所有的端点都以默认的路径<a href="http://localhost:8080/actuator" target="_blank" rel="noopener">http://localhost:8080/actuator</a> 开始，如我们查看info端点的信息就是访问:<a href="http://localhost:8080/actuator/info" target="_blank" rel="noopener">http://localhost:8080/actuator/info</a></p>
+</li>
+<li><p>Timestamps时间戳: 端点消耗的所有时间戳（作为查询参数或在请求正文中）必须格式化为ISO 8601中指定的偏移日期和时间 。 默认的时间戳是跟我们中国的时区不符合的.</p>
+</li>
+<li><p>actuator的大部分监控请求都是以get请求的.只有少数是post请求.</p>
+</li>
+<li><p>如果想更改默认的actuator启动路径的前缀,可以在application.properties中更改,如我们改成 <a href="http://localhost:8080/manage" target="_blank" rel="noopener">http://localhost:8080/manage</a></p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">management.endpoints.web.base-path</span>=<span class="string">/manage</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在application.yml中开启所有的Health监控数据。</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">management.endpoint.health.show-details</span>=<span class="string">always</span></span><br></pre></td></tr></table></figure>
+
+<p>health端点不仅仅只包含springboot应用本身的健康状态，还包含其他引用包的使用状态，如redis等。</p>
+</li>
+<li><p>metrics包含很多系统信息，如JVM（内存/堆）、系统（运行时间/平均负载/处理器的信息）、线程池信息、tomcat会话信息</p>
+</li>
+</ol>
+<h2 id="JMX-Java-Management-Extensions-监控"><a href="#JMX-Java-Management-Extensions-监控" class="headerlink" title="JMX(Java Management Extensions)监控"></a>JMX(Java Management Extensions)监控</h2><p>对于Spring Boot项目，还可以通过Java管理扩展（JMX）来让开发人员监控JVM的状况。</p>
+<h3 id="1-激活jmx监控"><a href="#1-激活jmx监控" class="headerlink" title="1. 激活jmx监控"></a>1. 激活jmx监控</h3><figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment">#激活所有的JMX方式请求</span></span><br><span class="line"><span class="meta">management.endpoints.jmx.exposure.include</span>=<span class="string">*</span></span><br><span class="line"><span class="comment">#开启spring的jmx监控</span></span><br><span class="line"><span class="meta">spring.jmx.enabled</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-控制台调用Java内置的jconsole来实现JMX监控"><a href="#2-控制台调用Java内置的jconsole来实现JMX监控" class="headerlink" title="2.控制台调用Java内置的jconsole来实现JMX监控"></a>2.控制台调用Java内置的jconsole来实现JMX监控</h3><p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/cmd%E6%89%93%E5%BC%80jconsole.jpg" alt></p>
+<p>这时会打开jconsole页面，选择当前的程序进程，如下：</p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/jmx%E7%9B%91%E6%8E%A7%E6%8E%A7%E5%88%B6%E5%8F%B0.jpg" alt></p>
+<p>进入界面后，在MBean标签的org.springframework.boot域下可对我们的程序进行监控和管理，如下：</p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/jmx%E7%9B%91%E6%8E%A7%E7%AB%AF%E7%82%B9.jpg" alt></p>
+<h1 id="自定义端点"><a href="#自定义端点" class="headerlink" title="自定义端点"></a>自定义端点</h1><h2 id="自定义端点使用到的注解"><a href="#自定义端点使用到的注解" class="headerlink" title="自定义端点使用到的注解"></a>自定义端点使用到的注解</h2><p>可以使用<code>@Endpoint</code>,<code>@WebEndpoint</code>,<code>@JmxEndpoint</code>,或者<code>EndpointWebExtension</code>来实现HTTP方式的端点,可以是传统SpringMVC也可以是最新的<code>Spring WebFlux</code></p>
+<ul>
+<li><code>@Endpoint</code>相当于<code>@WebEndpoint</code>和<code>@JmxEndpoint</code>的整合。web和jmx方式都支持</li>
+<li><code>@WebEndpoint</code> 只会生成web的方式的端点监控</li>
+<li><code>@JmxEndpoint</code> 只会生成Jmx的方式监控</li>
+</ul>
+<h2 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h2><p>默认的基础路径是<code>/actuator</code>,如果一个端点配置的路径是<code>sessions</code>,那么它的全路径就是<code>/actuator/sessions</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@WebEndpoint</span>(id = <span class="string">"sessions"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHealthEndpoint</span> </span>&#123;</span><br><span class="line">  <span class="meta">@ReadOperation</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Info <span class="title">get</span><span class="params">(@Selector String name)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Info(name, <span class="string">"23"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Selector</code> 的含义是让这个路径变成<code>/actuator/sessions/{name}</code> 我们能从路径上获取一个入参。</p>
+<h2 id="自定义管理端点路径"><a href="#自定义管理端点路径" class="headerlink" title="自定义管理端点路径"></a>自定义管理端点路径</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">management.endpoints.web.base-path &#x3D; &#x2F;manage</span><br></pre></td></tr></table></figure>
+
+<p>此配置会将<code>/actuator/sessions/{name}</code>转换成<code>/manage/sessions/{name}</code></p>
+<h2 id="自定义管理服务器地址"><a href="#自定义管理服务器地址" class="headerlink" title="自定义管理服务器地址"></a>自定义管理服务器地址</h2><figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">management.server.port</span> = <span class="string">8081</span></span><br><span class="line"><span class="meta">management.server.address</span> = <span class="string">127.0.0.1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>@Endpoint就相当于声明称一个@RestController的控制类，而请求方法分别被下面注解代替</p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>Operation</strong></th>
+<th align="center"><strong>HTTP method</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">@ReadOperation</td>
+<td align="center">GET</td>
+</tr>
+<tr>
+<td align="center">@WriteOperation</td>
+<td align="center">POST</td>
+</tr>
+<tr>
+<td align="center">@DeleteOperation</td>
+<td align="center">DELETE</td>
+</tr>
+</tbody></table>
+<h1 id="自定义JMX监控对象"><a href="#自定义JMX监控对象" class="headerlink" title="自定义JMX监控对象"></a>自定义JMX监控对象</h1><h2 id="1-创建SystemInfoMBean接口"><a href="#1-创建SystemInfoMBean接口" class="headerlink" title="1.创建SystemInfoMBean接口"></a>1.创建SystemInfoMBean接口</h2><p>定义cpu核心数、总内存、shutDown等方法。命名规范以MBean结尾</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 接口命名规范一定是以MBean结尾，默认以get开头为属性，其余为操作</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SystemInfoMBean</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getCpuCore</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">getTotalMemory</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shutDown</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-创建SystemInfo实现类"><a href="#2-创建SystemInfo实现类" class="headerlink" title="2.创建SystemInfo实现类"></a>2.创建SystemInfo实现类</h2><p>实现上述接口，命名规范与接口名一致去掉MBean</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SystemInfo</span> <span class="keyword">implements</span> <span class="title">SystemInfoMBean</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCpuCore</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Runtime.getRuntime().availableProcessors();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getTotalMemory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Runtime.getRuntime().totalMemory();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shutDown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-创建测试类TestMain"><a href="#3-创建测试类TestMain" class="headerlink" title="3.创建测试类TestMain"></a>3.创建测试类TestMain</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMain</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException, IOException </span>&#123;</span><br><span class="line">        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();</span><br><span class="line">        ObjectName objectName = <span class="keyword">new</span> ObjectName(<span class="string">"com.example.jmxendpoint:type=SystemInfo"</span>);</span><br><span class="line">        SystemInfo systemInfo = <span class="keyword">new</span> SystemInfo();</span><br><span class="line">        mBeanServer.registerMBean(systemInfo, objectName);</span><br><span class="line">        <span class="comment">// 阻塞</span></span><br><span class="line">        System.in.read();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-查看jconsole的MBean信息"><a href="#4-查看jconsole的MBean信息" class="headerlink" title="4.查看jconsole的MBean信息"></a>4.查看jconsole的MBean信息</h2><p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/%E8%87%AA%E5%AE%9A%E4%B9%89jmx%E7%9B%91%E6%8E%A7%E5%AF%B9%E8%B1%A1.jpg" alt></p>
+<h1 id="Spring-Boot定义JMX监控对象源码解析"><a href="#Spring-Boot定义JMX监控对象源码解析" class="headerlink" title="Spring Boot定义JMX监控对象源码解析"></a>Spring Boot定义JMX监控对象源码解析</h1><p>![](微服务架构-5-Spring-Boot特性之Actuator/Spring Boot JMX监控对象.png)</p>
+<p>通过查看SpringBoot项目的JMX监控控制台，发现其存在一个type为Admin，name为SpringApplication的MBean对象。查看SpringBoot源码，其通过创建SpringApplicationAdminMXBean接口，并通过SpringApplicationAdminMXBeanRegistrar实现其方法，最后由SpringApplicationAdminJmxAutoConfiguration.java进行自动装配。</p>
+<h2 id="1-SpringApplicationAdminMXBean-java"><a href="#1-SpringApplicationAdminMXBean-java" class="headerlink" title="1. SpringApplicationAdminMXBean.java"></a>1. SpringApplicationAdminMXBean.java</h2><p>定义MXBean接口，并定义两个属性和两个操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SpringApplicationAdminMXBean</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isReady</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isEmbeddedWebApplication</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">getProperty</span><span class="params">(String key)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-SpringApplicationAdminMXBeanRegistrar-java"><a href="#2-SpringApplicationAdminMXBeanRegistrar-java" class="headerlink" title="2.SpringApplicationAdminMXBeanRegistrar.java"></a>2.SpringApplicationAdminMXBeanRegistrar.java</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringApplicationAdminMXBeanRegistrar</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span>, <span class="title">GenericApplicationListener</span>, <span class="title">EnvironmentAware</span>, <span class="title">InitializingBean</span>, <span class="title">DisposableBean</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log logger = LogFactory.getLog(SpringApplicationAdminMXBeanRegistrar.SpringApplicationAdmin<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="keyword">private</span> ConfigurableApplicationContext applicationContext;</span><br><span class="line">    <span class="keyword">private</span> Environment environment = <span class="keyword">new</span> StandardEnvironment();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ObjectName objectName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> ready = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> embeddedWebApplication = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SpringApplicationAdminMXBeanRegistrar</span><span class="params">(String name)</span> <span class="keyword">throws</span> MalformedObjectNameException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.objectName = <span class="keyword">new</span> ObjectName(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现ApplicationContextAware接口的方法，设置应用上下文</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        Assert.state(applicationContext <span class="keyword">instanceof</span> ConfigurableApplicationContext, <span class="string">"ApplicationContext does not implement ConfigurableApplicationContext"</span>);</span><br><span class="line">        <span class="keyword">this</span>.applicationContext = (ConfigurableApplicationContext)applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现EnvironmentAware接口的方法，设置当前环境变量</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEnvironment</span><span class="params">(Environment environment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.environment = environment;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsEventType</span><span class="params">(ResolvableType eventType)</span> </span>&#123;</span><br><span class="line">        Class&lt;?&gt; type = eventType.getRawClass();</span><br><span class="line">        <span class="keyword">if</span> (type == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> ApplicationReadyEvent<span class="class">.<span class="keyword">class</span>.<span class="title">isAssignableFrom</span>(<span class="title">type</span>) || <span class="title">WebServerInitializedEvent</span>.<span class="title">class</span>.<span class="title">isAssignableFrom</span>(<span class="title">type</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsSourceType</span><span class="params">(Class&lt;?&gt; sourceType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ApplicationEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (event <span class="keyword">instanceof</span> ApplicationReadyEvent) &#123;</span><br><span class="line">            <span class="keyword">this</span>.onApplicationReadyEvent((ApplicationReadyEvent)event);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (event <span class="keyword">instanceof</span> WebServerInitializedEvent) &#123;</span><br><span class="line">            <span class="keyword">this</span>.onWebServerInitializedEvent((WebServerInitializedEvent)event);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">2147483648</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onApplicationReadyEvent</span><span class="params">(ApplicationReadyEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.applicationContext.equals(event.getApplicationContext())) &#123;</span><br><span class="line">            <span class="keyword">this</span>.ready = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onWebServerInitializedEvent</span><span class="params">(WebServerInitializedEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.applicationContext.equals(event.getApplicationContext())) &#123;</span><br><span class="line">            <span class="keyword">this</span>.embeddedWebApplication = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现InitializingBean接口的方法，初始化bean时候的调用</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MBeanServer server = ManagementFactory.getPlatformMBeanServer();</span><br><span class="line">        server.registerMBean(<span class="keyword">new</span> SpringApplicationAdminMXBeanRegistrar.SpringApplicationAdmin(), <span class="keyword">this</span>.objectName);</span><br><span class="line">        <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">            logger.debug(<span class="string">"Application Admin MBean registered with name '"</span> + <span class="keyword">this</span>.objectName + <span class="string">"'"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现DisposableBean接口的方法，销毁bean时的调用</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ManagementFactory.getPlatformMBeanServer().unregisterMBean(<span class="keyword">this</span>.objectName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实现上述MXBean接口，命名同接口去掉MXBean</span></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringApplicationAdmin</span> <span class="keyword">implements</span> <span class="title">SpringApplicationAdminMXBean</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="title">SpringApplicationAdmin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isReady</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> SpringApplicationAdminMXBeanRegistrar.<span class="keyword">this</span>.ready;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmbeddedWebApplication</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> SpringApplicationAdminMXBeanRegistrar.<span class="keyword">this</span>.embeddedWebApplication;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getProperty</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> SpringApplicationAdminMXBeanRegistrar.<span class="keyword">this</span>.environment.getProperty(key);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            SpringApplicationAdminMXBeanRegistrar.logger.info(<span class="string">"Application shutdown requested."</span>);</span><br><span class="line">            SpringApplicationAdminMXBeanRegistrar.<span class="keyword">this</span>.applicationContext.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-SpringApplicationAdminJmxAutoConfiguration-java"><a href="#3-SpringApplicationAdminJmxAutoConfiguration-java" class="headerlink" title="3.SpringApplicationAdminJmxAutoConfiguration.java"></a>3.SpringApplicationAdminJmxAutoConfiguration.java</h2><p>自动配置类，对定义的MXBean进行自动装配</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span>(proxyBeanMethods = <span class="keyword">false</span>)</span><br><span class="line"><span class="meta">@AutoConfigureAfter</span>(JmxAutoConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ConditionalOnProperty</span>(<span class="title">prefix</span> </span>= <span class="string">"spring.application.admin"</span>, value = <span class="string">"enabled"</span>, havingValue = <span class="string">"true"</span>,</span><br><span class="line">		matchIfMissing = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringApplicationAdminJmxAutoConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The property to use to customize the &#123;<span class="doctag">@code</span> ObjectName&#125; of the application admin</span></span><br><span class="line"><span class="comment">	 * mbean.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String JMX_NAME_PROPERTY = <span class="string">"spring.application.admin.jmx-name"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The default &#123;<span class="doctag">@code</span> ObjectName&#125; of the application admin mbean.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DEFAULT_JMX_NAME = <span class="string">"org.springframework.boot:type=Admin,name=SpringApplication"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> SpringApplicationAdminMXBeanRegistrar <span class="title">springApplicationAdminRegistrar</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			ObjectProvider&lt;MBeanExporter&gt; mbeanExporters, Environment environment)</span> <span class="keyword">throws</span> MalformedObjectNameException </span>&#123;</span><br><span class="line">		String jmxName = environment.getProperty(JMX_NAME_PROPERTY, DEFAULT_JMX_NAME);</span><br><span class="line">		<span class="keyword">if</span> (mbeanExporters != <span class="keyword">null</span>) &#123; <span class="comment">// Make sure to not register that MBean twice</span></span><br><span class="line">			<span class="keyword">for</span> (MBeanExporter mbeanExporter : mbeanExporters) &#123;</span><br><span class="line">				mbeanExporter.addExcludedBean(jmxName);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> SpringApplicationAdminMXBeanRegistrar(jmxName);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="手动实现将SystemInfoMBean通过SpringBoot进行jmx监控"><a href="#手动实现将SystemInfoMBean通过SpringBoot进行jmx监控" class="headerlink" title="手动实现将SystemInfoMBean通过SpringBoot进行jmx监控"></a>手动实现将SystemInfoMBean通过SpringBoot进行jmx监控</h1><h2 id="1-CustomerApplicationMXBeanRegistrar-java"><a href="#1-CustomerApplicationMXBeanRegistrar-java" class="headerlink" title="1. CustomerApplicationMXBeanRegistrar.java"></a>1. CustomerApplicationMXBeanRegistrar.java</h2><p>定义一个registrar，模拟上报MXBean到jmx</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomerApplicationMXBeanRegistrar</span> <span class="keyword">implements</span> <span class="title">ApplicationContextAware</span>,</span></span><br><span class="line"><span class="class">        <span class="title">EnvironmentAware</span>, <span class="title">InitializingBean</span>, <span class="title">DisposableBean</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ConfigurableApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Environment environment = <span class="keyword">new</span> StandardEnvironment();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ObjectName objectName = <span class="keyword">new</span> ObjectName(<span class="string">"com.example.jmxendpoint:type=SystemInfo"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomerApplicationMXBeanRegistrar</span><span class="params">()</span> <span class="keyword">throws</span> MalformedObjectNameException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MBeanServer server = ManagementFactory.getPlatformMBeanServer();</span><br><span class="line">        server.registerMBean(<span class="keyword">new</span> SystemInfo(), <span class="keyword">this</span>.objectName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.applicationContext = (ConfigurableApplicationContext)applicationContext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEnvironment</span><span class="params">(Environment environment)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.environment = environment;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-查看jconsole的MBean信息"><a href="#2-查看jconsole的MBean信息" class="headerlink" title="2.查看jconsole的MBean信息"></a>2.查看jconsole的MBean信息</h2><p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/%E6%89%8B%E5%8A%A8%E9%80%9A%E8%BF%87springboot%E5%AE%9E%E7%8E%B0jmx%E7%9B%91%E6%8E%A7.jpg" alt></p>
+<h1 id="开源监控系统Prometheus-Grafana"><a href="#开源监控系统Prometheus-Grafana" class="headerlink" title="开源监控系统Prometheus+Grafana"></a>开源监控系统Prometheus+Grafana</h1><h2 id="Prometheus"><a href="#Prometheus" class="headerlink" title="Prometheus"></a>Prometheus</h2><blockquote>
+<p>官网地址：<a href="https://prometheus.io/" target="_blank" rel="noopener">https://prometheus.io/</a></p>
+</blockquote>
+<ol>
+<li><p><strong>下载</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;prometheus&#x2F;releases&#x2F;download&#x2F;v2.26.0&#x2F;prometheus-2.26.0.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解压</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar -zxvf prometheus-2.26.0.linux-amd64</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>SpringBoot引入prometheus依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.micrometer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>micrometer-registry-prometheus<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>查看prometheus监控信息</strong></p>
+<p><a href="http://localhost:8081/methrics/prometheus" target="_blank" rel="noopener">http://localhost:8081/methrics/prometheus</a></p>
+</li>
+<li><p><strong>配置prometheus监控节点</strong></p>
+<figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># my global config</span></span><br><span class="line"><span class="attr">global:</span></span><br><span class="line">  <span class="attr">scrape_interval:</span>     <span class="string">15s</span> <span class="comment"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span></span><br><span class="line">  <span class="attr">evaluation_interval:</span> <span class="string">15s</span> <span class="comment"># Evaluate rules every 15 seconds. The default is every 1 minute.</span></span><br><span class="line">  <span class="comment"># scrape_timeout is set to the global default (10s).</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Alertmanager configuration</span></span><br><span class="line"><span class="attr">alerting:</span></span><br><span class="line">  <span class="attr">alertmanagers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">static_configs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">targets:</span></span><br><span class="line">      <span class="comment"># - alertmanager:9093</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span></span><br><span class="line"><span class="attr">rule_files:</span></span><br><span class="line">  <span class="comment"># - "first_rules.yml"</span></span><br><span class="line">  <span class="comment"># - "second_rules.yml"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A scrape configuration containing exactly one endpoint to scrape:</span></span><br><span class="line"><span class="comment"># Here it's Prometheus itself.</span></span><br><span class="line"><span class="attr">scrape_configs:</span></span><br><span class="line">  <span class="comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">'prometheus'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># metrics_path defaults to '/metrics'</span></span><br><span class="line">    <span class="comment"># scheme defaults to 'http'.</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">static_configs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">targets:</span> <span class="string">['localhost:9090']</span></span><br><span class="line">  <span class="comment"># 新增springboot监控节点</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">'spring-boot'</span></span><br><span class="line">    <span class="comment"># 配置metrics地址，根据该地址采集数据</span></span><br><span class="line">    <span class="attr">metrics_path:</span> <span class="string">'/actuator/prometheus'</span></span><br><span class="line">    <span class="comment"># 扫描间隔，默认15s</span></span><br><span class="line">    <span class="attr">scrape_interval:</span> <span class="string">5s</span></span><br><span class="line">    <span class="comment"># 配置目标节点</span></span><br><span class="line">    <span class="attr">static_configs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">targets:</span> <span class="string">['192.168.100.17:8081']</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动prometheus</strong></p>
+<p><strong>用指定配置文件启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;prometheus --config.file prometheus.yml</span><br></pre></td></tr></table></figure>
+
+<p><strong>后台启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nohup .&#x2F;prometheus --config.file prometheus.yml</span><br></pre></td></tr></table></figure>
+
+<p><strong>相关启动参数：</strong></p>
+<p>–web.enable-admin-api  该参数为开启API服务</p>
+<p>–web.enable-lifecycle  该参数为开启动态加载配置文件</p>
+<p>–config.file=/安装目录/prometheus.yml 该参数为指定配置文件路径</p>
+<p><strong>其他命令：</strong></p>
+<p>开启–web.enable-admin-api状态下：</p>
+<p><strong>删除指定 Metric 名称全部数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -X POST -g &#39;http:&#x2F;&#x2F;ip:9090&#x2F;api&#x2F;v1&#x2F;admin&#x2F;tsdb&#x2F;delete_series?match[]&#x3D;test&#39;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除指定 Metric 名称和 label 名称的全部数据</strong></p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -X POST -g &#39;http:&#x2F;&#x2F;ip:9090&#x2F;api&#x2F;v1&#x2F;admin&#x2F;tsdb&#x2F;delete_series?match[]&#x3D;test&#123;mode&#x3D;&quot;123&quot;&#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除指定时间范围内的 Metric 数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -X POST -g &#39;http:&#x2F;&#x2F;127.0.0.1:9090&#x2F;api&#x2F;v1&#x2F;admin&#x2F;tsdb&#x2F;delete_series?start&#x3D;1578301194&amp;end&#x3D;1578301694&amp;match[]&#x3D;test&#123;mode&#x3D;&quot;123&quot;&#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<p><strong>清理数据，从磁盘删除已经被 delete_series 接口删除的数据，并清理现有的 tombstones</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">curl -X POST http:&#x2F;&#x2F;127.0.0.1:9090&#x2F;api&#x2F;v1&#x2F;admin&#x2F;tsdb&#x2F;clean_tombstones</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="Grafana"><a href="#Grafana" class="headerlink" title="Grafana"></a>Grafana</h2><blockquote>
+<p>官方地址：<a href="https://grafana.com/" target="_blank" rel="noopener">https://grafana.com/</a></p>
+</blockquote>
+<ol>
+<li><p><strong>下载</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 使用华为开源镜像站地址（https:&#x2F;&#x2F;mirrors.huaweicloud.com&#x2F;）</span><br><span class="line">wget https:&#x2F;&#x2F;repo.huaweicloud.com&#x2F;grafana&#x2F;7.5.5&#x2F;grafana-7.5.5.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>解压</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tar -zxvf grafana-7.5.5.linux-amd64.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd grafana-7.5.5&#x2F;bin</span><br><span class="line">.&#x2F;grafana-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>访问</strong></p>
+<p>地址：<a href="http://192.168.100.201:3000/" target="_blank" rel="noopener">http://192.168.100.201:3000/</a></p>
+<p>初始账号密码：admin/admin</p>
+</li>
+<li><p><strong>添加数据源</strong></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E6%BA%90prometheus_1.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E6%BA%90prometheus_2.jpg" alt></p>
+</li>
+<li><p><strong>添加DashBoard</strong></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0dashboard_1.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0dashboard_2.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E6%B7%BB%E5%8A%A0dashboard_3.jpg" alt></p>
+</li>
+<li><p><strong>使用grafana官方DashBoard模板</strong></p>
+<p>地址：<a href="https://grafana.com/grafana/dashboards" target="_blank" rel="noopener">https://grafana.com/grafana/dashboards</a></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_1.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_2.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_3.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_4.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_5.jpg" alt></p>
+<p><img src="/2021/04/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-5-Spring-Boot%E7%89%B9%E6%80%A7%E4%B9%8BActuator/grafana%E5%AE%98%E6%96%B9dashboard%E6%A8%A1%E6%9D%BF_6.jpg" alt></p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" rel="tag"># 微服务架构</a>
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/20/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-4-%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AASpring-Boot-Starter%E7%BB%84%E4%BB%B6/" rel="next" title="微服务架构-4-手动实现一个Spring Boot Starter组件">
+                <i class="fa fa-chevron-left"></i> 微服务架构-4-手动实现一个Spring Boot Starter组件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/05/08/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-6-Spring-Cloud-Netflix-Ribbon/" rel="prev" title="微服务架构-6-Spring Cloud Netflix Ribbon">
+                微服务架构-6-Spring Cloud Netflix Ribbon <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/saritocat.png"
+                alt="张鸣" />
+            
+              <p class="site-author-name" itemprop="name">张鸣</p>
+              <p class="site-description motion-element" itemprop="description">No cross, no crown</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用"><span class="nav-text">使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Actuator两种形态监控"><span class="nav-text">Actuator两种形态监控</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP监控"><span class="nav-text">HTTP监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JMX-Java-Management-Extensions-监控"><span class="nav-text">JMX(Java Management Extensions)监控</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-激活jmx监控"><span class="nav-text">1. 激活jmx监控</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-控制台调用Java内置的jconsole来实现JMX监控"><span class="nav-text">2.控制台调用Java内置的jconsole来实现JMX监控</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义端点"><span class="nav-text">自定义端点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义端点使用到的注解"><span class="nav-text">自定义端点使用到的注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#路径"><span class="nav-text">路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义管理端点路径"><span class="nav-text">自定义管理端点路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义管理服务器地址"><span class="nav-text">自定义管理服务器地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义JMX监控对象"><span class="nav-text">自定义JMX监控对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-创建SystemInfoMBean接口"><span class="nav-text">1.创建SystemInfoMBean接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-创建SystemInfo实现类"><span class="nav-text">2.创建SystemInfo实现类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-创建测试类TestMain"><span class="nav-text">3.创建测试类TestMain</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-查看jconsole的MBean信息"><span class="nav-text">4.查看jconsole的MBean信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Boot定义JMX监控对象源码解析"><span class="nav-text">Spring Boot定义JMX监控对象源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-SpringApplicationAdminMXBean-java"><span class="nav-text">1. SpringApplicationAdminMXBean.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SpringApplicationAdminMXBeanRegistrar-java"><span class="nav-text">2.SpringApplicationAdminMXBeanRegistrar.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-SpringApplicationAdminJmxAutoConfiguration-java"><span class="nav-text">3.SpringApplicationAdminJmxAutoConfiguration.java</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#手动实现将SystemInfoMBean通过SpringBoot进行jmx监控"><span class="nav-text">手动实现将SystemInfoMBean通过SpringBoot进行jmx监控</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-CustomerApplicationMXBeanRegistrar-java"><span class="nav-text">1. CustomerApplicationMXBeanRegistrar.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-查看jconsole的MBean信息"><span class="nav-text">2.查看jconsole的MBean信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开源监控系统Prometheus-Grafana"><span class="nav-text">开源监控系统Prometheus+Grafana</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Prometheus"><span class="nav-text">Prometheus</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grafana"><span class="nav-text">Grafana</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张鸣</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+<!-- 添加站点访问计数 -->
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

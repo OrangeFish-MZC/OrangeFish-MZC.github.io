@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="微服务架构,SpringCloud," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CAPConsistency：一致性，所有节点在同一时间的数据完全一致 Availability：可用性，服务一直可用，而且是正常响应时间 Partition tolerance：分区容错性，在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务  CAP理论指的是一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务架构-8-Spring-Cloud-Netflix-Eureka">
+<meta property="og:url" content="http://yoursite.com/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/index.html">
+<meta property="og:site_name" content="张鸣的博客">
+<meta property="og:description" content="CAPConsistency：一致性，所有节点在同一时间的数据完全一致 Availability：可用性，服务一直可用，而且是正常响应时间 Partition tolerance：分区容错性，在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务  CAP理论指的是一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（P">
+<meta property="og:image" content="http://yoursite.com/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/CAP.jpeg">
+<meta property="og:image" content="http://yoursite.com/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/TestSmartLifecycle%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.jpg">
+<meta property="og:image" content="http://yoursite.com/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/ServiceRegistry%E7%B1%BB%E5%85%B3%E7%B3%BB%E5%9B%BE.png">
+<meta property="article:published_time" content="2021-07-02T02:47:31.000Z">
+<meta property="article:modified_time" content="2021-07-22T10:43:52.000Z">
+<meta property="article:author" content="张鸣">
+<meta property="article:tag" content="微服务架构">
+<meta property="article:tag" content="SpringCloud">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/CAP.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/07/02/微服务架构-7-Spring-Cloud-Netflix-Eureka/"/>
+
+
+
+
+
+  <title>微服务架构-8-Spring-Cloud-Netflix-Eureka | 张鸣的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张鸣的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hello World</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张鸣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/saritocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张鸣的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微服务架构-8-Spring-Cloud-Netflix-Eureka</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-02T10:47:31+08:00">
+                2021-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index">
+                    <span itemprop="name">微服务架构</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/SpringCloud/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringCloud</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+	  
+	    <span class="post-meta-divider">|</span>
+	    <span id="busuanzi_value_page_pv"></span>次阅读
+	  
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h1><p>Consistency：一致性，所有节点在同一时间的数据完全一致</p>
+<p>Availability：可用性，服务一直可用，而且是正常响应时间</p>
+<p>Partition tolerance：分区容错性，在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务</p>
+<p><img src="/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/CAP.jpeg" alt></p>
+<p>CAP理论指的是一个分布式系统最多只能同时满足一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）这三项中的两项。</p>
+<p>（1）满足CA舍弃P，也就是满足一致性和可用性，舍弃容错性。但是这也就意味着你的系统不是分布式的了，因为涉及分布式的想法就是把功能分开，部署到不同的机器上。</p>
+<p>（2）满足CP舍弃A，也就是满足一致性和容错性，舍弃可用性。如果你的系统允许有段时间的访问失效等问题，这个是可以满足的。就好比多个人并发买票，后台网络出现故障，你买的时候系统就崩溃了。</p>
+<p>（3）满足AP舍弃C，也就是满足可用性和容错性，舍弃一致性。这也就是意味着你的系统在并发访问的时候可能会出现数据不一致的情况。</p>
+<p>实时证明，大多数都是牺牲了一致性。像12306还有淘宝网，就好比是你买火车票，本来你看到的是还有一张票，其实在这个时刻已经被买走了，你填好了信息准备买的时候发现系统提示你没票了。这就是牺牲了一致性。</p>
+<p>但是不是说牺牲一致性一定是最好的。就好比mysql中的事务机制，张三给李四转了100块钱，这时候必须保证张三的账户上少了100，李四的账户多了100。因此需要数据的一致性，而且什么时候转钱都可以，也需要可用性。但是可以转钱失败是可以允许的。</p>
+<h1 id="SmartLifecycle"><a href="#SmartLifecycle" class="headerlink" title="SmartLifecycle"></a>SmartLifecycle</h1><p>在使用Spring开发时，所有bean都交给Spring容器来统一管理，其中包括每一个bean的加载和初始化。 有时候我们需要在Spring加载和初始化所有bean后，接着执行一些任务或者业务逻辑。这时SmartLifecycle接口就派上用场了。<strong>SmartLifecycle 是一个接口。当Spring容器加载所有bean并完成初始化之后，会接着回调实现该接口的类中对应的方法（start()方法）</strong>。源码如下</p>
+<p>SmartLifecycle.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SmartLifecycle</span> <span class="keyword">extends</span> <span class="title">Lifecycle</span>, <span class="title">Phased</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The default phase for &#123;<span class="doctag">@code</span> SmartLifecycle&#125;: &#123;<span class="doctag">@code</span> Integer.MAX_VALUE&#125;.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This is different from the common phase &#123;<span class="doctag">@code</span> 0&#125; associated with regular</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> Lifecycle&#125; implementations, putting the typically auto-started</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> SmartLifecycle&#125; beans into a later startup phase and an earlier</span></span><br><span class="line"><span class="comment">	 * shutdown phase.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@since</span> 5.1</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #getPhase()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> org.springframework.context.support.DefaultLifecycleProcessor#getPhase(Lifecycle)</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">int</span> DEFAULT_PHASE = Integer.MAX_VALUE;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Returns &#123;<span class="doctag">@code</span> true&#125; if this &#123;<span class="doctag">@code</span> Lifecycle&#125; component should get</span></span><br><span class="line"><span class="comment">	 * started automatically by the container at the time that the containing</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> ApplicationContext&#125; gets refreshed.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;A value of &#123;<span class="doctag">@code</span> false&#125; indicates that the component is intended to</span></span><br><span class="line"><span class="comment">	 * be started through an explicit &#123;<span class="doctag">@link</span> #start()&#125; call instead, analogous</span></span><br><span class="line"><span class="comment">	 * to a plain &#123;<span class="doctag">@link</span> Lifecycle&#125; implementation.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The default implementation returns &#123;<span class="doctag">@code</span> true&#125;.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #start()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #getPhase()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> LifecycleProcessor#onRefresh()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> ConfigurableApplicationContext#refresh()</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">default</span> <span class="keyword">boolean</span> <span class="title">isAutoStartup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Indicates that a Lifecycle component must stop if it is currently running.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The provided callback is used by the &#123;<span class="doctag">@link</span> LifecycleProcessor&#125; to support</span></span><br><span class="line"><span class="comment">	 * an ordered, and potentially concurrent, shutdown of all components having a</span></span><br><span class="line"><span class="comment">	 * common shutdown order value. The callback &lt;b&gt;must&lt;/b&gt; be executed after</span></span><br><span class="line"><span class="comment">	 * the &#123;<span class="doctag">@code</span> SmartLifecycle&#125; component does indeed stop.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The &#123;<span class="doctag">@link</span> LifecycleProcessor&#125; will call &lt;i&gt;only&lt;/i&gt; this variant of the</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> stop&#125; method; i.e. &#123;<span class="doctag">@link</span> Lifecycle#stop()&#125; will not be called for</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@code</span> SmartLifecycle&#125; implementations unless explicitly delegated to within</span></span><br><span class="line"><span class="comment">	 * the implementation of this method.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The default implementation delegates to &#123;<span class="doctag">@link</span> #stop()&#125; and immediately</span></span><br><span class="line"><span class="comment">	 * triggers the given callback in the calling thread. Note that there is no</span></span><br><span class="line"><span class="comment">	 * synchronization between the two, so custom implementations may at least</span></span><br><span class="line"><span class="comment">	 * want to put the same steps within their common lifecycle monitor (if any).</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #stop()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #getPhase()</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">(Runnable callback)</span> </span>&#123;</span><br><span class="line">		stop();</span><br><span class="line">		callback.run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Return the phase that this lifecycle object is supposed to run in.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;The default implementation returns &#123;<span class="doctag">@link</span> #DEFAULT_PHASE&#125; in order to</span></span><br><span class="line"><span class="comment">	 * let &#123;<span class="doctag">@code</span> stop()&#125; callbacks execute after regular &#123;<span class="doctag">@code</span> Lifecycle&#125;</span></span><br><span class="line"><span class="comment">	 * implementations.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #isAutoStartup()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #start()</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #stop(Runnable)</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> org.springframework.context.support.DefaultLifecycleProcessor#getPhase(Lifecycle)</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">default</span> <span class="keyword">int</span> <span class="title">getPhase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> DEFAULT_PHASE;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>父类Lifecycle.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lifecycle</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Start this component.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;Should not throw an exception if the component is already running.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;In the case of a container, this will propagate the start signal to all</span></span><br><span class="line"><span class="comment">	 * components that apply.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> SmartLifecycle#isAutoStartup()</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Stop this component, typically in a synchronous fashion, such that the component is</span></span><br><span class="line"><span class="comment">	 * fully stopped upon return of this method. Consider implementing &#123;<span class="doctag">@link</span> SmartLifecycle&#125;</span></span><br><span class="line"><span class="comment">	 * and its &#123;<span class="doctag">@code</span> stop(Runnable)&#125; variant when asynchronous stop behavior is necessary.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;Note that this stop notification is not guaranteed to come before destruction:</span></span><br><span class="line"><span class="comment">	 * On regular shutdown, &#123;<span class="doctag">@code</span> Lifecycle&#125; beans will first receive a stop notification</span></span><br><span class="line"><span class="comment">	 * before the general destruction callbacks are being propagated; however, on hot</span></span><br><span class="line"><span class="comment">	 * refresh during a context's lifetime or on aborted refresh attempts, a given bean's</span></span><br><span class="line"><span class="comment">	 * destroy method will be called without any consideration of stop signals upfront.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;Should not throw an exception if the component is not running (not started yet).</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;In the case of a container, this will propagate the stop signal to all components</span></span><br><span class="line"><span class="comment">	 * that apply.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> SmartLifecycle#stop(Runnable)</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> org.springframework.beans.factory.DisposableBean#destroy()</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Check whether this component is currently running.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;In the case of a container, this will return &#123;<span class="doctag">@code</span> true&#125; only if &lt;i&gt;all&lt;/i&gt;</span></span><br><span class="line"><span class="comment">	 * components that apply are currently running.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> whether the component is currently running</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">isRunning</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例：在一个Spring项目中实现SmartLifecycle</strong></p>
+<p>TestSmartLifecycle.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSmartLifecycle</span> <span class="keyword">implements</span> <span class="title">SmartLifecycle</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"-----Start-----"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"-----Stop-----"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isRunning</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<p><img src="/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/TestSmartLifecycle%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.jpg" alt></p>
+<p>接下来我们来看该接口在Eureka里的实现</p>
+<p>spring-cloud-netflix-eureka-server:EurekaServerInitializerConfiguration.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Dave Syer</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span>(proxyBeanMethods = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaServerInitializerConfiguration</span></span></span><br><span class="line"><span class="class">		<span class="keyword">implements</span> <span class="title">ServletContextAware</span>, <span class="title">SmartLifecycle</span>, <span class="title">Ordered</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory</span><br><span class="line">			.getLog(EurekaServerInitializerConfiguration<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> EurekaServerConfig eurekaServerConfig;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> ServletContext servletContext;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> EurekaServerBootstrap eurekaServerBootstrap;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> running;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> order = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setServletContext</span><span class="params">(ServletContext servletContext)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.servletContext = servletContext;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="comment">// <span class="doctag">TODO:</span> is this class even needed now?</span></span><br><span class="line">				eurekaServerBootstrap.contextInitialized(</span><br><span class="line">						EurekaServerInitializerConfiguration.<span class="keyword">this</span>.servletContext);</span><br><span class="line">				log.info(<span class="string">"Started Eureka Server"</span>);</span><br><span class="line"></span><br><span class="line">				publish(<span class="keyword">new</span> EurekaRegistryAvailableEvent(getEurekaServerConfig()));</span><br><span class="line">				EurekaServerInitializerConfiguration.<span class="keyword">this</span>.running = <span class="keyword">true</span>;</span><br><span class="line">				publish(<span class="keyword">new</span> EurekaServerStartedEvent(getEurekaServerConfig()));</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">				<span class="comment">// Help!</span></span><br><span class="line">				log.error(<span class="string">"Could not initialize Eureka servlet context"</span>, ex);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> EurekaServerConfig <span class="title">getEurekaServerConfig</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.eurekaServerConfig;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(ApplicationEvent event)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.applicationContext.publishEvent(event);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.running = <span class="keyword">false</span>;</span><br><span class="line">		eurekaServerBootstrap.contextDestroyed(<span class="keyword">this</span>.servletContext);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isRunning</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.running;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPhase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isAutoStartup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">(Runnable callback)</span> </span>&#123;</span><br><span class="line">		callback.run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.order;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>spring-cloud-netflix-eureka-client: EurekaAutoServiceRegistration.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaAutoServiceRegistration</span> <span class="keyword">implements</span> <span class="title">AutoServiceRegistration</span>,</span></span><br><span class="line"><span class="class">		<span class="title">SmartLifecycle</span>, <span class="title">Ordered</span>, <span class="title">SmartApplicationListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(EurekaAutoServiceRegistration<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> AtomicBoolean running = <span class="keyword">new</span> AtomicBoolean(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> order = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> AtomicInteger port = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> ApplicationContext context;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> EurekaServiceRegistry serviceRegistry;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> EurekaRegistration registration;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">EurekaAutoServiceRegistration</span><span class="params">(ApplicationContext context,</span></span></span><br><span class="line"><span class="function"><span class="params">			EurekaServiceRegistry serviceRegistry, EurekaRegistration registration)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.context = context;</span><br><span class="line">		<span class="keyword">this</span>.serviceRegistry = serviceRegistry;</span><br><span class="line">		<span class="keyword">this</span>.registration = registration;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// only set the port if the nonSecurePort or securePort is 0 and this.port != 0</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.port.get() != <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.registration.getNonSecurePort() == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="keyword">this</span>.registration.setNonSecurePort(<span class="keyword">this</span>.port.get());</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.registration.getSecurePort() == <span class="number">0</span> &amp;&amp; <span class="keyword">this</span>.registration.isSecure()) &#123;</span><br><span class="line">				<span class="keyword">this</span>.registration.setSecurePort(<span class="keyword">this</span>.port.get());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// only initialize if nonSecurePort is greater than 0 and it isn't already running</span></span><br><span class="line">		<span class="comment">// because of containerPortInitializer below</span></span><br><span class="line">		<span class="keyword">if</span> (!<span class="keyword">this</span>.running.get() &amp;&amp; <span class="keyword">this</span>.registration.getNonSecurePort() &gt; <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">this</span>.serviceRegistry.register(<span class="keyword">this</span>.registration);</span><br><span class="line"></span><br><span class="line">			<span class="keyword">this</span>.context.publishEvent(<span class="keyword">new</span> InstanceRegisteredEvent&lt;&gt;(<span class="keyword">this</span>,</span><br><span class="line">					<span class="keyword">this</span>.registration.getInstanceConfig()));</span><br><span class="line">			<span class="keyword">this</span>.running.set(<span class="keyword">true</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.serviceRegistry.deregister(<span class="keyword">this</span>.registration);</span><br><span class="line">		<span class="keyword">this</span>.running.set(<span class="keyword">false</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isRunning</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.running.get();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPhase</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isAutoStartup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">(Runnable callback)</span> </span>&#123;</span><br><span class="line">		stop();</span><br><span class="line">		callback.run();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.order;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supportsEventType</span><span class="params">(Class&lt;? extends ApplicationEvent&gt; eventType)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> WebServerInitializedEvent<span class="class">.<span class="keyword">class</span>.<span class="title">isAssignableFrom</span>(<span class="title">eventType</span>)</span></span><br><span class="line"><span class="class">				|| <span class="title">ContextClosedEvent</span>.<span class="title">class</span>.<span class="title">isAssignableFrom</span>(<span class="title">eventType</span>)</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ApplicationEvent event)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (event <span class="keyword">instanceof</span> WebServerInitializedEvent) &#123;</span><br><span class="line">			onApplicationEvent((WebServerInitializedEvent) event);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (event <span class="keyword">instanceof</span> ContextClosedEvent) &#123;</span><br><span class="line">			onApplicationEvent((ContextClosedEvent) event);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(WebServerInitializedEvent event)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// <span class="doctag">TODO:</span> take SSL into account</span></span><br><span class="line">		String contextName = event.getApplicationContext().getServerNamespace();</span><br><span class="line">		<span class="keyword">if</span> (contextName == <span class="keyword">null</span> || !contextName.equals(<span class="string">"management"</span>)) &#123;</span><br><span class="line">			<span class="keyword">int</span> localPort = event.getWebServer().getPort();</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.port.get() == <span class="number">0</span>) &#123;</span><br><span class="line">				log.info(<span class="string">"Updating port to "</span> + localPort);</span><br><span class="line">				<span class="keyword">this</span>.port.compareAndSet(<span class="number">0</span>, localPort);</span><br><span class="line">				start();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onApplicationEvent</span><span class="params">(ContextClosedEvent event)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (event.getApplicationContext() == context) &#123;</span><br><span class="line">			stop();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Spring-Cloud-Eureka"><a href="#Spring-Cloud-Eureka" class="headerlink" title="Spring Cloud Eureka"></a>Spring Cloud Eureka</h1><h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><ol>
+<li>服务的上下线感知</li>
+<li>服务的维护问题</li>
+</ol>
+<h2 id="服务的注册（Register）"><a href="#服务的注册（Register）" class="headerlink" title="服务的注册（Register）"></a>服务的注册（Register）</h2><h3 id="Eureka-Server接收注册请求"><a href="#Eureka-Server接收注册请求" class="headerlink" title="Eureka Server接收注册请求"></a>Eureka Server接收注册请求</h3><ul>
+<li><strong>Eureka Server如何接收请求</strong></li>
+<li><strong>Eureka Server如何存储服务地址</strong></li>
+</ul>
+<p><strong>Eureka Core提供基于jersey的RESTFUL请求实现服务的注册</strong></p>
+<p>applicationResource.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A &lt;em&gt;jersey&lt;/em&gt; resource that handles request related to a particular</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Application&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Karthik Ranganathan, Greg Kim</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Produces</span>(&#123;<span class="string">"application/xml"</span>, <span class="string">"application/json"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationResource</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(ApplicationResource<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String appName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> EurekaServerConfig serverConfig;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PeerAwareInstanceRegistry registry;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ResponseCache responseCache;</span><br><span class="line"></span><br><span class="line">    ApplicationResource(String appName,</span><br><span class="line">                        EurekaServerConfig serverConfig,</span><br><span class="line">                        PeerAwareInstanceRegistry registry) &#123;</span><br><span class="line">        <span class="keyword">this</span>.appName = appName.toUpperCase();</span><br><span class="line">        <span class="keyword">this</span>.serverConfig = serverConfig;</span><br><span class="line">        <span class="keyword">this</span>.registry = registry;</span><br><span class="line">        <span class="keyword">this</span>.responseCache = registry.getResponseCache();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAppName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> appName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Gets information about a particular &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Application&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> version</span></span><br><span class="line"><span class="comment">     *            the version of the request.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> acceptHeader</span></span><br><span class="line"><span class="comment">     *            the accept header of the request to indicate whether to serve</span></span><br><span class="line"><span class="comment">     *            JSON or XML data.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the response containing information about a particular</span></span><br><span class="line"><span class="comment">     *         application.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Response <span class="title">getApplication</span><span class="params">(@PathParam(<span class="string">"version"</span>)</span> String version,</span></span><br><span class="line"><span class="function">                                   @<span class="title">HeaderParam</span><span class="params">(<span class="string">"Accept"</span>)</span> <span class="keyword">final</span> String acceptHeader,</span></span><br><span class="line"><span class="function">                                   @<span class="title">HeaderParam</span><span class="params">(EurekaAccept.HTTP_X_EUREKA_ACCEPT)</span> String eurekaAccept) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!registry.shouldAllowAccess(<span class="keyword">false</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(Status.FORBIDDEN).build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        EurekaMonitors.GET_APPLICATION.increment();</span><br><span class="line"></span><br><span class="line">        CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">        KeyType keyType = Key.KeyType.JSON;</span><br><span class="line">        <span class="keyword">if</span> (acceptHeader == <span class="keyword">null</span> || !acceptHeader.contains(<span class="string">"json"</span>)) &#123;</span><br><span class="line">            keyType = Key.KeyType.XML;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Key cacheKey = <span class="keyword">new</span> Key(</span><br><span class="line">                Key.EntityType.Application,</span><br><span class="line">                appName,</span><br><span class="line">                keyType,</span><br><span class="line">                CurrentRequestVersion.get(),</span><br><span class="line">                EurekaAccept.fromString(eurekaAccept)</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        String payLoad = responseCache.get(cacheKey);</span><br><span class="line">        CurrentRequestVersion.remove();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (payLoad != <span class="keyword">null</span>) &#123;</span><br><span class="line">            logger.debug(<span class="string">"Found: &#123;&#125;"</span>, appName);</span><br><span class="line">            <span class="keyword">return</span> Response.ok(payLoad).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            logger.debug(<span class="string">"Not Found: &#123;&#125;"</span>, appName);</span><br><span class="line">            <span class="keyword">return</span> Response.status(Status.NOT_FOUND).build();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Gets information about a particular instance of an application.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id</span></span><br><span class="line"><span class="comment">     *            the unique identifier of the instance.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> information about a particular instance.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Path</span>(<span class="string">"&#123;id&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> InstanceResource <span class="title">getInstanceInfo</span><span class="params">(@PathParam(<span class="string">"id"</span>)</span> String id) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> InstanceResource(<span class="keyword">this</span>, id, serverConfig, registry);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Registers information about a particular instance for an</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Application&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> info</span></span><br><span class="line"><span class="comment">     *            &#123;<span class="doctag">@link</span> InstanceInfo&#125; information of the instance.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> isReplication</span></span><br><span class="line"><span class="comment">     *            a header parameter containing information whether this is</span></span><br><span class="line"><span class="comment">     *            replicated from other nodes.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@POST</span></span><br><span class="line">    <span class="meta">@Consumes</span>(&#123;<span class="string">"application/json"</span>, <span class="string">"application/xml"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Response <span class="title">addInstance</span><span class="params">(InstanceInfo info,</span></span></span><br><span class="line"><span class="function"><span class="params">                                @HeaderParam(PeerEurekaNode.HEADER_REPLICATION)</span> String isReplication) </span>&#123;</span><br><span class="line">        logger.debug(<span class="string">"Registering instance &#123;&#125; (replication=&#123;&#125;)"</span>, info.getId(), isReplication);</span><br><span class="line">        <span class="comment">// validate that the instanceinfo contains all the necessary required fields</span></span><br><span class="line">        <span class="keyword">if</span> (isBlank(info.getId())) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Missing instanceId"</span>).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isBlank(info.getHostName())) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Missing hostname"</span>).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isBlank(info.getIPAddr())) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Missing ip address"</span>).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isBlank(info.getAppName())) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Missing appName"</span>).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!appName.equals(info.getAppName())) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Mismatched appName, expecting "</span> + appName + <span class="string">" but was "</span> + info.getAppName()).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (info.getDataCenterInfo() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Missing dataCenterInfo"</span>).build();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (info.getDataCenterInfo().getName() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(<span class="string">"Missing dataCenterInfo Name"</span>).build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// handle cases where clients may be registering with bad DataCenterInfo with missing data</span></span><br><span class="line">        DataCenterInfo dataCenterInfo = info.getDataCenterInfo();</span><br><span class="line">        <span class="keyword">if</span> (dataCenterInfo <span class="keyword">instanceof</span> UniqueIdentifier) &#123;</span><br><span class="line">            String dataCenterInfoId = ((UniqueIdentifier) dataCenterInfo).getId();</span><br><span class="line">            <span class="keyword">if</span> (isBlank(dataCenterInfoId)) &#123;</span><br><span class="line">                <span class="keyword">boolean</span> experimental = <span class="string">"true"</span>.equalsIgnoreCase(serverConfig.getExperimental(<span class="string">"registration.validation.dataCenterInfoId"</span>));</span><br><span class="line">                <span class="keyword">if</span> (experimental) &#123;</span><br><span class="line">                    String entity = <span class="string">"DataCenterInfo of type "</span> + dataCenterInfo.getClass() + <span class="string">" must contain a valid id"</span>;</span><br><span class="line">                    <span class="keyword">return</span> Response.status(<span class="number">400</span>).entity(entity).build();</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (dataCenterInfo <span class="keyword">instanceof</span> AmazonInfo) &#123;</span><br><span class="line">                    AmazonInfo amazonInfo = (AmazonInfo) dataCenterInfo;</span><br><span class="line">                    String effectiveId = amazonInfo.get(AmazonInfo.MetaDataKey.instanceId);</span><br><span class="line">                    <span class="keyword">if</span> (effectiveId == <span class="keyword">null</span>) &#123;</span><br><span class="line">                        amazonInfo.getMetadata().put(AmazonInfo.MetaDataKey.instanceId.getName(), info.getId());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    logger.warn(<span class="string">"Registering DataCenterInfo of type &#123;&#125; without an appropriate id"</span>, dataCenterInfo.getClass());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        registry.register(info, <span class="string">"true"</span>.equals(isReplication));</span><br><span class="line">        <span class="keyword">return</span> Response.status(<span class="number">204</span>).build();  <span class="comment">// 204 to be backwards compatible</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns the application name of a particular application.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the application name of a particular application.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> appName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isBlank</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> str == <span class="keyword">null</span> || str.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>applicationsResource.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A &lt;em&gt;jersey&lt;/em&gt; resource that handles request related to all</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Applications&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Karthik Ranganathan, Greg Kim</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Path</span>(<span class="string">"/&#123;version&#125;/apps"</span>)</span><br><span class="line"><span class="meta">@Produces</span>(&#123;<span class="string">"application/xml"</span>, <span class="string">"application/json"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationsResource</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_ACCEPT = <span class="string">"Accept"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_ACCEPT_ENCODING = <span class="string">"Accept-Encoding"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_CONTENT_ENCODING = <span class="string">"Content-Encoding"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_CONTENT_TYPE = <span class="string">"Content-Type"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_GZIP_VALUE = <span class="string">"gzip"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String HEADER_JSON_VALUE = <span class="string">"json"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> EurekaServerConfig serverConfig;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PeerAwareInstanceRegistry registry;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ResponseCache responseCache;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Inject</span></span><br><span class="line">    ApplicationsResource(EurekaServerContext eurekaServer) &#123;</span><br><span class="line">        <span class="keyword">this</span>.serverConfig = eurekaServer.getServerConfig();</span><br><span class="line">        <span class="keyword">this</span>.registry = eurekaServer.getRegistry();</span><br><span class="line">        <span class="keyword">this</span>.responseCache = registry.getResponseCache();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ApplicationsResource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(EurekaServerContextHolder.getInstance().getServerContext());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Gets information about a particular &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Application&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> version</span></span><br><span class="line"><span class="comment">     *            the version of the request.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> appId</span></span><br><span class="line"><span class="comment">     *            the unique application identifier (which is the name) of the</span></span><br><span class="line"><span class="comment">     *            application.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> information about a particular application.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Path</span>(<span class="string">"&#123;appId&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ApplicationResource <span class="title">getApplicationResource</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">            @PathParam(<span class="string">"version"</span>)</span> String version,</span></span><br><span class="line"><span class="function">            @<span class="title">PathParam</span><span class="params">(<span class="string">"appId"</span>)</span> String appId) </span>&#123;</span><br><span class="line">        CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ApplicationResource(appId, serverConfig, registry);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            CurrentRequestVersion.remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get information about all &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Applications&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> version the version of the request.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> acceptHeader the accept header to indicate whether to serve JSON or XML data.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> acceptEncoding the accept header to indicate whether to serve compressed or uncompressed data.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> eurekaAccept an eureka accept extension, see &#123;<span class="doctag">@link</span> com.netflix.appinfo.EurekaAccept&#125;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uriInfo the &#123;<span class="doctag">@link</span> java.net.URI&#125; information of the request made.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> regionsStr A comma separated list of remote regions from which the instances will also be returned.</span></span><br><span class="line"><span class="comment">     *                   The applications returned from the remote region can be limited to the applications</span></span><br><span class="line"><span class="comment">     *                   returned by &#123;<span class="doctag">@link</span> EurekaServerConfig#getRemoteRegionAppWhitelist(String)&#125;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a response containing information about all &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Applications&#125;</span></span><br><span class="line"><span class="comment">     *         from the &#123;<span class="doctag">@link</span> AbstractInstanceRegistry&#125;.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Response <span class="title">getContainers</span><span class="params">(@PathParam(<span class="string">"version"</span>)</span> String version,</span></span><br><span class="line"><span class="function">                                  @<span class="title">HeaderParam</span><span class="params">(HEADER_ACCEPT)</span> String acceptHeader,</span></span><br><span class="line"><span class="function">                                  @<span class="title">HeaderParam</span><span class="params">(HEADER_ACCEPT_ENCODING)</span> String acceptEncoding,</span></span><br><span class="line"><span class="function">                                  @<span class="title">HeaderParam</span><span class="params">(EurekaAccept.HTTP_X_EUREKA_ACCEPT)</span> String eurekaAccept,</span></span><br><span class="line"><span class="function">                                  @Context UriInfo uriInfo,</span></span><br><span class="line"><span class="function">                                  @Nullable @<span class="title">QueryParam</span><span class="params">(<span class="string">"regions"</span>)</span> String regionsStr) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> isRemoteRegionRequested = <span class="keyword">null</span> != regionsStr &amp;&amp; !regionsStr.isEmpty();</span><br><span class="line">        String[] regions = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (!isRemoteRegionRequested) &#123;</span><br><span class="line">            EurekaMonitors.GET_ALL.increment();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            regions = regionsStr.toLowerCase().split(<span class="string">","</span>);</span><br><span class="line">            Arrays.sort(regions); <span class="comment">// So we don't have different caches for same regions queried in different order.</span></span><br><span class="line">            EurekaMonitors.GET_ALL_WITH_REMOTE_REGIONS.increment();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Check if the server allows the access to the registry. The server can</span></span><br><span class="line">        <span class="comment">// restrict access if it is not</span></span><br><span class="line">        <span class="comment">// ready to serve traffic depending on various reasons.</span></span><br><span class="line">        <span class="keyword">if</span> (!registry.shouldAllowAccess(isRemoteRegionRequested)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(Status.FORBIDDEN).build();</span><br><span class="line">        &#125;</span><br><span class="line">        CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">        KeyType keyType = Key.KeyType.JSON;</span><br><span class="line">        String returnMediaType = MediaType.APPLICATION_JSON;</span><br><span class="line">        <span class="keyword">if</span> (acceptHeader == <span class="keyword">null</span> || !acceptHeader.contains(HEADER_JSON_VALUE)) &#123;</span><br><span class="line">            keyType = Key.KeyType.XML;</span><br><span class="line">            returnMediaType = MediaType.APPLICATION_XML;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Key cacheKey = <span class="keyword">new</span> Key(Key.EntityType.Application,</span><br><span class="line">                ResponseCacheImpl.ALL_APPS,</span><br><span class="line">                keyType, CurrentRequestVersion.get(), EurekaAccept.fromString(eurekaAccept), regions</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        Response response;</span><br><span class="line">        <span class="keyword">if</span> (acceptEncoding != <span class="keyword">null</span> &amp;&amp; acceptEncoding.contains(HEADER_GZIP_VALUE)) &#123;</span><br><span class="line">            response = Response.ok(responseCache.getGZIP(cacheKey))</span><br><span class="line">                    .header(HEADER_CONTENT_ENCODING, HEADER_GZIP_VALUE)</span><br><span class="line">                    .header(HEADER_CONTENT_TYPE, returnMediaType)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            response = Response.ok(responseCache.get(cacheKey))</span><br><span class="line">                    .build();</span><br><span class="line">        &#125;</span><br><span class="line">        CurrentRequestVersion.remove();</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get information about all delta changes in &#123;<span class="doctag">@link</span> com.netflix.discovery.shared.Applications&#125;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * The delta changes represent the registry information change for a period</span></span><br><span class="line"><span class="comment">     * as configured by</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> EurekaServerConfig#getRetentionTimeInMSInDeltaQueue()&#125;. The</span></span><br><span class="line"><span class="comment">     * changes that can happen in a registry include</span></span><br><span class="line"><span class="comment">     * &lt;em&gt;Registrations,Cancels,Status Changes and Expirations&lt;/em&gt;. Normally</span></span><br><span class="line"><span class="comment">     * the changes to the registry are infrequent and hence getting just the</span></span><br><span class="line"><span class="comment">     * delta will be much more efficient than getting the complete registry.</span></span><br><span class="line"><span class="comment">     * &lt;/p&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * Since the delta information is cached over a period of time, the requests</span></span><br><span class="line"><span class="comment">     * may return the same data multiple times within the window configured by</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@link</span> EurekaServerConfig#getRetentionTimeInMSInDeltaQueue()&#125;.The clients</span></span><br><span class="line"><span class="comment">     * are expected to handle this duplicate information.</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> version the version of the request.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> acceptHeader the accept header to indicate whether to serve  JSON or XML data.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> acceptEncoding the accept header to indicate whether to serve compressed or uncompressed data.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> eurekaAccept an eureka accept extension, see &#123;<span class="doctag">@link</span> com.netflix.appinfo.EurekaAccept&#125;</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> uriInfo  the &#123;<span class="doctag">@link</span> java.net.URI&#125; information of the request made.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> response containing the delta information of the</span></span><br><span class="line"><span class="comment">     *         &#123;<span class="doctag">@link</span> AbstractInstanceRegistry&#125;.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Path</span>(<span class="string">"delta"</span>)</span><br><span class="line">    <span class="meta">@GET</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Response <span class="title">getContainerDifferential</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">            @PathParam(<span class="string">"version"</span>)</span> String version,</span></span><br><span class="line"><span class="function">            @<span class="title">HeaderParam</span><span class="params">(HEADER_ACCEPT)</span> String acceptHeader,</span></span><br><span class="line"><span class="function">            @<span class="title">HeaderParam</span><span class="params">(HEADER_ACCEPT_ENCODING)</span> String acceptEncoding,</span></span><br><span class="line"><span class="function">            @<span class="title">HeaderParam</span><span class="params">(EurekaAccept.HTTP_X_EUREKA_ACCEPT)</span> String eurekaAccept,</span></span><br><span class="line"><span class="function">            @Context UriInfo uriInfo, @Nullable @<span class="title">QueryParam</span><span class="params">(<span class="string">"regions"</span>)</span> String regionsStr) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">boolean</span> isRemoteRegionRequested = <span class="keyword">null</span> != regionsStr &amp;&amp; !regionsStr.isEmpty();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If the delta flag is disabled in discovery or if the lease expiration</span></span><br><span class="line">        <span class="comment">// has been disabled, redirect clients to get all instances</span></span><br><span class="line">        <span class="keyword">if</span> ((serverConfig.shouldDisableDelta()) || (!registry.shouldAllowAccess(isRemoteRegionRequested))) &#123;</span><br><span class="line">            <span class="keyword">return</span> Response.status(Status.FORBIDDEN).build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String[] regions = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (!isRemoteRegionRequested) &#123;</span><br><span class="line">            EurekaMonitors.GET_ALL_DELTA.increment();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            regions = regionsStr.toLowerCase().split(<span class="string">","</span>);</span><br><span class="line">            Arrays.sort(regions); <span class="comment">// So we don't have different caches for same regions queried in different order.</span></span><br><span class="line">            EurekaMonitors.GET_ALL_DELTA_WITH_REMOTE_REGIONS.increment();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        CurrentRequestVersion.set(Version.toEnum(version));</span><br><span class="line">        KeyType keyType = Key.KeyType.JSON;</span><br><span class="line">        String returnMediaType = MediaType.APPLICATION_JSON;</span><br><span class="line">        <span class="keyword">if</span> (acceptHeader == <span class="keyword">null</span> || !acceptHeader.contains(HEADER_JSON_VALUE)) &#123;</span><br><span class="line">            keyType = Key.KeyType.XML;</span><br><span class="line">            returnMediaType = MediaType.APPLICATION_XML;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Key cacheKey = <span class="keyword">new</span> Key(Key.EntityType.Application,</span><br><span class="line">                ResponseCacheImpl.ALL_APPS_DELTA,</span><br><span class="line">                keyType, CurrentRequestVersion.get(), EurekaAccept.fromString(eurekaAccept), regions</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> Response response;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (acceptEncoding != <span class="keyword">null</span> &amp;&amp; acceptEncoding.contains(HEADER_GZIP_VALUE)) &#123;</span><br><span class="line">             response = Response.ok(responseCache.getGZIP(cacheKey))</span><br><span class="line">                    .header(HEADER_CONTENT_ENCODING, HEADER_GZIP_VALUE)</span><br><span class="line">                    .header(HEADER_CONTENT_TYPE, returnMediaType)</span><br><span class="line">                    .build();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            response = Response.ok(responseCache.get(cacheKey)).build();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        CurrentRequestVersion.remove();</span><br><span class="line">        <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Eureka-Client注册服务"><a href="#Eureka-Client注册服务" class="headerlink" title="Eureka Client注册服务"></a>Eureka Client注册服务</h3><ol>
+<li><p>Eureka Client注册服务，通过实现spring-cloud-commons包的ServiceRegistry统一接口来实现服务的注册，实现类为EurekaServiceRegistry.java，如下为EurekaServiceRegistry的类关系图以及相关源码。</p>
+<p>spring-cloud-commons包定义的服务注册接口ServiceRegistry类关系图</p>
+<p><img src="/2021/07/02/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-7-Spring-Cloud-Netflix-Eureka/ServiceRegistry%E7%B1%BB%E5%85%B3%E7%B3%BB%E5%9B%BE.png" alt></p>
+<p>EurekaServiceRegistry.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaServiceRegistry</span> <span class="keyword">implements</span> <span class="title">ServiceRegistry</span>&lt;<span class="title">EurekaRegistration</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log log = LogFactory.getLog(EurekaServiceRegistry<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(EurekaRegistration reg)</span> </span>&#123;</span><br><span class="line">		maybeInitializeClient(reg);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (log.isInfoEnabled()) &#123;</span><br><span class="line">			log.info(<span class="string">"Registering application "</span></span><br><span class="line">					+ reg.getApplicationInfoManager().getInfo().getAppName()</span><br><span class="line">					+ <span class="string">" with eureka with status "</span></span><br><span class="line">					+ reg.getInstanceConfig().getInitialStatus());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		reg.getApplicationInfoManager()</span><br><span class="line">				.setInstanceStatus(reg.getInstanceConfig().getInitialStatus());</span><br><span class="line"></span><br><span class="line">		reg.getHealthCheckHandler().ifAvailable(healthCheckHandler -&gt; reg</span><br><span class="line">				.getEurekaClient().registerHealthCheck(healthCheckHandler));</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>EurekaAutoServiceRegistration.java实现SmartLifecycle接口，并在start方法中调用了EurekaServiceRegistry的注册方法register，最终完成服务初始化注册。这两个类均有EurekaClientAutoConfiguration.java自动装配初始化bean</p>
+<p>EurekaClientAutoConfiguration.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span>(proxyBeanMethods = <span class="keyword">false</span>)</span><br><span class="line"><span class="meta">@EnableConfigurationProperties</span></span><br><span class="line"><span class="meta">@ConditionalOnClass</span>(EurekaClientConfig<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ConditionalOnProperty</span>(<span class="title">value</span> </span>= <span class="string">"eureka.client.enabled"</span>, matchIfMissing = <span class="keyword">true</span>)</span><br><span class="line"><span class="meta">@ConditionalOnDiscoveryEnabled</span></span><br><span class="line"><span class="meta">@AutoConfigureBefore</span>(&#123; NoopDiscoveryClientAutoConfiguration<span class="class">.<span class="keyword">class</span>,</span></span><br><span class="line"><span class="class">		<span class="title">CommonsClientAutoConfiguration</span>.<span class="title">class</span>, <span class="title">ServiceRegistryAutoConfiguration</span>.<span class="title">class</span> &#125;)</span></span><br><span class="line"><span class="class">@<span class="title">AutoConfigureAfter</span>(<span class="title">name</span> </span>= &#123;</span><br><span class="line">		<span class="string">"org.springframework.cloud.netflix.eureka.config.DiscoveryClientOptionalArgsConfiguration"</span>,</span><br><span class="line">		<span class="string">"org.springframework.cloud.autoconfigure.RefreshAutoConfiguration"</span>,</span><br><span class="line">		<span class="string">"org.springframework.cloud.netflix.eureka.EurekaDiscoveryClientConfiguration"</span>,</span><br><span class="line">		<span class="string">"org.springframework.cloud.client.serviceregistry.AutoServiceRegistrationAutoConfiguration"</span> &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EurekaClientAutoConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> ConfigurableEnvironment env;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">EurekaClientAutoConfiguration</span><span class="params">(ConfigurableEnvironment env)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.env = env;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> EurekaServiceRegistry <span class="title">eurekaServiceRegistry</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> EurekaServiceRegistry();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@ConditionalOnBean</span>(AutoServiceRegistrationProperties<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">	@<span class="title">ConditionalOnProperty</span>(</span></span><br><span class="line"><span class="class">			<span class="title">value</span> </span>= <span class="string">"spring.cloud.service-registry.auto-registration.enabled"</span>,</span><br><span class="line">			matchIfMissing = <span class="keyword">true</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> EurekaAutoServiceRegistration <span class="title">eurekaAutoServiceRegistration</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			ApplicationContext context, EurekaServiceRegistry registry,</span></span></span><br><span class="line"><span class="function"><span class="params">			EurekaRegistration registration)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> EurekaAutoServiceRegistration(context, registry, registration);</span><br><span class="line">	&#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h2 id="服务的查询-发现（Get-Registry）"><a href="#服务的查询-发现（Get-Registry）" class="headerlink" title="服务的查询/发现（Get Registry）"></a>服务的查询/发现（Get Registry）</h2><h2 id="服务的续约-Renew"><a href="#服务的续约-Renew" class="headerlink" title="服务的续约(Renew)"></a>服务的续约(Renew)</h2><p><strong>心跳失败</strong>的比例在15分钟之内，低于85%的节点，Eureka Server会认为这个实例出现网络故障，直接剔除这个有问题的服务。</p>
+<p>减少网络抖动或者网络不稳定的情况下，避免误删除。那么这个服务不会被剔除。</p>
+<ul>
+<li>Eureka Server不会剔除因为长时间没有收到心跳数据的过期服务。</li>
+<li>Eureka Server仍然能接收新的服务的注册与查询。</li>
+</ul>
+<p>AbstractInstanceRegistry.java</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">volatile</span> <span class="keyword">int</span> numberOfRenewsPerMinThreshold; <span class="comment">// 每分钟最小续约数量</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">volatile</span> <span class="keyword">int</span> expectedNumberOfClientsSendingRenews; <span class="comment">// 预期每分钟收到续约的客户端数量</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 以服务注册中心注册了5个服务实例为例：</span></span><br><span class="line"><span class="comment"> * expectedNumberOfClientsSendingRenews = 5</span></span><br><span class="line"><span class="comment"> * getExpectedClientRenewalIntervalSeconds 默认为30S，即每分钟发送两个心跳数据包</span></span><br><span class="line"><span class="comment"> * getRenewalPercentThreshold 默认为85%，即心跳失败比例达到85%</span></span><br><span class="line"><span class="comment"> * numberOfRenewsPerMinThreshold = 5 * （60.0 / 30.0） * 85% = 取整（8.5） = 8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">updateRenewsPerMinThreshold</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.numberOfRenewsPerMinThreshold = (<span class="keyword">int</span>) (<span class="keyword">this</span>.expectedNumberOfClientsSendingRenews</span><br><span class="line">                                                * (<span class="number">60.0</span> / serverConfig.getExpectedClientRenewalIntervalSeconds())</span><br><span class="line">                                                * serverConfig.getRenewalPercentThreshold());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" rel="tag"># 微服务架构</a>
+          
+            <a href="/tags/SpringCloud/" rel="tag"># SpringCloud</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/08/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-6-Spring-Cloud-Netflix-Ribbon/" rel="next" title="微服务架构-6-Spring Cloud Netflix Ribbon">
+                <i class="fa fa-chevron-left"></i> 微服务架构-6-Spring Cloud Netflix Ribbon
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/05/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-8-Spring-Cloud-Netflix-Config/" rel="prev" title="微服务架构-7-Spring-Cloud-Netflix-Config">
+                微服务架构-7-Spring-Cloud-Netflix-Config <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/saritocat.png"
+                alt="张鸣" />
+            
+              <p class="site-author-name" itemprop="name">张鸣</p>
+              <p class="site-description motion-element" itemprop="description">No cross, no crown</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CAP"><span class="nav-text">CAP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SmartLifecycle"><span class="nav-text">SmartLifecycle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Spring-Cloud-Eureka"><span class="nav-text">Spring Cloud Eureka</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用"><span class="nav-text">作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务的注册（Register）"><span class="nav-text">服务的注册（Register）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Eureka-Server接收注册请求"><span class="nav-text">Eureka Server接收注册请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Eureka-Client注册服务"><span class="nav-text">Eureka Client注册服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务的查询-发现（Get-Registry）"><span class="nav-text">服务的查询&#x2F;发现（Get Registry）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务的续约-Renew"><span class="nav-text">服务的续约(Renew)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张鸣</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+<!-- 添加站点访问计数 -->
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

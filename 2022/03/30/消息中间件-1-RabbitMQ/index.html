@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="消息中间件,RabbitMQ," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="消息队列一、消息与消息队列消息（Message）是指在应用间传送的数据。消息可以非常简单，比如只包含文本字符串，也可以更复杂，可能包含嵌入对象。消息队列（Message Queue）是一种应用间的通信方式，消息发送后可以立即返回，由消息系统来确保消息的可靠传递。消息发布者只管把消息发布到MQ中而不用管谁来取，消息使用者只管从MQ中取消息而不管是谁发布的。这样发布者和使用者都不用知道对方的存在。 二">
+<meta property="og:type" content="article">
+<meta property="og:title" content="消息中间件-1-RabbitMQ">
+<meta property="og:url" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/index.html">
+<meta property="og:site_name" content="张鸣的博客">
+<meta property="og:description" content="消息队列一、消息与消息队列消息（Message）是指在应用间传送的数据。消息可以非常简单，比如只包含文本字符串，也可以更复杂，可能包含嵌入对象。消息队列（Message Queue）是一种应用间的通信方式，消息发送后可以立即返回，由消息系统来确保消息的可靠传递。消息发布者只管把消息发布到MQ中而不用管谁来取，消息使用者只管从MQ中取消息而不管是谁发布的。这样发布者和使用者都不用知道对方的存在。 二">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220330212400447.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220330212506996.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220426153604039.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220426153648347.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172238142.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172319038.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172615010.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172805639.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172850500.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172922540.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331173011456.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408163933663.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220426154738540.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408165331501.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408174944533.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408180519486.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181010053.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181128300.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181237989.png">
+<meta property="og:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181307143.png">
+<meta property="article:published_time" content="2022-03-30T12:19:38.000Z">
+<meta property="article:modified_time" content="2022-05-16T08:22:56.000Z">
+<meta property="article:author" content="张鸣">
+<meta property="article:tag" content="消息中间件">
+<meta property="article:tag" content="RabbitMQ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220330212400447.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/03/30/消息中间件-1-RabbitMQ/"/>
+
+
+
+
+
+  <title>消息中间件-1-RabbitMQ | 张鸣的博客</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张鸣的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Hello World</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="张鸣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/saritocat.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张鸣的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">消息中间件-1-RabbitMQ</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-30T20:19:38+08:00">
+                2022-03-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">消息中间件</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+	  
+	    <span class="post-meta-divider">|</span>
+	    <span id="busuanzi_value_page_pv"></span>次阅读
+	  
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h1><h2 id="一、消息与消息队列"><a href="#一、消息与消息队列" class="headerlink" title="一、消息与消息队列"></a>一、消息与消息队列</h2><p>消息（Message）是指在应用间传送的数据。消息可以非常简单，比如只包含文本字符串，也可以更复杂，可能包含嵌入对象。<br>消息队列（Message Queue）是一种应用间的通信方式，消息发送后可以立即返回，由消息系统来确保消息的可靠传递。消息发布者只管把消息发布到MQ中而不用管谁来取，消息使用者只管从MQ中取消息而不管是谁发布的。这样发布者和使用者都不用知道对方的存在。</p>
+<h2 id="二、消息队列应用场景"><a href="#二、消息队列应用场景" class="headerlink" title="二、消息队列应用场景"></a>二、消息队列应用场景</h2><p>从上面的描述中可以看出消息队列是一种应用间的异步协作机制，那什么时候需要使用MQ呢？<br>以常见的订单系统为例，用户点击【下单】按钮之后的业务逻辑可能包括：扣减库存、生成相应单据、发红包、发短信通知。在业务发展初期这些逻辑可能放在一起同步执行，随着业务的发展订单量增长，需要提升系统服务的性能，这时可以将一些不需要立即生效的操作拆分出来异步执行，比如发放红包、发短信通知等。这种场景下就可以用MQ，在下单的主流程（比如扣减库存、生成相应单据）完成之后<br>发送一条消息到MQ让主流程快速完结，而由另外的单独线程拉取MQ的消息（或者由MQ推送消息），当发现MQ中有发红包或发短信之类的消息时，执行相应的业务逻辑。<br>以上是用于业务解耦的情况，其它常见场景包括最终一致性、广播、错峰流控等等。即异步、削峰、解耦。</p>
+<h1 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h1><h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>RabbitMQ是一个开源的AMQP实现，服务器端用Erlang语言编写，支持多种客户端。用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。</p>
+<h2 id="二、特点"><a href="#二、特点" class="headerlink" title="二、特点"></a>二、特点</h2><p>AMQP：Advanced Message Queue，高级消息队列协议。它是应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制。<br>RabbitMQ最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。具体特点包括：</p>
+<ol>
+<li>可靠性（Reliability）<br>RabbitMQ使用一些机制来保证可靠性，如持久化、传输确认、发布确认。</li>
+<li>灵活的路由（Flexible Routing）<br>在消息进入队列之前，通过Exchange来路由消息的。对于典型的路由功能，RabbitMQ已经提供了一些内置的Exchange来实现。针对更复杂的路由功能，可以将多个Exchange绑定在一起，也通过插件机制实现自己的Exchange。</li>
+<li>消息集群（Clustering）<br>多个RabbitMQ服务器可以组成一个集群，形成一个逻辑Broker。</li>
+<li>高可用（Highly Available Queues）<br>队列可以在集群中的机器上进行镜像，使得在部分节点出问题的情况下队列仍然可用。</li>
+<li>多种协议（Multi-protocol）<br>RabbitMQ支持多种消息队列协议，比如STOMP、MQTT等等。</li>
+<li>多语言客户端（Many Clients）<br>RabbitMQ几乎支持所有常用语言，比如Java、.NET、Ruby等等。</li>
+<li>管理界面（Management UI）<br>RabbitMQ提供了一个易用的用户界面，使得用户可以监控和管理消息Broker的许多方面。</li>
+<li>跟踪机制（Tracing）<br>如果消息异常，RabbitMQ提供了消息跟踪机制，使用者可以找出发生了什么。</li>
+<li>插件机制（Plugin System）<br>RabbitMQ提供了许多插件，来从多方面进行扩展，也可以编写自己的插件。</li>
+</ol>
+<h2 id="三、单节点安装和使用"><a href="#三、单节点安装和使用" class="headerlink" title="三、单节点安装和使用"></a>三、单节点安装和使用</h2><h3 id="1-安装依赖环境"><a href="#1-安装依赖环境" class="headerlink" title="1.安装依赖环境"></a>1.安装依赖环境</h3><ol>
+<li><p>在 <a href="http://www.rabbitmq.com/which-erlang.html" target="_blank" rel="noopener">http://www.rabbitmq.com/which-erlang.html</a> 页面查看安装rabbitmq需要安装erlang对应的版本</p>
+</li>
+<li><p>在 <a href="https://github.com/rabbitmq/erlang-rpm/releases" target="_blank" rel="noopener">https://github.com/rabbitmq/erlang-rpm/releases</a> 页面找到需要下载的erlang版本，erlang-*.centos.x86_64.rpm就是centos版本的。其中el7,el8,el9标识系统版本要求，EL是Red Hat Enterprise Linux（EL）的缩写，EL7是Red Hat 7.x,CentOS7.x，EL8是Red Hat8.x,CentOS8.x。所以当我们使用centos7的时候应该使用包含el7的包，不能使用其它的。但在centos8中有时可以使用el7的包，一般不推荐这样做。</p>
+</li>
+<li><p>复制下载地址后，使用wget命令下载</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget -P /home/download https://github.com/rabbitmq/erlang-</span><br><span class="line">rpm/releases/download/v23.3.3/erlang-23.3.3-1.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Erlang</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo rpm -Uvh /home/download/erlang-21.2.3-1.el7.centos.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装socat</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo yum install -y socat</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="2-安装RabbitMQ"><a href="#2-安装RabbitMQ" class="headerlink" title="2.安装RabbitMQ"></a>2.安装RabbitMQ</h3><ol>
+<li><p>在官方下载页面找到CentOS7版本的下载链接，下载rpm安装包</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget -P /home/download https://github.com/rabbitmq/rabbitmq-</span><br><span class="line">server/releases/download/v3.8.15/rabbitmq-server-3.8.15-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装RabbitMQ</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo rpm -Uvh /home/download/rabbitmq-server-3.7.9-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="3-启动和关闭"><a href="#3-启动和关闭" class="headerlink" title="3.启动和关闭"></a>3.启动和关闭</h3><ul>
+<li><p>启动服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl start rabbitmq-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看状态</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl status rabbitmq-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl stop rabbitmq-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置开机启动</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl enable rabbitmq-server</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="4-开启Web管理插件"><a href="#4-开启Web管理插件" class="headerlink" title="4.开启Web管理插件"></a>4.开启Web管理插件</h3><ol>
+<li><p>开启插件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>说明：rabbitmq有一个默认的guest用户，但只能通过localhost访问，所以需要添加一个能够远程访问的用户。</p>
+</blockquote>
+</li>
+<li><p>添加用户</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl add_user admin admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为用户分配操作权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl set_user_tags admin administrator</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为用户分配资源权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其他用户操作相关命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">查看当前用户列表</span></span><br><span class="line">rabbitmqctl list_users</span><br><span class="line"><span class="meta">#</span><span class="bash">删除一个用户</span></span><br><span class="line">rabbitmqctl delete_user Username</span><br><span class="line"><span class="meta">#</span><span class="bash">修改用户密码</span></span><br><span class="line">rabbitmqctl change_password Username Newpassword</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>rabbitmqctl命令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 表示stop在rabbitmq服务器上运行得一个Erlang节点，可以指定一个pid_file，表示会等待这个指定的程序结束</span></span><br><span class="line">rabbitmqctl stop &#123;pid_file&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 表示终止rabbitmq服务器上的Erlang进程，如果终止失败，会返回非零数字</span></span><br><span class="line">rabbitmqctl shutdown</span><br><span class="line"><span class="meta">#</span><span class="bash"> 表示终止rabbitmq的应用，但是erlang节点还在运行。该命令典型的运行在一些需要rabbitmq应用被停止的管理行为之前，例如reset</span></span><br><span class="line">rabbitmqctl -n nodeName stop_app</span><br><span class="line"><span class="meta">#</span><span class="bash"> 表示启动rabbitmq的应用。该命令典型的运行在一些需要rabbitmq应用被停止的管理行为之后，例如reset</span></span><br><span class="line">rabbitmqctl -n nodeName start_app</span><br><span class="line"><span class="meta">#</span><span class="bash"> 表示设置rabbitmq节点为原始状态。会从该节点所属的cluster中都删除，从管理数据库中删除所有数据，例如配置的用户和vhost，还会删除所有的持久消息。要想reset和force_reset操作执行成功，rabbitmq应用需要处于停止状态，即执行过stop_app</span></span><br><span class="line">rabbitmqctl -n nodeName reset</span><br><span class="line"><span class="meta">#</span><span class="bash"> 表示强制性的设置rabbitmq节点为原始状态，与reset的区别在于，可以忽略目前管理数据库的状态和cluster的配置，无条件的reset</span></span><br><span class="line">rabbitmqctl -n nodeName force_reset</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h3 id="5-防火墙添加端口"><a href="#5-防火墙添加端口" class="headerlink" title="5.防火墙添加端口"></a>5.防火墙添加端口</h3><p>RabbitMQ 服务启动后，还不能进行外部通信，需要将端口添加都防火墙</p>
+<ol>
+<li><p>添加端口</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --add-port=4369/tcp --permanent</span><br><span class="line">sudo firewall-cmd --zone=public --add-port=5672/tcp --permanent</span><br><span class="line">sudo firewall-cmd --zone=public --add-port=25672/tcp --permanent</span><br><span class="line">sudo firewall-cmd --zone=public --add-port=15672/tcp --permanent</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启防火墙</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="6-卸载"><a href="#6-卸载" class="headerlink" title="6.卸载"></a>6.卸载</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 卸载erlang</span></span><br><span class="line">yum list | grep erlang</span><br><span class="line">yum -y remove erlang-*</span><br><span class="line">rm -rf /usr/lib64/erlang</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 卸载RabbitMQ</span></span><br><span class="line">yum list | grep rabbitmq</span><br><span class="line">yum -y remove rabbitmq-server.noarch</span><br><span class="line">find / -name rabbit*</span><br><span class="line">rm -rf 依次删除</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、RabbitMQ基本配置"><a href="#四、RabbitMQ基本配置" class="headerlink" title="四、RabbitMQ基本配置"></a>四、RabbitMQ基本配置</h2><p>RabbitMQ有一套默认的配置，能够满足日常开发需求，如果需要修改，需要自己创建一个配置文件touch/etc/rabbitmq/rabbitmq.conf<br>配置文件示例：<br><a href="https://github.com/rabbitmq/rabbitmq-server/blob/master/deps/rabbit/docs/rabbitmq.conf.example" target="_blank" rel="noopener">https://github.com/rabbitmq/rabbitmq-server/blob/master/deps/rabbit/docs/rabbitmq.conf.example</a><br>配置项说明：<br><a href="https://www.rabbitmq.com/configure.html#config-items" target="_blank" rel="noopener">https://www.rabbitmq.com/configure.html#config-items</a></p>
+<p>RabbitMQ会绑定一些端口，安装完后，需要将这些端口添加至防火墙。</p>
+<ul>
+<li>4369：是Erlang的端口/结点名称映射程序，用来跟踪节点名称监听地址，在集群中起到一个类似DNS的作用。</li>
+<li>5672, 5671：AMQP 0-9-1 和 1.0 客户端端口，没有使用SSL和使用SSL的端口。</li>
+<li>25672：用于RabbitMQ节点间和CLI工具通信，配合4369使用。</li>
+<li>15672：HTTP_API端口，管理员用户才能访问，用于管理RbbitMQ，需要启用management插件。</li>
+<li>61613,61614：当STOMP插件启用的时候打开，作为STOMP客户端端口（根据是否使用TLS选择）。</li>
+<li>1883, 8883：当MQTT插件启用的时候打开，作为MQTT客户端端口（根据是否使用TLS选择）。</li>
+<li>15674：基于WebSocket的STOMP客户端端口（当插件Web STOMP启用的时候打开）</li>
+<li>15675：基于WebSocket的MQTT客户端端口（当插件Web MQTT启用的时候打开）</li>
+</ul>
+<h2 id="五、RabbitMQ管理界面"><a href="#五、RabbitMQ管理界面" class="headerlink" title="五、RabbitMQ管理界面"></a>五、RabbitMQ管理界面</h2><p>RabbitMQ安装包中带有管理插件，但需要手动激活</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br></pre></td></tr></table></figure>
+
+<p>RabbitMQ有一个默认的用户“guest”，但这个用户默认只能通过本机访问，要让其它机器可以访问，需要创建一个新用户，为其分配权限</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">添加用户</span></span><br><span class="line">rabbitmqctl add_user admin admin</span><br><span class="line"><span class="meta">#</span><span class="bash">为用户分配权限</span></span><br><span class="line">rabbitmqctl set_user_tags admin administrator</span><br><span class="line"><span class="meta">#</span><span class="bash">为用户分配资源权限</span></span><br><span class="line">rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、RabbitMQ角色分类"><a href="#六、RabbitMQ角色分类" class="headerlink" title="六、RabbitMQ角色分类"></a>六、RabbitMQ角色分类</h2><p>RabbitMQ的用户角色分类：none、management、policymaker、monitoring、administrator</p>
+<ul>
+<li><p>none：不能访问management plugin</p>
+</li>
+<li><p>management：用户可以通过AMQP做的任何事外加：</p>
+<ul>
+<li>列出自己可以通过AMQP登入的virtual hosts</li>
+<li>查看自己的virtual hosts中的queues,exchanges和bindings</li>
+<li>查看和关闭自己的channels和connections</li>
+<li>查看有关自己的virtual hosts的“全局”的统计信息，包含其他用户在这些virtual hosts中的活动。</li>
+</ul>
+</li>
+<li><p>policymaker：management可以做的任何事外加：</p>
+<ul>
+<li>查看、创建和删除自己的virtual hosts所属的policies和parameters</li>
+</ul>
+</li>
+<li><p>monitoring：management可以做的任何事外加：</p>
+<ul>
+<li>列出所有virtual hosts，包括他们不能登录的virtual hosts</li>
+<li>查看其他用户的connections和channels</li>
+<li>查看节点级别的数据如clustering和memory使用情况</li>
+<li>查看真正的关于所有virtual hosts的全局的统计信息</li>
+</ul>
+</li>
+<li><p>administrator：policymaker和monitoring可以做的任何事外加：</p>
+<ul>
+<li>创建和删除virtual hosts</li>
+<li>查看、创建和删除users</li>
+<li>查看创建和删除permissions</li>
+<li>关闭其他用户的connections</li>
+</ul>
+</li>
+</ul>
+<h2 id="七、简单使用示例"><a href="#七、简单使用示例" class="headerlink" title="七、简单使用示例"></a>七、简单使用示例</h2><p>RabbitMQ支持多种语言访问，以Java为例看下一般使用RabbitMQ的步骤。<br>1、maven工程的pom文件中添加依赖</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.rabbitmq<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>amqp-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、消息生产者</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.gupaoedu.rabbitmq;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.Channel;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.Connection;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.ConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeoutException;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, TimeoutException </span>&#123;</span><br><span class="line">    <span class="comment">//创建连接工厂</span></span><br><span class="line">    ConnectionFactory factory = <span class="keyword">new</span> ConnectionFactory();</span><br><span class="line">    factory.setUsername(<span class="string">"guest"</span>);</span><br><span class="line">    factory.setPassword(<span class="string">"guest"</span>);</span><br><span class="line">    <span class="comment">//设置 RabbitMQ 地址</span></span><br><span class="line">    factory.setHost(<span class="string">"localhost"</span>);</span><br><span class="line">    <span class="comment">//建立到代理服务器到连接</span></span><br><span class="line">    Connection conn = factory.newConnection();</span><br><span class="line">    <span class="comment">//获得信道</span></span><br><span class="line">    Channel channel = conn.createChannel();</span><br><span class="line">    <span class="comment">//声明交换器</span></span><br><span class="line">    String exchangeName = <span class="string">"hello-exchange"</span>;</span><br><span class="line">    channel.exchangeDeclare(exchangeName, <span class="string">"direct"</span>, <span class="keyword">true</span>);</span><br><span class="line"> </span><br><span class="line">    String routingKey = <span class="string">"hola"</span>;</span><br><span class="line">    <span class="comment">//发布消息</span></span><br><span class="line">    <span class="keyword">byte</span>[] messageBodyBytes = <span class="string">"quit"</span>.getBytes();</span><br><span class="line">    channel.basicPublish(exchangeName, routingKey, <span class="keyword">null</span>, messageBodyBytes);</span><br><span class="line"> </span><br><span class="line">    channel.close();</span><br><span class="line">    conn.close();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3、消息消费者</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> org.gupaoedu.rabbitmq;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.*;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeoutException;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, TimeoutException </span>&#123;</span><br><span class="line">    ConnectionFactory factory = <span class="keyword">new</span> ConnectionFactory();</span><br><span class="line">    factory.setUsername(<span class="string">"guest"</span>);</span><br><span class="line">    factory.setPassword(<span class="string">"guest"</span>);</span><br><span class="line">    factory.setHost(<span class="string">"localhost"</span>);</span><br><span class="line">    <span class="comment">//建立到代理服务器到连接</span></span><br><span class="line">    Connection conn = factory.newConnection();</span><br><span class="line">    <span class="comment">//获得信道</span></span><br><span class="line">    <span class="keyword">final</span> Channel channel = conn.createChannel();</span><br><span class="line">    <span class="comment">//声明交换器</span></span><br><span class="line">    String exchangeName = <span class="string">"hello-exchange"</span>;</span><br><span class="line">    channel.exchangeDeclare(exchangeName, <span class="string">"direct"</span>, <span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">//声明队列</span></span><br><span class="line">    String queueName = channel.queueDeclare().getQueue();</span><br><span class="line">    String routingKey = <span class="string">"hola"</span>;</span><br><span class="line">    <span class="comment">//绑定队列，通过键 hola 将队列和交换器绑定起来</span></span><br><span class="line">    channel.queueBind(queueName, exchangeName, routingKey);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">      <span class="comment">//消费消息</span></span><br><span class="line">      <span class="keyword">boolean</span> autoAck = <span class="keyword">false</span>;</span><br><span class="line">      String consumerTag = <span class="string">""</span>;</span><br><span class="line">      channel.basicConsume(queueName, autoAck, consumerTag, <span class="keyword">new</span> DefaultConsumer(channel) &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleDelivery</span><span class="params">(String consumerTag,</span></span></span><br><span class="line"><span class="function"><span class="params">                     Envelope envelope,</span></span></span><br><span class="line"><span class="function"><span class="params">                     AMQP.BasicProperties properties,</span></span></span><br><span class="line"><span class="function"><span class="params">                     <span class="keyword">byte</span>[] body)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">          String routingKey = envelope.getRoutingKey();</span><br><span class="line">          String contentType = properties.getContentType();</span><br><span class="line">          System.out.println(<span class="string">"消费的路由键："</span> + routingKey);</span><br><span class="line">          System.out.println(<span class="string">"消费的内容类型："</span> + contentType);</span><br><span class="line">          <span class="keyword">long</span> deliveryTag = envelope.getDeliveryTag();</span><br><span class="line">          <span class="comment">//确认消息</span></span><br><span class="line">          channel.basicAck(deliveryTag, <span class="keyword">false</span>);</span><br><span class="line">          System.out.println(<span class="string">"消费的消息体内容："</span>);</span><br><span class="line">          String bodyStr = <span class="keyword">new</span> String(body, <span class="string">"UTF-8"</span>);</span><br><span class="line">          System.out.println(bodyStr);</span><br><span class="line"> </span><br><span class="line">       &#125;</span><br><span class="line">     &#125;);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4、运行Consumer</p>
+<p>先运行Consumer，这样当生产者发送消息的时候能在消费者后端看到消息记录。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220330212400447.png" alt></p>
+<p>5、运行Producer<br>接着运行Producer,发布一条消息，在Consumer的控制台能看到接收的消息：</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220330212506996.png" alt></p>
+<h2 id="八、AMQP协议"><a href="#八、AMQP协议" class="headerlink" title="八、AMQP协议"></a>八、AMQP协议</h2><p>AMQP（Advanced Message Queuing Protocol）高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。</p>
+<ul>
+<li><p>AMQP结构</p>
+<ul>
+<li>Module Layer：位于协议最高层，主要定义了一些供客户端调用的命令，客户端可以利用这些命令实现自己的业务逻辑。例如，客户端可以使用Queue.Declare命令声明一个队列或者使用Basic.Consume订阅消费一个队列中的消息。</li>
+<li>Session Layer：位于中间层，主要负责将客户端的命令发送给服务器，再将服务端的应答返回给客户端，主要为客户端与服务器之间的通信提供可靠性同步机制和错误处理。</li>
+<li>Transport Layer：位于最底层，主要传输二进制数据流，提供帧的处理、信道复用、错误检测和数据表示等。</li>
+</ul>
+</li>
+</ul>
+<p>AMQP说到底还是一个通信协议，通信协议都会涉及报文交互从low-level举例来说，AMQP本身是应用层的协议，其填充于TCP协议层的数据部分。从high-level来说，AMQP是通过协议命令进行交互的。AMQP协议可以看作一系列结构化命令的集合，这里的命令代表一种操作，类似于HTTP中的方法(GET、POST、PUT、DELETE等)。</p>
+<ul>
+<li><p>AMQP生产者流转过程</p>
+<p>当客户端与Broker建立连接的时候，会调用factory.newConnection方法，这个方法会进一步封装成Protocol Header 0-9-1的报文头发送给Broker，以此通知Broker本次交互采用的是AMQP0-9-1协议，紧接着Broker返回Connection.Start来建立连接，在连接的过程中涉及Connection.Start/.Start-OK、Connection.Tune/.Tune-Ok，Connection.Open/.Open-Ok这6个命令的交互。</p>
+<p>当客户端调用connection.createChannel方法准备开启信道的时候，其包装Channel.Open命令发送给Broker，等待Channel.Open-Ok命令。</p>
+<p>当客户端发送消息的时候，需要调用channel.basicPublish方法，对应的AQMP命令为Basic.Publish，注意这个命令和前面涉及的命令略有不同，这个命令还包含了ContentHeader和Content Body。Content Header里面包含的是消息体的属性，例如，投递模式、优先级等。而Content Body包含消息体本身。当客户端发送完消息需要关闭资源时，涉及Channel.Close/.Close-Ok与Connection.Close/.Close-Ok的命令交互。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220426153604039.png" alt="AMQP生产者流转过程"></p>
+</li>
+<li><p>AMQP消费者流转过程</p>
+<p>消费者客户端同样需要与Broker建立连接与生产者客户端一样，协议交互同样涉及Connection.Start/.Start-Ok、Connection.Tune/.Tune-Ok和Connection.Open/.Open-Ok等，这里中省略了这些步骤紧接着也少不了在Connection之上建立Channel，和生产者客户端一样，协议涉及Channel.Open/Open-Ok。</p>
+<p>如果在消费之前调用了channel.basicQos(int prefetchCount)的方法来设置消费者客户端最大能“保持”的未确认的消息数，那么协议流转会涉及Basic.Qos/.Qos-Ok这两个AMQP命令。</p>
+<p>在真正消费之前，消费者客户端需要向Broker发送Basic.Consume命令(即调用channel.basicConsume方法〉将Channel置为接收模式，之后Broker回执Basic.Consume-Ok以告诉消费者客户端准备好消费消息。紧接着Broker向消费者客户端推送(Push)消息，即Basic.Deliver命令，有意思的是这个和Basic.Publish命令一样会携带Content Header和Content Body 。<br>消费者接收到消息并正确消费之后，向Broker发送确认，即Basic.Ack命令。在消费者停止消费的时候，主动关闭连接，这点和生产者一样，涉及Channel.Close/.Close-Ok手口Connection.Close/.Close-Ok。<br>AMQP还有很多其它命令，不在此介绍</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220426153648347.png" alt="AMQP消费者流转过程"></p>
+</li>
+</ul>
+<h1 id="RabbitMQ中的概念模型"><a href="#RabbitMQ中的概念模型" class="headerlink" title="RabbitMQ中的概念模型"></a>RabbitMQ中的概念模型</h1><h2 id="一、消息模型"><a href="#一、消息模型" class="headerlink" title="一、消息模型"></a>一、消息模型</h2><p>所有MQ产品从模型抽象上来说都是一样的过程：消费者（consumer）订阅某个队列。生产者（producer）创建消息，然后发布到队列（queue）中，最后将消息发送到监听的消费者。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172238142.png" alt="消息流"></p>
+<h2 id="二、RabbitMQ基本概念"><a href="#二、RabbitMQ基本概念" class="headerlink" title="二、RabbitMQ基本概念"></a>二、RabbitMQ基本概念</h2><p>上面只是最简单抽象的描述，具体到RabbitMQ则有更详细的概念需要解释。上面介绍过RabbitMQ是AMQP协议的一个开源实现，所以其内部实际上也是AMQP中的基本概念：</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172319038.png" alt="RabbitMQ内部结构"></p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="基本架构图"></p>
+<ol>
+<li><p>Message</p>
+<p>消息，消息是不具名的，它由消息头和消息体组成。消息体是不透明的，而消息头则由一系列的可选属性组成，这些属性包括routing-key（路由键）、priority（相对于其他消息的优先权）、delivery-mode（指出该消息可能需要持久性存储）等。</p>
+</li>
+<li><p>Publisher</p>
+<p>消息的生产者，也是一个向交换器发布消息的客户端应用程序。</p>
+</li>
+<li><p>Exchange</p>
+<p>交换器，用来接收生产者发送的消息并将这些消息路由给服务器中的队列。</p>
+</li>
+<li><p>Binding</p>
+<p>绑定，用于消息队列和交换器之间的关联。一个绑定就是基于路由键将交换器和消息队列连接起来的路由规则，所以可以将交换器理解成一个由绑定构成的路由表。</p>
+</li>
+<li><p>Queue</p>
+<p>消息队列，用来保存消息直到发送给消费者。它是消息的容器，也是消息的终点。一个消息可投入一个或多个队列。消息一直在队列里面，等待消费者连接到这个队列将其取走。</p>
+</li>
+<li><p>Connection</p>
+<p>网络连接，比如一个TCP连接。</p>
+</li>
+<li><p>Channel</p>
+<p>信道，多路复用连接中的一条独立的双向数据流通道。信道是建立在真实的TCP连接内地虚拟连接，AMQP命令都是通过信道发出去的，不管是发布消息、订阅队列还是接收消息，这些动作都是通过信道完成。因为对于操作系统来说建立和销毁TCP都是非常昂贵的开销，所以引入了信道的概念，以复用一条TCP连接。</p>
+</li>
+<li><p>Consumer</p>
+<p>消息的消费者，表示一个从消息队列中取得消息的客户端应用程序。消费者的消费模式分为两种：</p>
+<p>一种是通过basic.consume命令（push），订阅某一个队列中的消息,channel会自动在处理完上一条消息之后，接收下一条消息。（同一个channel消息处理是串行的）。除非关闭channel或者取消订阅，否则客户端将会一直接收队列的消息。</p>
+<p>一种是通过basic.get命令（pull），主动获取队列中的消息，但是绝对不可以通过循环调用basic.get来代替basic.consume，这是因为basic.get RabbitMQ在实际执行的时候，是首先consume某一个队列，然后检索第一条消息，然后再取消订阅。如果是高吞吐率的消费者，最好还是建议使用basic.consume。</p>
+</li>
+<li><p>Virtual Host</p>
+<p>虚拟主机，表示一批交换器、消息队列和相关对象。虚拟主机是共享相同的身份认证和加密环境的独立服务器域。每个vhost本质上就是一个mini版的RabbitMQ服务器，拥有自己的队列、交换器、绑定和权限机制。vhost是AMQP概念的基础，必须在连接时指定，RabbitMQ默认的vhost是/。</p>
+</li>
+<li><p>Broker</p>
+<p>表示消息队列服务器实体。</p>
+</li>
+</ol>
+<h2 id="三、AMQP中的消息路由"><a href="#三、AMQP中的消息路由" class="headerlink" title="三、AMQP中的消息路由"></a>三、AMQP中的消息路由</h2><p>AMQP中消息的路由过程和Java开发者熟悉的JMS存在一些差别，AMQP中增加了Exchange和Binding的角色。生产者把消息发布到Exchange上，消息最终到达队列并被消费者接收，而Binding决定交换器的消息应该发送到那个队列。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172615010.png" alt="AMQP的消息路由过程"></p>
+<h2 id="四、Exchange类型"><a href="#四、Exchange类型" class="headerlink" title="四、Exchange类型"></a>四、Exchange类型</h2><p>Exchange分发消息时根据类型的不同分发策略有区别，目前共四种类型：direct、fanout、topic、headers。headers匹配AMQP消息的header而不是路由键，此外headers交换器和direct交换器完全一致，但性能差很多，目前几乎用不到了，所以直接看另外三种类型：</p>
+<p>1、direct</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172805639.png" alt="direct交换器"></p>
+<p>消息中的路由键（routingkey）如果和Binding中的bindingkey一致，交换器就将消息发到对应的队列中。路由键与队列名完全匹配，如果一个队列绑定到交换机要求路由键为“dog”，则只转发routingkey标记为“dog”的消息，不会转发“dog.puppy”，也不会转发“dog.guard”等等。它是完全匹配、单播的模式。</p>
+<p>2、fanout</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172850500.png" alt="fanout交换器"></p>
+<p>每个发到fanout类型交换器的消息都会分到所有绑定的队列上去。fanout交换器不处理路由键，只是简单的将队列绑定到交换器上，每个发送到交换器的消息都会被转发到与该交换器绑定的所有队列上。很像子网广播，每台子网内的主机都获得了一份复制的消息。fanout类型转发消息是最快的。</p>
+<p>3、topic</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331172922540.png" alt="topic交换器"></p>
+<p>topic交换器通过模式匹配分配消息的路由键属性，将路由键和某个模式进行匹配，此时队列需要绑定到一个模式上。它将路由键和绑定键的字符串切分成单词，这些单词之间用点隔开。它同样也会识别两个通配符：符号“#”和符号“”。#匹配0个或多个单词，匹配不多不少一个单词。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220331173011456.png" alt></p>
+<h1 id="消息可靠性"><a href="#消息可靠性" class="headerlink" title="消息可靠性"></a>消息可靠性</h1><p>RabbitMQ消息的可靠性投递主要两种实现：<br>1、通过实现消费的重试机制，通过@Retryable来实现重试，可以设置重试次数和重试频率；<br>2、生产端实现消息可靠性投递。<br>两种方法消费端都可能收到重复消息，要求消费端必须实现幂等性消费。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408163933663.png" alt="消息可靠性"></p>
+<h2 id="消息的可靠投递"><a href="#消息的可靠投递" class="headerlink" title="消息的可靠投递"></a>消息的可靠投递</h2><p>RabbitMQ 的消息可靠性，一般是业务系统接入消息中间件时首要考虑的问题，一般通过三个方面保障</p>
+<ul>
+<li>发送可靠性：确保消息成功发送到Broker</li>
+<li>存储可靠性：Broker对消息持久化，确保消息不会丢失</li>
+<li>消费可靠性：确保消息成功被消费，消费者在消费消息的同时，需要将autoAck设置为false，然后通过手动确认的方式去确认己经正确消费的消息，以免在消费端引起不必要的消息丢失。</li>
+</ul>
+<p>一般消息发送可靠性分为三个层级：</p>
+<ul>
+<li>At most once：最多一次，消息可能会丢失 ，但绝不会重复传输</li>
+<li>At least once：最少一次，消息绝不会丢失，但可能会重复传输</li>
+<li>Exactly once：恰好一次，每条消息肯定会被传输一次且仅传输一次</li>
+</ul>
+<p>RabbitMQ 支持其中的“最多一次”和“最少一次”，其中“最少一次”投递实现需要考虑以下这个几个方面的内容：</p>
+<ul>
+<li>消息生产者需要开启事务机制或者publisher confirm机制，以确保消息可以可靠地传输到RabbitMQ 中。</li>
+<li>消息生产者需要配合使用mandatory参数或者备份交换器来确保消息能够从交换器路由到队列中，进而能够保存下来而不会被丢弃。</li>
+</ul>
+<p>“最多一次”的方式就无须考虑以上那些方面，生产者随意发送，不过这样很难确保消息会成功发送。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220426154738540.png" alt></p>
+<h3 id="生产端"><a href="#生产端" class="headerlink" title="生产端"></a>生产端</h3><p>在使用RabbitMQ的时候，作为消息发送方希望杜绝任何消息丢失或者投递失败场景。RabbitMQ为我<br>们提供了两种方式用来控制消息的投递可靠性模式</p>
+<ul>
+<li>confirm确认模式</li>
+<li>return退回模式</li>
+</ul>
+<p><strong>1. 消息投递到exchange的确认模式</strong></p>
+<p>rabbitmq的消息投递的过程为：</p>
+<p>producer–&gt;broker–&gt;exchange–&gt;queue–&gt;consumer</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408165331501.png" alt="confirm模式"></p>
+<ul>
+<li>生产端开启confirm模式，channel.confirmSelect()</li>
+<li>生产端发送消息到rabbitmq后，异步接收从rabbitmq返回的ack确认消息</li>
+<li>生产端通过channel.addConfirmListener()可以监听到消息ack状态，通过handleAck与handleNack来分别处理投递成功的消息与投递失败的消息</li>
+</ul>
+<blockquote>
+<p>具体代码见rabbitmq-study代码</p>
+</blockquote>
+<p><strong>2. 消息未投递到queue的退回模式</strong></p>
+<p>消息从exchange–&gt;queue投递失败，如无法路由到对应的队列，可设置mandatory为true，则可通过channel.addReturnListener()监听到return消息，如设置为false，则消息自动删除或进入死信队列。</p>
+<h3 id="消费端"><a href="#消费端" class="headerlink" title="消费端"></a>消费端</h3><p><strong>消息确认机制ack</strong></p>
+<p>ack指Acknowledge确认。表示消费端收到消息后的确认方式。消费端消息的确认分为：自动确认（默认）、手动确认、不确认。</p>
+<p>其中自动确认是指，当消息一旦被consumer接收到，则自动确认收到，并将相应message从RabbitMQ的消息缓存中移除。但是在实际业务处理中，很可能消息接收到，业务处理出现异常，那么该消息就会丢失。如果设置了手动确认方式，则需要在业务处理成功后，调用channel.basicAck()，手动签收，如果出现异常，则调用channel.basicNack()方法。</p>
+<h2 id="消费端限流"><a href="#消费端限流" class="headerlink" title="消费端限流"></a>消费端限流</h2><p>假设一个场景，首先，我们Rabbitmq服务器积压了有上万条未处理的消息，我们随便打开一个消费者客户端，会出现这样情况:巨量的消息瞬间全部推送过来，但是我们单个客户端无法同时处理这么多数据!</p>
+<p>当数据量特别大的时候，我们对生产端限流肯定是不科学的，因为有时候并发量就是特别大，有时候并发量又特别少，我们无法约束生产端，这是用户的行为。所以我们应该对消费端限流，用于保持消费端的稳定，当消息数量激增的时候很有可能造成资源耗尽，以及影响服务的性能，导致系统的卡顿甚至直接崩溃。可通过channel.basicQos()来设置消费端的处理消息数量，此时需设置为手动ack。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408174944533.png" alt="消费端限流"></p>
+<h2 id="TTL"><a href="#TTL" class="headerlink" title="TTL"></a>TTL</h2><p>Time To Live，消息过期时间设置声明队列时，指定即可</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408180519486.png" alt="TTL"></p>
+<p>设置消息过期时间有以下两种方式：</p>
+<ul>
+<li>队列统一过期：队列过期后，会将队列所有消息全部移除</li>
+<li>消息单独过期：消息过期后，只有消息在队列顶端，才会判断其是否过期（移除掉）</li>
+</ul>
+<p>如果设置了消息的过期时间，也设置了队列的过期时间，它以时间短的为准。</p>
+<h2 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h2><p>死信队列，英文缩写：DLX。Dead Letter Exchange（死信交换机），当消息成为Dead message后，可以被重新发送到另一个交换机，这个交换机就是DLX。</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181010053.png" alt="DLX"></p>
+<p>消息成为死信的三种情况：</p>
+<ol>
+<li>队列消息长度到达限制；</li>
+<li>消费者拒接消费消息，basicNack/basicReject,并且不把消息重新放入原目标队列,requeue=false；</li>
+<li>原队列存在消息过期设置，消息到达超时时间未被消费；</li>
+</ol>
+<p>队列绑定死信交换机：</p>
+<p>给队列设置参数：x-dead-letter-exchange和x-dead-letter-routing-key也就是说此时Queue作为”生产者”</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181128300.png" alt="绑定死信交换机"></p>
+<h2 id="延迟队列"><a href="#延迟队列" class="headerlink" title="延迟队列"></a>延迟队列</h2><p>延迟队列，即消息进入队列后不会立即被消费，只有到达指定时间后，才会被消费</p>
+<p>需求：下单后，30分钟未支付，取消订单，回滚库存。新用户注册成功7天后，发送短信问候。<br>实现方式：定时器（×）延迟队列（√）</p>
+<p>实现步骤：</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181237989.png" alt></p>
+<p>在RabbitMQ中并未提供延迟队列功能</p>
+<p>替代实现：TTL+死信队列组合实现延迟队列的效果</p>
+<p><img src="/2022/03/30/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-1-RabbitMQ/image-20220408181307143.png" alt></p>
+<h1 id="集群部署方式"><a href="#集群部署方式" class="headerlink" title="集群部署方式"></a>集群部署方式</h1><h2 id="多机多节点集群部署"><a href="#多机多节点集群部署" class="headerlink" title="多机多节点集群部署"></a>多机多节点集群部署</h2><h2 id="单机多节点部署"><a href="#单机多节点部署" class="headerlink" title="单机多节点部署"></a>单机多节点部署</h2><p><strong>1.保证当前安装的rabbitmq程序正常，并正常启动过。</strong></p>
+<p><strong>2.停掉rabbitmq节点，保证服务未在运行中。</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl stop</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.设置环境变量指定端口和节点名称</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit-1</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.后台启动节点</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+
+<p><strong>5.启动第二个节点</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5673 RABBITMQ_SERVER_START_ARGS="-rabbitmq_management listener [&#123;port,15673&#125;]" RABBITMQ_NODENAME=rabbit-2 rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+
+<p><strong>6.启动第三个节点</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5674 RABBITMQ_SERVER_START_ARGS="-rabbitmq_management listener [&#123;port,15674&#125;]" RABBITMQ_NODENAME=rabbit-3 rabbitmq-server -detached</span><br></pre></td></tr></table></figure>
+
+<p><strong>7.将rabbit-2加入到集群</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 停止 rabbit-2 的应用</span></span><br><span class="line">rabbitmqctl -n rabbit-2 stop_app</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置 rabbit-2 的设置</span></span><br><span class="line">rabbitmqctl -n rabbit-2 reset</span><br><span class="line"><span class="meta">#</span><span class="bash"> rabbit-2 节点加入到 rabbit1的集群中</span></span><br><span class="line">rabbitmqctl -n rabbit-2 join_cluster rabbit-1 --ram</span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 rabbit-2 节点</span></span><br><span class="line">rabbitmqctl -n rabbit-2 start_app</span><br></pre></td></tr></table></figure>
+
+<p><strong>8.将rabbit-3加入到集群</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 停止 rabbit-3 的应用</span></span><br><span class="line">rabbitmqctl -n rabbit-3 stop_app</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置 rabbit-3 的设置</span></span><br><span class="line">rabbitmqctl -n rabbit-3 reset</span><br><span class="line"><span class="meta">#</span><span class="bash"> rabbit-3 节点加入到 rabbit-1的集群中</span></span><br><span class="line">rabbitmqctl -n rabbit-3 join_cluster rabbit-1 --ram</span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 rabbit-3 节点</span></span><br><span class="line">rabbitmqctl -n rabbit-3 start_app</span><br></pre></td></tr></table></figure>
+
+<p><strong>9.查看集群状态，看到 {running_nodes,[rabbit3@node1,rabbit2@node1,rabbit1@node1]} 说明节点已启动成功。</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl -n rabbit-1 cluster_status</span><br></pre></td></tr></table></figure>
+
+<p><strong>10.移除节点</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">首先将要移除的节点停机</span></span><br><span class="line">rabbitmqctl -n rabbit-3 stop_app</span><br><span class="line"><span class="meta">#</span><span class="bash">在主节点,也就是发起进群的主机上进行节点的移除</span></span><br><span class="line">rabbitmqctl -n rabbit-1 forget_cluster_node rabbit-3</span><br></pre></td></tr></table></figure>
+
+<p><strong>11.设置高可用集群</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl set_policy ha-all "^" '&#123;"ha-mode":"all"&#125;'</span><br></pre></td></tr></table></figure>
+
+<h2 id="镜像队列模式集群"><a href="#镜像队列模式集群" class="headerlink" title="镜像队列模式集群"></a>镜像队列模式集群</h2><ul>
+<li><p>镜像队列属于RabbitMQ的高可用方案，见：<a href="https://www.rabbitmq.com/ha.html#mirroring-arguments" target="_blank" rel="noopener">https://www.rabbitmq.com/ha.html#mirroring-arguments</a></p>
+</li>
+<li><p>通过前面的步骤搭建的集群属于普通模式集群，是通过共享元数据实现集群</p>
+</li>
+<li><p>开启镜像队列模式需要在管理页面添加策略，添加方式：</p>
+<ol>
+<li>进入管理页面-&gt;Admin-&gt;Policies（在页面右侧）-&gt;Add/update a policy</li>
+<li>在表单中填入：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">name: ha-all</span><br><span class="line">Pattern: ^</span><br><span class="line">Apply to: Queues</span><br><span class="line">Priority: 0</span><br><span class="line">Definition: ha-mode &#x3D; all</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong></p>
+<p>name:策略名称，如果使用已有的名称，保存后将会修改原来的信息</p>
+<p>Apply to：策略应用到什么对象上</p>
+<p>Pattern：策略应用到对象时，对象名称的匹配规则（正则表达式）</p>
+<p>Priority：优先级，数值越大，优先级越高，相同优先级取最后一个</p>
+<p>Definition：策略定义的类容，对于镜像队列的配置来说，只需要包含3个部分:ha-mode、ha-params和ha-sync-mode。其中，ha-sync-mode是同步的方式，自动还是手动，默认是自动。ha-mode和ha-params组合使用。组合方式如下：</p>
+<table>
+<thead>
+<tr>
+<th>ha-mode</th>
+<th>ha-params</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>all</td>
+<td>(empty)</td>
+<td>队列镜像到集群类所有节点</td>
+</tr>
+<tr>
+<td>exactly</td>
+<td>count</td>
+<td>队列镜像到集群内指定数量的节点。如果集群内节点数少于此值，队列将会镜像到所有节点。如果大于此值，而且一个包含镜像的节点停止，则新的镜像不会在其它节点创建。</td>
+</tr>
+<tr>
+<td>nodes</td>
+<td>nodename</td>
+<td>队列镜像到指定节点，指定的节点不在集群中不会报错。当队列申明时，如果指定的节点不在线，则队列会被创建在客户端所连接的节点上。</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>镜像队列模式相比较普通模式，镜像模式会占用更多的带宽来进行同步，所以镜像队列的吞吐量会低于普通模式</p>
+</li>
+<li><p>但普通模式不能实现高可用，某个节点挂了后，这个节点上的消息将无法被消费，需要等待节点启动后才能被消费。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag"># 消息中间件</a>
+          
+            <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/12/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84-10-Spring-Cloud-Gateway/" rel="next" title="微服务架构-10-Spring-Cloud-Gateway">
+                <i class="fa fa-chevron-left"></i> 微服务架构-10-Spring-Cloud-Gateway
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/04/12/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6-2-kafka/" rel="prev" title="消息中间件-2-kafka">
+                消息中间件-2-kafka <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/saritocat.png"
+                alt="张鸣" />
+            
+              <p class="site-author-name" itemprop="name">张鸣</p>
+              <p class="site-description motion-element" itemprop="description">No cross, no crown</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#消息队列"><span class="nav-text">消息队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、消息与消息队列"><span class="nav-text">一、消息与消息队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、消息队列应用场景"><span class="nav-text">二、消息队列应用场景</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RabbitMQ"><span class="nav-text">RabbitMQ</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、特点"><span class="nav-text">二、特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、单节点安装和使用"><span class="nav-text">三、单节点安装和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-安装依赖环境"><span class="nav-text">1.安装依赖环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-安装RabbitMQ"><span class="nav-text">2.安装RabbitMQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-启动和关闭"><span class="nav-text">3.启动和关闭</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-开启Web管理插件"><span class="nav-text">4.开启Web管理插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-防火墙添加端口"><span class="nav-text">5.防火墙添加端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-卸载"><span class="nav-text">6.卸载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、RabbitMQ基本配置"><span class="nav-text">四、RabbitMQ基本配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、RabbitMQ管理界面"><span class="nav-text">五、RabbitMQ管理界面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、RabbitMQ角色分类"><span class="nav-text">六、RabbitMQ角色分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、简单使用示例"><span class="nav-text">七、简单使用示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、AMQP协议"><span class="nav-text">八、AMQP协议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RabbitMQ中的概念模型"><span class="nav-text">RabbitMQ中的概念模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、消息模型"><span class="nav-text">一、消息模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、RabbitMQ基本概念"><span class="nav-text">二、RabbitMQ基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、AMQP中的消息路由"><span class="nav-text">三、AMQP中的消息路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、Exchange类型"><span class="nav-text">四、Exchange类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#消息可靠性"><span class="nav-text">消息可靠性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#消息的可靠投递"><span class="nav-text">消息的可靠投递</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生产端"><span class="nav-text">生产端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消费端"><span class="nav-text">消费端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消费端限流"><span class="nav-text">消费端限流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TTL"><span class="nav-text">TTL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#死信队列"><span class="nav-text">死信队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#延迟队列"><span class="nav-text">延迟队列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集群部署方式"><span class="nav-text">集群部署方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#多机多节点集群部署"><span class="nav-text">多机多节点集群部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单机多节点部署"><span class="nav-text">单机多节点部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#镜像队列模式集群"><span class="nav-text">镜像队列模式集群</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张鸣</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+<!-- 添加站点访问计数 -->
+<div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style='display:none'>
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider">|</span>
+</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+    有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+</span>
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
